@@ -13,3 +13,6 @@
 # Fichiers temporaires
 *.tmp
 *.log
+
+# Instructions Claude locales (non versionnées)
+CLAUDE.md
