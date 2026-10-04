@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Obsidian (config locale de l'espace de travail)
+.obsidian/workspace*.json
+.obsidian/cache
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+
+# Fichiers temporaires
+*.tmp
+*.log
