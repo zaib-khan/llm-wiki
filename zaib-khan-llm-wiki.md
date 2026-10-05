@@ -138,6 +138,20 @@ wiki/family/
 
 Type subfolders keep English names and are reserved (never used as domain names): `sources/`, `entities/`, `concepts/`, `syntheses/`.
 
+Inside `entities/`, people and companies have their own subfolders, also created only when needed. Other entities stay directly in `entities/`:
+
+```
+wiki/work/
+└── entities/
+    ├── personne/        ← person pages
+    │   └── marc-dupont.md
+    ├── companies/       ← company pages
+    │   └── acme.md
+    └── jira.md          ← any other entity
+```
+
+`personne/` and `companies/` are reserved names too.
+
 ### 5.6 Projects and archive
 
 - Time-bound topics (reading a book, planning a trip, a research of a few weeks) live in `wiki/projects/<project>/`, with a project page `<project>.md`, following the same rules as domains.
@@ -151,20 +165,23 @@ Type subfolders keep English names and are reserved (never used as domain names)
 | Domains and subdomains | The word given by the user, as is (spelling checked) |
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
+| Entity subfolders | `entities/personne/` (people), `entities/companies/` (companies) |
 | Templates | `templates/template-<type>.md` (e.g. `template-user.md`), so they never share a name with a wiki page |
 
 ---
 
 ## 6. Page Types and Templates
 
-The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-entity.md`, `template-concept.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
+The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-person.md`, `template-company.md`, `template-entity.md`, `template-concept.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
 
 | Type | Purpose |
 |---|---|
 | `user` | The user: identity, situation, goals, values, preferences, health, psychology, relationships — the center of the wiki |
 | `domain` | Overview of a domain or subdomain, with the list of its pages |
 | `project` | A time-bound project: goal, status, dates, related pages |
-| `entity` | A person, place, organization, object |
+| `person` | A person: identity, relationship to the user, contact, work, personality, history |
+| `company` | A company: identity, activity, location, relationship to the user, organization, people known there |
+| `entity` | Any other entity: place, object, tool, organization that is not a company |
 | `concept` | An idea, topic, method, theory — including the user's own ideas |
 | `source` | Summary of one raw source |
 | `synthesis` | Comparison, analysis, overview, or a kept answer to a question |
@@ -173,7 +190,7 @@ The `templates/` folder holds one template per page type, named `template-<type>
 
 ```yaml
 ---
-type: entity            # user | domain | project | entity | concept | source | synthesis
+type: entity            # user | domain | project | person | company | entity | concept | source | synthesis
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 sources: []             # links to raw files in raw/processed/
@@ -181,12 +198,30 @@ tags: []
 ---
 ```
 
-Each template then defines its sections. Suggested defaults:
+**Extra frontmatter fields** (names stay in English so queries work in any language):
+
+- **person**: `relationship`, `birthday`, `company` (link to the company page), `role`, `address`
+- **company**: `relationship`, `industry`, `website`, `size`, `founded`, `address` (headquarters)
+
+`address` is detailed as much as possible:
+
+```yaml
+address:
+  street: ""
+  postal_code: ""
+  city: ""
+  region: ""
+  country: ""
+```
+
+Each template then defines its sections (headings written in the user's language). Suggested defaults:
 
 - **user**: Identity · Current situation · Goals · Values & preferences · Health & wellbeing · Personality · Key people · Domains · History
 - **domain**: Overview · Pages (by type) · Subdomains · Key facts · Open points
 - **project**: Goal · Status · Timeline · Key information · Related pages · Outcome (when finished)
-- **entity** (person): Who · Relationship to the user · Facts · History · Links
+- **person**: Identity · Relationship to the user · Contact details · Work · Personality · Interests · Important dates · Close circle · Facts & information · Interaction history · Ideas & gifts · Links
+- **company**: Identity · Activity · Size & figures · Location · Relationship to the user · Organization · People known there · Culture & values · Tools & methods · Competitors & partners · News & history · Facts & information · Links
+- **entity**: Who / what · Relationship to the user · Facts · History · Links
 - **concept**: Summary · Details · The user's view · Evolution · Related concepts · Sources
 - **source**: Metadata (author, date, URL, format) · Summary · Key points · Pages updated · Quotes worth keeping
 - **synthesis**: Question or purpose · Answer / analysis · Sources · Related pages
@@ -267,7 +302,7 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 5. Writes a `source` page.
 6. Creates or updates the related entity, concept, and synthesis pages. A single source may touch 10–15 pages.
    - The agent **creates pages freely** inside existing domains.
-   - **Exceptions requiring validation:** a new **person** page, a new domain, a new subdomain.
+   - **Exceptions requiring validation:** a new **person** page, a new domain, a new subdomain. Company pages are created freely.
 7. Updates `user.md` freely when it learns something about the user — and **reports to the user exactly what was added, changed, or removed**.
 8. Flags contradictions (section 10) and records the evolution of the user's ideas.
 9. Adds all links (wikilinks) both ways where relevant.
@@ -471,13 +506,14 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Number of wikis | One (several possible) |
 | Domains | Chosen by the user; agent proposes, user validates |
 | Subdomain depth | Unlimited (unique names, created only when justified) |
-| Type subfolders | Created only when needed |
+| Type subfolders | Created only when needed (`entities/personne/`, `entities/companies/` included) |
 | Raw file naming | `YYYY-MM-DD-short-title.ext` |
 | Raw capture fidelity | Errors corrected, meaning and wording unchanged |
 | Ingest trigger | On demand (`ingest` / `processRaw`) |
 | Ingest mode | Autonomous, questions grouped at the end |
 | Captured idea | Agent asks: integrate now or at next ingest |
 | New person page | Requires validation |
+| New company page | Created freely |
 | `user.md` updates | Free, always reported to the user |
 | Citations | Wiki pages and raw sources |
 | Keeping an answer | Agent proposes, user validates (synthesis page + conversation trace) |
