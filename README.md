@@ -45,18 +45,19 @@ The agent does not only file and answer. It reminds you of forgotten ideas that 
 
 ### Structure, simplicity, and you in control
 
-- A defined structure: `raw/` as an inbox, `raw/processed/` mirroring the wiki, domains as folders, templates for every page type, unique file names.
+- A defined structure: `raw/` as an inbox, `raw/processed/` mirroring the wiki, domains as folders (named with your own words), templates for every page type (`template-<type>.md`), unique file names.
 - Simplicity first: nothing is created before it is needed.
 - The agent proposes, you validate: new domains, person pages, schema changes, web searches, commits.
+- You always know what you can ask: a `command.md` file at the root of your wiki lists every command and explains what it does.
 
 ## How to use it
 
 1. Create a new, empty folder for your wiki (your wiki lives in its own repository — this one only contains the prompt).
 2. Open your LLM agent in that folder and give it [`zaib-khan-llm-wiki.md`](zaib-khan-llm-wiki.md).
 3. Answer three short questions: your language, your name, and your first domain. Everything else comes with time.
-4. Drop sources into `raw/` and say `ingest`. Tell the agent your ideas. Ask it questions. Run `lint` from time to time.
+4. Open `command.md` to see what you can ask. Drop sources into `raw/` and say `ingest`. Tell the agent your ideas. Ask it questions. Run `lint` from time to time.
 
-Open the wiki in [Obsidian](https://obsidian.md) to browse it, follow links, and watch the graph grow.
+Open the wiki in [Obsidian](https://obsidian.md) to browse it, follow links, and watch the graph grow. The agent configures Obsidian for you at first launch and installs [qmd](https://github.com/tobi/qmd) for local search. Your wiki is a git repository: the agent proposes a commit (and a push, if you have a remote) after each operation.
 
 Every rule in the prompt is a default: change anything by asking your agent.
 
