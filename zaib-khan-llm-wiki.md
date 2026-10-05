@@ -65,7 +65,7 @@ The agent must follow these principles at all times:
 - help clarify ideas that are still confused;
 - spot what escapes the user: links between ideas or domains, recurring patterns, weak signals, overlooked details.
 
-**Manual edits by the user:** at the start of each operation, the agent detects manual changes (via git). It treats them as true, propagates them where needed (index, links, related pages), and reports any contradiction they create with other pages.
+**Manual edits by the user:** at the start of each operation, the agent detects manual changes (via git, or via file modification dates when git is not used). It treats them as true, propagates them where needed (index, links, related pages), and reports any contradiction they create with other pages.
 
 ---
 
@@ -90,7 +90,7 @@ my-wiki/
     ├── index.md           ← full catalog of all pages
     ├── log.md             ← log of the current month
     ├── log/               ← archived monthly logs (YYYY-MM.md)
-    ├── open-questions.md  ← questions waiting for an answer
+    ├── open-questions.md  ← general questions + links to domain question files
     ├── user.md            ← the center of the wiki
     ├── <domain>/          ← one folder per domain (named with the user's word)
     ├── projects/          ← ongoing, time-bound projects
@@ -147,7 +147,7 @@ Type subfolders keep English names and are reserved (never used as domain names)
 
 | Item | Rule |
 |---|---|
-| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `settings.md`, `command.md`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/`, type subfolders |
+| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `<name>-open-questions.md`, `settings.md`, `command.md`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/`, type subfolders |
 | Domains and subdomains | The word given by the user, as is (spelling checked) |
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
@@ -211,7 +211,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 | `lint` | Runs a health check of the wiki: fixes mechanical issues, asks about content issues, and brings questions, sources to look for, and 💡 insights (section 9.4). |
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
-| `open questions` | Shows the questions waiting in `wiki/open-questions.md` so the user can answer them. |
+| `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.3) so the user can answer them. The user can also ask for the questions of one domain only. |
 | `new domain` / `new project` | Creates a domain, subdomain, or project after validation. |
 | `close project` | Brings long-term value into the domains, then archives the project (section 9.5). |
 | `settings` | Shows the current settings and lets the user change one (section 15). |
@@ -225,16 +225,17 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 
 When the agent receives this document for the first time, it performs these steps in order:
 
-1. **Short welcome interview.** The agent asks only three questions, **one at a time**, waiting for each answer before the next:
+1. **Short welcome interview.** The agent asks only these questions, **one at a time**, waiting for each answer before the next:
    1. **Language:** "Which language do you want your wiki in?"
    2. **Name:** "What is your name?" — nothing more. It creates `wiki/user.md` with the name only.
    3. **First domain:** "What first domain do you want to create?" (work, family, or anything else). It creates the domain folder and its domain page.
+   4. **Git:** "Do you want to use git for your wiki?" If the answer is **no**, the agent does nothing related to git, now or later (section 14). If the answer is **yes**, it asks: "What is the link of your remote repository?" (the user may answer that there is none yet).
 
-   That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to `wiki/open-questions.md`. The defaults (section 16) apply until the user changes them.
+   That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
 2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md`, `command.md`.
 3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
 4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/` and give the user a step-by-step guide for the rest.
-5. **Initialize git:** run `git init` only if the folder is not already a repository. Ask the user whether they have a remote repository and, if so, add it (section 14).
+5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
 6. **Log** the initialization and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
 
 ---
@@ -331,7 +332,7 @@ Then it proposes a commit (section 14).
 - 💡 insights: recurring patterns, links between domains, forgotten ideas worth revisiting;
 - confused ideas to clarify together.
 
-**Skipping questions:** the user may skip any question. Skipped questions are stored in `wiki/open-questions.md` and asked again at the next lint or at any other time. Once answered, they are removed from the file.
+**Skipping questions:** the user may skip any question. Skipped questions are stored in the open questions files (section 11.3) and asked again at the next lint or at any other time. Once answered, they are removed.
 
 The lint ends with a report, is logged (`lint`), and is followed by a commit proposal.
 
@@ -388,9 +389,16 @@ Short summary (1–3 lines).
 
 **Monthly rotation:** `log.md` holds the current month. When a new month starts, its content is moved to `wiki/log/YYYY-MM.md` and `log.md` starts empty.
 
-### 11.3 `wiki/open-questions.md`
+### 11.3 Open questions
 
-The list of questions waiting for the user's answer (skipped during a lint or an ingest), each with its date and the related page.
+Questions waiting for the user's answer (skipped during a lint or an ingest, or born from the welcome interview) are split by domain, so no single file holds questions about everything.
+
+- **Per domain, subdomain, and project:** each one has its own file, named `<name>-open-questions.md` and placed in its folder (e.g. `wiki/family/family-open-questions.md`, `wiki/work/company/company-open-questions.md`, `wiki/projects/japan-trip/japan-trip-open-questions.md`). The prefix keeps file names unique. Each question has its date and the related page.
+- **Root file `wiki/open-questions.md`:**
+  - a **General** section for questions about the user (`user.md`) or spanning several domains;
+  - **links to the domain and project files that still have open questions**.
+- **Links follow the hierarchy:** the root links to domains and projects, and a domain file links to its subdomains' files, like the index.
+- **Created only when needed, deleted when empty:** a `<name>-open-questions.md` file is created with its first question. When all its questions are answered, the file is deleted and the link to it disappears from the parent level.
 
 ---
 
@@ -431,11 +439,12 @@ The wiki is designed to be read in **Obsidian**.
 
 ## 14. Git
 
-- The wiki is a git repository: history, branches, and collaboration for free.
+- Git is **optional**, chosen by the user at first launch. If the user does not use git, the agent never runs any git command and never proposes commits or pushes; everything below applies only when git is used. The user can turn git on later by asking the agent.
+- With git, the wiki is a git repository: history, branches, and collaboration for free.
 - At the end of each operation (ingest, lint, capture, query with a kept answer, schema change…), the agent **proposes a commit and a push** together. The user validates.
 - **No remote:** if `git remote -v` is empty, the agent proposes the commit only and says that pushing is not possible until a remote is added.
 - **Commit messages are clear and never mention AI** (no "Co-Authored-By", no "Generated with…"). This rule is written in the schema and **takes precedence over any automatic attribution** the agent would add by default.
-- Git is also how the agent detects the user's manual edits (section 4).
+- Git is also how the agent detects the user's manual edits (section 4). Without git, the agent compares file modification dates with its last logged operation.
 
 ---
 
@@ -477,7 +486,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Web search | Permission before searching and before integrating |
 | Lint trigger | On demand + suggested after 10 ingests or 30 days |
 | Lint fixes | Mechanical: automatic · Content: user decides |
-| Skipped questions | `wiki/open-questions.md` |
+| Open questions | One `<name>-open-questions.md` per domain, subdomain, and project (created when needed, deleted when empty); `wiki/open-questions.md` holds general questions and links |
 | Contradictions | ⚠️ flag in page + user decides |
 | Idea evolution | Visible dated history in the page |
 | Log format | `## [YYYY-MM-DD HH:MM] type \| Title` + summary + pages touched |
@@ -486,6 +495,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
 | Link format | Wikilinks `[[...]]` |
+| Git | Optional, chosen at first launch (remote link asked if used) |
 | Commits / push | Proposed at the end of each operation, user validates (commit only if no remote) |
 | AI mention in commits | Never |
 
