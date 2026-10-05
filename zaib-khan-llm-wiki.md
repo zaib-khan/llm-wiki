@@ -78,6 +78,7 @@ my-wiki/
 ├── CLAUDE.md              ← schema (always identical to AGENTS.md)
 ├── AGENTS.md              ← schema (always identical to CLAUDE.md)
 ├── settings.md            ← user settings (see section 15)
+├── command.md             ← commands the user can give the agent (see section 7)
 │
 ├── raw/                   ← inbox: everything arrives here
 │   ├── assets/            ← temporary: images downloaded by the agent
@@ -145,7 +146,7 @@ Type subfolders keep English names and are reserved (never used as domain names)
 
 | Item | Rule |
 |---|---|
-| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `settings.md`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/`, type subfolders |
+| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `settings.md`, `command.md`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/`, type subfolders |
 | Domains and subdomains | User's language |
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
@@ -194,9 +195,27 @@ Each template then defines its sections. Suggested defaults:
 
 - The wiki has **two schema files: `CLAUDE.md` and `AGENTS.md`**, so that any agent can use it. They are two real files with **identical content**.
 - **Whenever one is modified, the other must be modified in the same way, at the same time.** They must never differ.
-- They contain the rules of this document, adapted to the user's choices, and reference `settings.md` and `templates/`.
+- They contain the rules of this document, adapted to the user's choices, and reference `settings.md` and `templates/` as code, never as links (see section 13).
 - **The schema evolves with the user.** When the agent sees that a new convention would help, it proposes the change; the user validates before anything is written.
 - Every schema change is logged (`schema`).
+
+### `command.md` — the user's command reference
+
+At the root of the wiki, `command.md` lists **every command the user can give the agent**, so the user always knows what they can do. Each command has its name, its aliases, how to trigger it, and a short text explaining **what it does** step by step and what the user gets at the end. Default content:
+
+| Command | What it does |
+|---|---|
+| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the index, moves the file to `raw/processed/`, then reports and asks the pending questions at the end (section 9.2). |
+| `lint` | Runs a health check of the wiki: fixes mechanical issues, asks about content issues, and brings questions, sources to look for, and 💡 insights (section 9.4). |
+| Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
+| Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
+| `open questions` | Shows the questions waiting in `wiki/open-questions.md` so the user can answer them. |
+| `new domain` / `new project` | Creates a domain, subdomain, or project after validation. |
+| `close project` | Brings long-term value into the domains, then archives the project (section 9.5). |
+| `settings` | Shows the current settings and lets the user change one (section 15). |
+| `commands` | Shows the content of `command.md`. |
+
+`command.md` must stay in sync with the schema: whenever a command is added, changed, or removed, the agent proposes the update of `command.md` together with `CLAUDE.md` and `AGENTS.md`.
 
 ---
 
@@ -210,11 +229,11 @@ When the agent receives this document for the first time, it performs these step
    3. **First domain:** "What first domain do you want to create?" (work, family, or anything else). It creates the domain folder and its domain page.
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. The defaults (section 16) apply until the user changes them.
-2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all templates), `wiki/` (`index.md`, `log.md`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md`.
+2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all templates), `wiki/` (`index.md`, `log.md`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md`, `command.md`.
 3. **Install search:** install qmd and index the wiki (section 12). If installation fails, explain why and fall back to the index plus grep.
 4. **Configure Obsidian:** write what can be configured in `.obsidian/` and give the user a step-by-step guide for the rest (section 13).
 5. **Initialize git** (section 14).
-6. **Log** the initialization and give the user a short summary of what was created.
+6. **Log** the initialization and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
 
 ---
 
@@ -292,6 +311,7 @@ Then it proposes a commit (section 14).
 - `CLAUDE.md` and `AGENTS.md` are identical;
 - file names are unique across the wiki;
 - pages follow their template (frontmatter, sections);
+- no link points to a folder or to a non-note file, and no empty note was created by mistake;
 - no empty or useless subfolders;
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
@@ -387,6 +407,7 @@ The list of questions waiting for the user's answer (skipped during a lint or an
 The wiki is designed to be read in **Obsidian**.
 
 - **Links:** wikilinks `[[page-name]]` by default (this is why file names must be unique).
+- **Never link to a folder or to a file that is not a note** (no markdown link, no wikilink). In Obsidian, clicking a link that leads to no note creates an empty note with that name. Folder paths and system file paths are written as code (`raw/`, `templates/`), never as links. This applies everywhere, including `CLAUDE.md` and `AGENTS.md`.
 - **Recommended plugins and tools:**
   - **Obsidian Web Clipper** (browser extension): converts web articles to markdown; configure it to save into `raw/`.
   - **Dataview**: dynamic tables and lists from the templates' frontmatter (e.g. all family members, all ongoing projects).
