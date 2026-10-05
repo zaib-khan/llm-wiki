@@ -40,7 +40,7 @@ The agent must follow these principles at all times:
 4. **The structure is defined, not improvised.** The agent files content according to the rules of this document, not according to its own taste. The user must always be able to find their way.
 5. **The agent proposes, the user validates** for every structural or sensitive decision: new domains and subdomains, new person pages, schema changes, keeping a query answer, web searches, commits and pushes.
 6. **`user.md` is the center of everything.** Every page is connected to it, directly or indirectly.
-7. **Language.** The wiki content is written in the user's preferred language. System files and folders keep English names (see section 5).
+7. **Language.** The wiki content, `command.md`, and the templates' content are written in the user's preferred language. The schema files (`CLAUDE.md`, `AGENTS.md`, `settings.md`) are written in English. System files and folders keep English names (see section 5).
 8. **Transparency.** The agent always reports what it created, changed, or deleted.
 
 ---
@@ -92,7 +92,7 @@ my-wiki/
     ├── log/               ← archived monthly logs (YYYY-MM.md)
     ├── open-questions.md  ← questions waiting for an answer
     ├── user.md            ← the center of the wiki
-    ├── <domain>/          ← one folder per domain (named in the user's language)
+    ├── <domain>/          ← one folder per domain (named with the user's word)
     ├── projects/          ← ongoing, time-bound projects
     └── archive/           ← finished projects
 ```
@@ -111,12 +111,13 @@ my-wiki/
 - `raw/assets/` is a temporary area for images downloaded by the agent from the web. When the related article is processed, its images follow it into `raw/processed/<domain>/`.
 - **The original file name is a hint.** A file dropped as `dad.jpg` tells the agent it relates to the user's father. The agent reads the original name to understand the file, then renames it during ingest.
 - **Naming:** during ingest, every raw file is renamed to `YYYY-MM-DD-short-title.ext` (the date the source was added). The content is never changed.
+- **Permanent system folders:** `raw/processed/`, `raw/assets/`, and `wiki/log/` are part of the structure even when empty. Git does not track empty folders, so if one is missing (e.g. after a clone), the agent simply recreates it.
 - **Non-text sources** (PDF, images, audio, video): the original is kept, and the agent creates a markdown text version next to it (extraction, transcription, or description), with the same base name. The text version is used for integration.
 
 ### 5.4 `wiki/` — domains
 
 - **A domain is a folder.** Each domain folder contains a domain page with the same name: `wiki/family/family.md`. The domain page gives an overview and lists all pages of the domain.
-- Domains are **chosen by the user** (family, work, health, a hobby — anything). Domain folders are named in the user's language.
+- Domains are **chosen by the user** (family, work, health, a hobby — anything). Domain folders are named **exactly with the word the user gives**, whatever its language (e.g. "work" stays `work/` in a French wiki): no translation, no confirmation needed. The agent only checks the spelling: if it spots a typo, it proposes the corrected name before creating the folder.
 - **Subdomains** follow exactly the same rule, recursively: `wiki/work/company/company.md`.
 - **No depth limit**, with two safeguards:
   - **file names are unique across the whole wiki** (wikilinks resolve by file name — two `marc.md` files would make `[[marc]]` ambiguous; use `marc-dupont.md` and `marc-cousin.md`);
@@ -147,15 +148,16 @@ Type subfolders keep English names and are reserved (never used as domain names)
 | Item | Rule |
 |---|---|
 | System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `settings.md`, `command.md`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/`, type subfolders |
-| Domains and subdomains | User's language |
+| Domains and subdomains | The word given by the user, as is (spelling checked) |
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
+| Templates | `templates/template-<type>.md` (e.g. `template-user.md`), so they never share a name with a wiki page |
 
 ---
 
 ## 6. Page Types and Templates
 
-The `templates/` folder holds one template per page type. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
+The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-entity.md`, `template-concept.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
 
 | Type | Purpose |
 |---|---|
@@ -228,11 +230,11 @@ When the agent receives this document for the first time, it performs these step
    2. **Name:** "What is your name?" — nothing more. It creates `wiki/user.md` with the name only.
    3. **First domain:** "What first domain do you want to create?" (work, family, or anything else). It creates the domain folder and its domain page.
 
-   That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. The defaults (section 16) apply until the user changes them.
-2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all templates), `wiki/` (`index.md`, `log.md`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md`, `command.md`.
-3. **Install search:** install qmd and index the wiki (section 12). If installation fails, explain why and fall back to the index plus grep.
-4. **Configure Obsidian:** write what can be configured in `.obsidian/` and give the user a step-by-step guide for the rest (section 13).
-5. **Initialize git** (section 14).
+   That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to `wiki/open-questions.md`. The defaults (section 16) apply until the user changes them.
+2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md`, `command.md`.
+3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
+4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/` and give the user a step-by-step guide for the rest.
+5. **Initialize git:** run `git init` only if the folder is not already a repository. Ask the user whether they have a remote repository and, if so, add it (section 14).
 6. **Log** the initialization and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
 
 ---
@@ -312,7 +314,7 @@ Then it proposes a commit (section 14).
 - file names are unique across the wiki;
 - pages follow their template (frontmatter, sections);
 - no link points to a folder or to a non-note file, and no empty note was created by mistake;
-- no empty or useless subfolders;
+- no empty or useless subfolders (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
 - pages not updated for a long time (`user.md`, person pages…);
@@ -396,7 +398,8 @@ The list of questions waiting for the user's answer (skipped during a lint or an
 
 - **qmd** (https://github.com/tobi/qmd) is installed at first launch: a local search engine for markdown with keyword (BM25) and semantic (vector) search plus LLM re-ranking, available as a CLI and as an MCP server — so it works with any agent.
 - **Scope:** `wiki/` **and** `raw/processed/`, so a precise detail can be found even if it was not carried into the wiki.
-- **Re-indexing:** after every ingest and after any change to the wiki or the sources.
+- **Collection names:** qmd collections are global to the machine, so generic names like `wiki` or `raw` would clash with another wiki. Prefix them with the wiki's folder name: `<wiki>-wiki` (on `wiki/`) and `<wiki>-raw` (on `raw/processed/`).
+- **Re-indexing:** after every ingest and after any change to the wiki or the sources, run `qmd update && qmd embed`. Run `qmd cleanup` if qmd reports orphaned chunks.
 - **Fallback:** if qmd cannot be installed or fails, the agent uses `index.md`, the domain pages, and grep.
 - **Other scripts:** when a mechanical task becomes repetitive (checking that `CLAUDE.md` = `AGENTS.md`, unique names, broken links, log rotation…), the agent may **propose** to write a small script in `scripts/`. Nothing is created without validation.
 
@@ -415,7 +418,13 @@ The wiki is designed to be read in **Obsidian**.
   - **Marp**: slide decks in markdown.
   - **Excalidraw** / **Canvas**: diagrams and visual maps of ideas.
 - **Graph view:** the best way to see the shape of the wiki — hubs, clusters, orphans.
-- **Configuration at first launch:** the agent writes what it can in `.obsidian/` (templates folder, attachment folder, wikilink format) and guides the user step by step for the rest (installing plugins, the browser extension).
+- **Configuration at first launch:** the agent writes these settings to `.obsidian/`, so the setup is reproducible:
+  - `app.json`: `"useMarkdownLinks": false` (wikilinks), `"newLinkFormat": "shortest"`, `"attachmentFolderPath": "raw/assets"`, and `"userIgnoreFilters": ["templates/"]` (templates are excluded from search, graph, and link suggestions);
+  - `templates.json`: `"folder": "templates"` (core Templates plugin);
+  - `core-plugins.json`: enable the core plugins used by the wiki (templates, graph, backlinks, canvas, file explorer, search);
+  - `.gitignore`: add `.obsidian/workspace*.json`.
+
+  The agent then guides the user step by step for the rest (installing community plugins, the browser extension).
 - **Images:** the agent downloads only useful images (diagrams, charts) when fetching web content. To view an article with images, it reads the text first, then looks at the images separately.
 
 ---
@@ -424,7 +433,8 @@ The wiki is designed to be read in **Obsidian**.
 
 - The wiki is a git repository: history, branches, and collaboration for free.
 - At the end of each operation (ingest, lint, capture, query with a kept answer, schema change…), the agent **proposes a commit and a push** together. The user validates.
-- **Commit messages are clear and never mention AI** (no "Co-Authored-By", no "Generated with…").
+- **No remote:** if `git remote -v` is empty, the agent proposes the commit only and says that pushing is not possible until a remote is added.
+- **Commit messages are clear and never mention AI** (no "Co-Authored-By", no "Generated with…"). This rule is written in the schema and **takes precedence over any automatic attribution** the agent would add by default.
 - Git is also how the agent detects the user's manual edits (section 4).
 
 ---
@@ -445,7 +455,10 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 |---|---|
 | Wiki language | User's preferred language |
 | System file and folder names | English |
-| Domain names | User's language |
+| Schema files language | English (`CLAUDE.md`, `AGENTS.md`, `settings.md`) |
+| `command.md` and templates language | User's language |
+| Template file names | `template-<type>.md` |
+| Domain names | The word given by the user, as is (spelling checked) |
 | Number of wikis | One (several possible) |
 | Domains | Chosen by the user; agent proposes, user validates |
 | Subdomain depth | Unlimited (unique names, created only when justified) |
@@ -469,11 +482,11 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Idea evolution | Visible dated history in the page |
 | Log format | `## [YYYY-MM-DD HH:MM] type \| Title` + summary + pages touched |
 | Log rotation | Monthly (`wiki/log/YYYY-MM.md`) |
-| Search | qmd on `wiki/` + `raw/processed/`, fallback index + grep |
+| Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`), fallback index + grep |
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
 | Link format | Wikilinks `[[...]]` |
-| Commits / push | Proposed at the end of each operation, user validates |
+| Commits / push | Proposed at the end of each operation, user validates (commit only if no remote) |
 | AI mention in commits | Never |
 
 ---
