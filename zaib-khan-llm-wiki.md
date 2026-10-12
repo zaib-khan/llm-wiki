@@ -144,6 +144,7 @@ Inside `entities/`, people and companies have their own subfolders, also created
 wiki/work/
 └── entities/
     ├── personne/        ← person pages
+    │   ├── personne-work.md   ← common page linking all person pages of the domain
     │   └── marc-dupont.md
     ├── companies/       ← company pages
     │   └── acme.md
@@ -151,6 +152,14 @@ wiki/work/
 ```
 
 `personne/` and `companies/` are reserved names too.
+
+**People rules:**
+
+- **Common page:** each `personne/` folder contains a common page `personne-<domain>.md` (type `people`, e.g. `personne-work.md`) that lists and links every person page of the folder. It is created with the folder. Every person page links back to it, and the domain page links to it (in its "People" section).
+- **Organization tables:** a company page keeps a table of the people known there. Each name is linked to its person page when one exists; otherwise it stays plain text.
+- **People attached to an organization** (listed in a company page's table) get a person page **only if at least one way to reach them is known** (e-mail, phone, or other). Otherwise their name stays plain text in the organization's table.
+- **Close people** (family, friends) always get a person page, even without contact details.
+- **Every new person page requires the user's validation.**
 
 ### 5.6 Projects and archive
 
@@ -172,7 +181,7 @@ wiki/work/
 
 ## 6. Page Types and Templates
 
-The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-person.md`, `template-company.md`, `template-entity.md`, `template-concept.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
+The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-person.md`, `template-people.md`, `template-company.md`, `template-entity.md`, `template-concept.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
 
 | Type | Purpose |
 |---|---|
@@ -180,6 +189,7 @@ The `templates/` folder holds one template per page type, named `template-<type>
 | `domain` | Overview of a domain or subdomain, with the list of its pages |
 | `project` | A time-bound project: goal, status, dates, related pages |
 | `person` | A person: identity, relationship to the user, contact, work, personality, history |
+| `people` | The common page of a `personne/` folder, linking all its person pages |
 | `company` | A company: identity, activity, location, relationship to the user, organization, people known there |
 | `entity` | Any other entity: place, object, tool, organization that is not a company |
 | `concept` | An idea, topic, method, theory — including the user's own ideas |
@@ -190,7 +200,7 @@ The `templates/` folder holds one template per page type, named `template-<type>
 
 ```yaml
 ---
-type: entity            # user | domain | project | person | company | entity | concept | source | synthesis
+type: entity            # user | domain | project | person | people | company | entity | concept | source | synthesis
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 sources: []             # links to raw files in raw/processed/
@@ -217,10 +227,11 @@ address:
 Each template then defines its sections (headings written in the user's language). Suggested defaults:
 
 - **user**: Identity · Current situation · Goals · Values & preferences · Health & wellbeing · Personality · Key people · Domains · History
-- **domain**: Overview · Pages (by type) · Subdomains · Key facts · Open points
+- **domain**: Overview · Pages (by type) · People (link to `personne-<domain>.md`) · Subdomains · Key facts · Open points
 - **project**: Goal · Status · Timeline · Key information · Related pages · Outcome (when finished)
 - **person**: Identity · Relationship to the user · Contact details · Work · Personality · Interests · Important dates · Close circle · Facts & information · Interaction history · Ideas & gifts · Links
-- **company**: Identity · Activity · Size & figures · Location · Relationship to the user · Organization · People known there · Culture & values · Tools & methods · Competitors & partners · News & history · Facts & information · Links
+- **people**: Overview · People (table: name linked to the person page, relationship, role, organization) · Links
+- **company**: Identity · Activity · Size & figures · Location · Relationship to the user · Organization · People known there (table, names linked to person pages when they exist) · Culture & values · Tools & methods · Competitors & partners · News & history · Facts & information · Links
 - **entity**: Who / what · Relationship to the user · Facts · History · Links
 - **concept**: Summary · Details · The user's view · Evolution · Related concepts · Sources
 - **source**: Metadata (author, date, URL, format) · Summary · Key points · Pages updated · Quotes worth keeping
@@ -247,6 +258,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
 | `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.3) so the user can answer them. The user can also ask for the questions of one domain only. |
+| `new person` | Creates a person page after validation, in the right domain's `entities/personne/`, and adds it to the common page `personne-<domain>.md` (section 5.5). |
 | `new domain` / `new project` | Creates a domain, subdomain, or project after validation. |
 | `close project` | Brings long-term value into the domains, then archives the project (section 9.5). |
 | `settings` | Shows the current settings and lets the user change one (section 15). |
@@ -354,7 +366,10 @@ Then it proposes a commit (section 14).
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
 - pages not updated for a long time (`user.md`, person pages…);
-- every page is connected to `user.md`, directly or indirectly.
+- every page is connected to `user.md`, directly or indirectly;
+- every person page links to its common page `personne-<domain>.md`, and every common page lists all person pages of its folder.
+- wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
+- no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
 
 **Fixes:**
 - **Mechanical, safe fixes** are done automatically: links, index, orphans, template formatting, empty folders.
@@ -512,7 +527,8 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Ingest trigger | On demand (`ingest` / `processRaw`) |
 | Ingest mode | Autonomous, questions grouped at the end |
 | Captured idea | Agent asks: integrate now or at next ingest |
-| New person page | Requires validation |
+| New person page | Requires validation; for people attached to an organization, only if a way to reach them is known |
+| People common page | `personne-<domain>.md` in each `personne/` folder |
 | New company page | Created freely |
 | `user.md` updates | Free, always reported to the user |
 | Citations | Wiki pages and raw sources |
