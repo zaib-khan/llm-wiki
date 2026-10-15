@@ -415,7 +415,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
 
 1. **Check the versions.** Read `prompt_version` in `settings.md`. Find the **latest tag** of `prompt_source` (only tagged versions count; untagged changes on the main branch are ignored). If both are equal, say the wiki is up to date and stop.
 2. **Read what changed.** Fetch the new version of this document and `CHANGELOG.md` at that tag, and list the changes between the two versions.
-   - **Unknown version** (no `prompt_version` or no copy in `.llm-wiki/`): compare the whole wiki (schema, templates, `command.md`, structure) with the new version and list every difference.
+   - **Unknown version** (no `prompt_version` or no copy in `.llm-wiki/`): compare the whole wiki (schema, templates, `command.md`, `settings.md`, structure) with the new version. Without the copy, the agent cannot tell a user customization from an old rule of the prompt (e.g. automatic commits instead of proposed commits). So **every difference is presented as a possible conflict, one at a time**: the current version and the new version side by side, with the question "Is this your personal choice (keep it) or an old rule (replace it)?". If the user does not know, the new version is applied. Step 3 is skipped; the answers replace it.
 3. **Detect customizations** by comparing three versions: the copy in `.llm-wiki/` (what was applied), the current wiki (what the user has now), and the new version. Anything that differs between the copy and the current wiki is a user customization.
 4. **Secure the wiki before changing anything.**
    - **With git:** ask the user to commit their pending changes first, so everything can be undone.

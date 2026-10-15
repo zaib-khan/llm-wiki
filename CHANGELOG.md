@@ -11,6 +11,9 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+### Changed
+- Update from an unknown version (section 9.6, step 2): every difference is now presented as a possible conflict, one at a time, and the user says whether it is a personal choice (keep) or an old rule (replace). If the user does not know, the new version is applied.
+
 ## [0.9.0] - 2026-10-15
 
 ### Added
