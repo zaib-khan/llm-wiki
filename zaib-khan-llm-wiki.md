@@ -261,6 +261,11 @@ Each template then defines its sections (headings written in the user's language
 - **source**: Metadata (author, date, URL, format) · Summary · Key points · Pages updated · Quotes worth keeping
 - **synthesis**: Question or purpose · Answer / analysis · Sources · Related pages
 
+**Required and optional sections:**
+
+- For most types, a page has **all the sections of its template**, even when some are still empty.
+- For **`contact` and `company` pages, every section is optional**: the page keeps the order and the names of its template's sections, but only shows the sections that have content. A new section is added when there is something to put in it. (What a contact needs to exist is defined in section 5.5.)
+
 ---
 
 ## 7. Schema Files
@@ -385,7 +390,7 @@ Then it proposes a commit (section 14).
 - gaps that a web search could fill;
 - `CLAUDE.md` and `AGENTS.md` are identical;
 - file names are unique across the wiki;
-- pages follow their template (frontmatter, sections);
+- pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
 - no link points to a folder or to a non-note file, and no empty note was created by mistake;
 - no empty or useless subfolders (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
