@@ -449,6 +449,12 @@ This document evolves. A wiki created with an older version keeps its old rules 
 5. **Present the changes and get validation.**
    - **Simple changes** (new rule, new command, updated template, new setting): validated all at once.
    - **Changes touching the user's content** (moving, renaming, or modifying existing pages and files): validated one by one, each with an explanation.
+   - **Migrating pages to a new template** (e.g. an old type replaced by a new one):
+     - **Map the sections:** each old section is matched with the new section that has the same meaning (e.g. "Who" → "Identity", "Organization" → "Work", "History" → "Interaction history"). Old sections with no match are kept at the end of the page, unchanged.
+     - **Validate the mapping once per template:** the agent shows the mapping table (old section → new section) and waits for the user's validation, then applies it to every page of that type. Special cases (e.g. a contact that does not meet the rules of section 5.5) are still validated one by one.
+     - **Do not add empty sections**, unless the new template requires all its sections (section 6).
+     - **Fill new frontmatter fields only when they can be deduced from the page's content**; otherwise leave them out.
+     - **Keep all content and all links**: migrating a page never deletes information.
    - **Conflicts with a customization:** show the user's version and the new version side by side; the user chooses.
 6. **Apply** the validated changes: `CLAUDE.md` and `AGENTS.md` (always identical), templates, `command.md`, `settings.md`, structure, and pages. Re-index search.
 7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, log the operation (`update`), and propose a commit (if git is used).
