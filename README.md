@@ -2,6 +2,8 @@
 
 A prompt that turns your LLM agent (Claude Code, Codex, OpenCode, Cursor…) into the librarian of your personal second brain.
 
+**Current version: 0.9.0** — still in testing; `1.0.0` will mark the first stable release. See [`CHANGELOG.md`](CHANGELOG.md).
+
 ## Why I built this
 
 Too much information reaches me every day: articles, videos, documents, conversations — and my own thoughts. Over time I noticed the cost. I forget details. I forget where something came from. My ideas get confused, and I lose focus. Sometimes I have a really good idea, then I read a website or watch a video, and the idea is gone.
@@ -35,7 +37,7 @@ And when an idea evolves — idea A in January becomes idea B in June — that i
 
 ### A model of your life, with you at the center
 
-The wiki is not only knowledge. It represents **you and your world**: a `user.md` at the center, then domains you choose — family, work, your company, a hobby, anything. Each domain is a folder; the people around you get their own pages.
+The wiki is not only knowledge. It represents **you and your world**: a `user.md` at the center, then domains you choose — family, work, your company, a hobby, anything. Each domain is a folder. The people around you get their own pages (with a common page per domain linking them all), and so do the companies in your life.
 
 Everything lives in **one wiki**, on purpose: a detail from your private life can be the key to a professional question, and the other way around. With the full context, the agent can see what you miss.
 
@@ -47,6 +49,7 @@ The agent does not only file and answer. It reminds you of forgotten ideas that 
 
 - A defined structure: `raw/` as an inbox, `raw/processed/` mirroring the wiki, domains as folders (named with your own words), templates for every page type (`template-<type>.md`), unique file names.
 - Simplicity first: nothing is created before it is needed.
+- Open questions are never lost: when you skip one, it waits in its domain's own question file until you answer it.
 - The agent proposes, you validate: new domains, person pages, schema changes, web searches, commits.
 - You always know what you can ask: a `command.md` file at the root of your wiki lists every command and explains what it does.
 
