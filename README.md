@@ -37,7 +37,7 @@ And when an idea evolves — idea A in January becomes idea B in June — that i
 
 ### A model of your life, with you at the center
 
-The wiki is not only knowledge. It represents **you and your world**: a `user.md` at the center, then domains you choose — family, work, your company, a hobby, anything. Each domain is a folder. The people around you get their own pages (with a common page per domain linking them all), and so do the companies in your life.
+The wiki is not only knowledge. It represents **you and your world**: a `user.md` at the center, then domains you choose — family, work, your company, a hobby, anything. Each domain is a folder. The people around you (contacts) and the companies in your life get their own pages, with a list per domain linking them all.
 
 Everything lives in **one wiki**, on purpose: a detail from your private life can be the key to a professional question, and the other way around. With the full context, the agent can see what you miss.
 
