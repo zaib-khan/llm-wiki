@@ -142,28 +142,34 @@ wiki/family/
 
 Type subfolders keep English names and are reserved (never used as domain names): `sources/`, `entities/`, `concepts/`, `syntheses/`.
 
-Inside `entities/`, people and companies have their own subfolders, also created only when needed. Other entities stay directly in `entities/`:
+Contacts and companies have their own folders **at the domain level**, also created only when needed. Each one holds a list page that links all its pages. `entities/` keeps only the other entities:
 
 ```
-wiki/work/
+wiki/football/
+├── football.md
+├── contacts/
+│   ├── football-contacts.md    ← contact list of the domain (type contact-list)
+│   └── coach-martin.md         ← one contact (type contact)
+├── companies/
+│   ├── football-companies.md   ← company list of the domain (type company-list)
+│   └── acme.md                 ← one company (type company)
 └── entities/
-    ├── personne/        ← person pages
-    │   ├── personne-work.md   ← common page linking all person pages of the domain
-    │   └── marc-dupont.md
-    ├── companies/       ← company pages
-    │   └── acme.md
-    └── jira.md          ← any other entity
+    └── stade-de-france.md      ← any other entity
 ```
 
-`personne/` and `companies/` are reserved names too.
+`contacts/` and `companies/` are reserved names too.
 
-**People rules:**
+**Contact rules:**
 
-- **Common page:** each `personne/` folder contains a common page `personne-<domain>.md` (type `people`, e.g. `personne-work.md`) that lists and links every person page of the folder. It is created with the folder. Every person page links back to it, and the domain page links to it (in its "People" section).
-- **Organization tables:** a company page keeps a table of the people known there. Each name is linked to its person page when one exists; otherwise it stays plain text.
-- **People attached to an organization** (listed in a company page's table) get a person page **only if at least one way to reach them is known** (e-mail, phone, or other). Otherwise their name stays plain text in the organization's table.
-- **Close people** (family, friends) always get a person page, even without contact details.
-- **Every new person page requires the user's validation.**
+- **To exist in the wiki**, a contact needs **a first name or a last name, and at least one way to reach them** (phone, e-mail, address, or other). Otherwise, their name stays plain text wherever it is mentioned.
+- **Exception — family:** when the user says a person is a member of their family and what the relationship is, a first name or a last name is enough. The relationship is recorded in the `relationship` field. The agent never guesses it.
+- **Every new contact page requires the user's validation.** Company pages are created freely.
+
+**List pages:**
+
+- Each `contacts/` folder contains `<domain>-contacts.md` (type `contact-list`), and each `companies/` folder contains `<domain>-companies.md` (type `company-list`). They list and link every page of their folder and are created with the folder.
+- Every contact or company page links back to its list, and the domain page links to both lists.
+- **Organization tables:** a company page keeps a table of the people known there. Each name is linked to its contact page when one exists; otherwise it stays plain text.
 
 ### 5.6 Projects and archive
 
@@ -178,23 +184,24 @@ wiki/work/
 | Domains and subdomains | The word given by the user, as is (spelling checked) |
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
-| Entity subfolders | `entities/personne/` (people), `entities/companies/` (companies) |
+| Contacts and companies | `<domain>/contacts/` with `<domain>-contacts.md`, `<domain>/companies/` with `<domain>-companies.md` |
 | Templates | `templates/template-<type>.md` (e.g. `template-user.md`), so they never share a name with a wiki page |
 
 ---
 
 ## 6. Page Types and Templates
 
-The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-person.md`, `template-people.md`, `template-company.md`, `template-entity.md`, `template-concept.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
+The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-contact.md`, `template-contact-list.md`, `template-company.md`, `template-company-list.md`, `template-entity.md`, `template-concept.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
 
 | Type | Purpose |
 |---|---|
 | `user` | The user: identity, situation, goals, values, preferences, health, psychology, relationships — the center of the wiki |
 | `domain` | Overview of a domain or subdomain, with the list of its pages |
 | `project` | A time-bound project: goal, status, dates, related pages |
-| `person` | A person: identity, relationship to the user, contact, work, personality, history |
-| `people` | The common page of a `personne/` folder, linking all its person pages |
+| `contact` | A person: identity, relationship to the user, contact details, work, personality, history |
+| `contact-list` | The list page of a `contacts/` folder, linking all its contact pages |
 | `company` | A company: identity, activity, location, relationship to the user, organization, people known there |
+| `company-list` | The list page of a `companies/` folder, linking all its company pages |
 | `entity` | Any other entity: place, object, tool, organization that is not a company |
 | `concept` | An idea, topic, method, theory — including the user's own ideas |
 | `source` | Summary of one raw source |
@@ -204,7 +211,7 @@ The `templates/` folder holds one template per page type, named `template-<type>
 
 ```yaml
 ---
-type: entity            # user | domain | project | person | people | company | entity | concept | source | synthesis
+type: entity            # user | domain | project | contact | contact-list | company | company-list | entity | concept | source | synthesis
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 sources: []             # links to raw files in raw/processed/
@@ -214,7 +221,7 @@ tags: []
 
 **Extra frontmatter fields** (names stay in English so queries work in any language):
 
-- **person**: `relationship`, `birthday`, `company` (link to the company page), `role`, `address`
+- **contact**: `relationship`, `birthday`, `company` (link to the company page), `role`, `address`
 - **company**: `relationship`, `industry`, `website`, `size`, `founded`, `address` (headquarters)
 
 `address` is detailed as much as possible:
@@ -231,11 +238,12 @@ address:
 Each template then defines its sections (headings written in the user's language). Suggested defaults:
 
 - **user**: Identity · Current situation · Goals · Values & preferences · Health & wellbeing · Personality · Key people · Domains · History
-- **domain**: Overview · Pages (by type) · People (link to `personne-<domain>.md`) · Subdomains · Key facts · Open points
+- **domain**: Overview · Pages (by type) · Contacts (link to `<domain>-contacts.md`) · Companies (link to `<domain>-companies.md`) · Subdomains · Key facts · Open points
 - **project**: Goal · Status · Timeline · Key information · Related pages · Outcome (when finished)
-- **person**: Identity · Relationship to the user · Contact details · Work · Personality · Interests · Important dates · Close circle · Facts & information · Interaction history · Ideas & gifts · Links
-- **people**: Overview · People (table: name linked to the person page, relationship, role, organization) · Links
-- **company**: Identity · Activity · Size & figures · Location · Relationship to the user · Organization · People known there (table, names linked to person pages when they exist) · Culture & values · Tools & methods · Competitors & partners · News & history · Facts & information · Links
+- **contact**: Identity · Relationship to the user · Contact details · Work · Personality · Interests · Important dates · Close circle · Facts & information · Interaction history · Ideas & gifts · Links
+- **contact-list**: Overview · Contacts (table: name linked to the contact page, relationship, role, organization) · Links
+- **company-list**: Overview · Companies (table: name linked to the company page, industry, relationship to the user) · Links
+- **company**: Identity · Activity · Size & figures · Location · Relationship to the user · Organization · People known there (table, names linked to contact pages when they exist) · Culture & values · Tools & methods · Competitors & partners · News & history · Facts & information · Links
 - **entity**: Who / what · Relationship to the user · Facts · History · Links
 - **concept**: Summary · Details · The user's view · Evolution · Related concepts · Sources
 - **source**: Metadata (author, date, URL, format) · Summary · Key points · Pages updated · Quotes worth keeping
@@ -262,7 +270,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
 | `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.3) so the user can answer them. The user can also ask for the questions of one domain only. |
-| `new person` | Creates a person page after validation, in the right domain's `entities/personne/`, and adds it to the common page `personne-<domain>.md` (section 5.5). |
+| `new contact` | Creates a contact page after validation, in the right domain's `contacts/`, and adds it to the list `<domain>-contacts.md` (section 5.5). |
 | `new domain` / `new project` | Creates a domain, subdomain, or project after validation. |
 | `close project` | Brings long-term value into the domains, then archives the project (section 9.5). |
 | `settings` | Shows the current settings and lets the user change one (section 15). |
@@ -308,7 +316,7 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 
 **Trigger:** only on demand, when the user says `ingest` or `processRaw`.
 
-**Rhythm:** the agent processes all sources in `raw/` **autonomously**. It only needs the user for things that require their judgment (contradictions, new domains or subdomains, new person pages, classification doubts). It **does not stop**: it sets these points aside and asks **all its questions at the end**.
+**Rhythm:** the agent processes all sources in `raw/` **autonomously**. It only needs the user for things that require their judgment (contradictions, new domains or subdomains, new contact pages, classification doubts). It **does not stop**: it sets these points aside and asks **all its questions at the end**.
 
 **For each source, the agent:**
 
@@ -319,7 +327,7 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 5. Writes a `source` page.
 6. Creates or updates the related entity, concept, and synthesis pages. A single source may touch 10–15 pages.
    - The agent **creates pages freely** inside existing domains.
-   - **Exceptions requiring validation:** a new **person** page, a new domain, a new subdomain. Company pages are created freely.
+   - **Exceptions requiring validation:** a new **contact** page (only if the contact rules of section 5.5 are met), a new domain, a new subdomain. Company pages are created freely.
 7. Updates `user.md` freely when it learns something about the user — and **reports to the user exactly what was added, changed, or removed**.
 8. Flags contradictions (section 10) and records the evolution of the user's ideas.
 9. Adds all links (wikilinks) both ways where relevant.
@@ -370,9 +378,10 @@ Then it proposes a commit (section 14).
 - no empty or useless subfolders (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
-- pages not updated for a long time (`user.md`, person pages…);
+- pages not updated for a long time (`user.md`, contact pages…);
 - every page is connected to `user.md`, directly or indirectly;
-- every person page links to its common page `personne-<domain>.md`, and every common page lists all person pages of its folder;
+- every contact and company page links to its list (`<domain>-contacts.md`, `<domain>-companies.md`), and every list includes all pages of its folder;
+- every contact page meets the contact rules (a name and a way to reach them, or marked as family);
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
@@ -564,14 +573,14 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Number of wikis | One (several possible) |
 | Domains | Chosen by the user; agent proposes, user validates |
 | Subdomain depth | Unlimited (unique names, created only when justified) |
-| Type subfolders | Created only when needed (`entities/personne/`, `entities/companies/` included) |
+| Type subfolders | Created only when needed (`contacts/`, `companies/` included) |
 | Raw file naming | `YYYY-MM-DD-short-title.ext` |
 | Raw capture fidelity | Errors corrected, meaning and wording unchanged |
 | Ingest trigger | On demand (`ingest` / `processRaw`) |
 | Ingest mode | Autonomous, questions grouped at the end |
 | Captured idea | Agent asks: integrate now or at next ingest |
-| New person page | Requires validation; for people attached to an organization, only if a way to reach them is known |
-| People common page | `personne-<domain>.md` in each `personne/` folder |
+| New contact page | Requires validation; needs a name and a way to reach them (family: a name is enough) |
+| List pages | `<domain>-contacts.md` and `<domain>-companies.md` |
 | New company page | Created freely |
 | `user.md` updates | Free, always reported to the user |
 | Citations | Wiki pages and raw sources |
