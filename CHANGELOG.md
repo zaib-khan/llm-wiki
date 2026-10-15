@@ -11,11 +11,15 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+### Added
+- New page type `howto` (template `template-howto.md`, type subfolder `how-to/`, e.g. `comment-faire/` in a French wiki): step-by-step procedures. Only "Goal" is required. `status` (`writing`, `draft`, `tested`, `outdated`) with a synced `howto/<status>` tag, and `last_used`. The user may write `writing` how-tos by hand.
+
 ### Changed
 - Page type `concept` renamed to `knowledge` (template `template-knowledge.md`, type subfolder `knowledge/`, e.g. `connaissances/` in a French wiki).
 
 ### Migration from 0.10.0
 - Rename every `concepts/` type subfolder to the `knowledge` folder name of the wiki's language (recorded in `settings.md`), change `type: concept` to `type: knowledge`, rename `template-concept.md` to `template-knowledge.md` and its "Related concepts" section to "Related knowledge". Wikilinks resolve by file name, so links keep working.
+- The agent lists the `knowledge` pages that are actually step-by-step procedures (e.g. "procedure-…", "runbook-…"), and after validation moves them to the how-to folder and adapts them to `template-howto.md` (section 9.6 migration rule). Their status is asked to the user.
 
 ## [0.10.0] - 2026-10-15
 

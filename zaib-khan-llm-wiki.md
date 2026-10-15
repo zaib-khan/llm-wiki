@@ -53,7 +53,7 @@ The agent must follow these principles at all times:
 - decides what enters the library (drops sources, tells ideas);
 - explores the wiki and asks questions;
 - validates the agent's proposals;
-- may make **small edits** directly in the wiki. Larger changes should go through the agent.
+- may make **small edits** directly in the wiki. Larger changes should go through the agent. **Exception:** the user may freely write a `howto` page by hand, over several days, while its status is `writing` (section 6).
 
 **The agent (librarian):**
 - writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, index, log;
@@ -147,6 +147,7 @@ Type subfolders are named **in the wiki's language** and are reserved (never use
 | Sources | `sources/` | `sources/` |
 | Entities | `entities/` | `entites/` |
 | Knowledge | `knowledge/` | `connaissances/` |
+| How-tos | `how-to/` | `comment-faire/` |
 | Syntheses | `syntheses/` | `syntheses/` |
 | Contacts | `contacts/` | `contacts/` |
 | Companies | `companies/` | `entreprises/` |
@@ -203,7 +204,7 @@ wiki/football/
 
 ## 6. Page Types and Templates
 
-The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-contact.md`, `template-contact-list.md`, `template-company.md`, `template-company-list.md`, `template-entity.md`, `template-knowledge.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
+The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-contact.md`, `template-contact-list.md`, `template-company.md`, `template-company-list.md`, `template-entity.md`, `template-knowledge.md`, `template-howto.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
 
 | Type | Purpose |
 |---|---|
@@ -216,6 +217,7 @@ The `templates/` folder holds one template per page type, named `template-<type>
 | `company-list` | The list page of a `companies/` folder, linking all its company pages |
 | `entity` | Any other entity: place, object, tool, organization that is not a company |
 | `knowledge` | What the user knows or has learned: an idea, topic, method, explanation — including the user's own ideas |
+| `howto` | How to do something, step by step (a procedure, a runbook, a checklist). `knowledge` is for understanding, `howto` is for doing |
 | `source` | Summary of one raw source |
 | `synthesis` | Comparison, analysis, overview, or a kept answer to a question |
 
@@ -223,7 +225,7 @@ The `templates/` folder holds one template per page type, named `template-<type>
 
 ```yaml
 ---
-type: entity            # user | domain | project | contact | contact-list | company | company-list | entity | knowledge | source | synthesis
+type: entity            # user | domain | project | contact | contact-list | company | company-list | entity | knowledge | howto | source | synthesis
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 sources: []             # links to raw files in raw/processed/
@@ -234,6 +236,7 @@ tags: []
 **Extra frontmatter fields** (names stay in English so queries work in any language):
 
 - **contact**: `relationship`, `birthday`, `company` (link to the company page), `role`, `address`
+- **howto**: `status` (`writing` · `draft` · `tested` · `outdated`), `last_used`. The matching tag `howto/<status>` is always added and kept in sync with `status`; `status` is the reference.
 - **company**: `relationship`, `industry`, `website`, `size`, `founded`, `address` (headquarters)
 
 `address` is detailed as much as possible:
@@ -258,6 +261,7 @@ Each template then defines its sections (headings written in the user's language
 - **company**: Identity · Activity · Size & figures · Location · Relationship to the user · Organization · People known there (table, names linked to contact pages when they exist) · Culture & values · Tools & methods · Competitors & partners · News & history · Facts & information · Links
 - **entity**: Who / what · Relationship to the user · Facts · History · Links
 - **knowledge**: Summary · Details · The user's view · Evolution · Related knowledge · Sources
+- **howto**: Goal · When to use it · Prerequisites · Steps · Verification · Known issues · History · Links
 - **source**: Metadata (author, date, URL, format) · Summary · Key points · Pages updated · Quotes worth keeping
 - **synthesis**: Question or purpose · Answer / analysis · Sources · Related pages
 
@@ -265,6 +269,19 @@ Each template then defines its sections (headings written in the user's language
 
 - For most types, a page has **all the sections of its template**, even when some are still empty.
 - For **`contact` and `company` pages, every section is optional**: the page keeps the order and the names of its template's sections, but only shows the sections that have content. A new section is added when there is something to put in it. (What a contact needs to exist is defined in section 5.5.)
+- For **`howto` pages, only "Goal" is required**; the other sections are optional.
+
+**How-to status:**
+
+| `status` | Meaning |
+|---|---|
+| `writing` | Still being written; steps may be missing |
+| `draft` | Finished, not yet tested end to end |
+| `tested` | Followed successfully; reliable |
+| `outdated` | No longer works; needs review |
+
+- A `writing` how-to may be used to answer a question, but the agent says so: "⚠️ this how-to is still being written". The agent never completes it on its own.
+- When the user says a how-to is finished, the agent sets its status to `draft` (or `tested` if the user has already followed it).
 
 ---
 
@@ -342,7 +359,7 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 3. Renames it to `YYYY-MM-DD-short-title.ext`.
 4. Determines its main domain (and related domains).
 5. Writes a `source` page.
-6. Creates or updates the related entity, knowledge, and synthesis pages. A single source may touch 10–15 pages.
+6. Creates or updates the related entity, knowledge, how-to, and synthesis pages. A single source may touch 10–15 pages.
    - The agent **creates pages freely** inside existing domains.
    - **Exceptions requiring validation:** a new **contact** page (only if the contact rules of section 5.5 are met), a new domain, a new subdomain. Company pages are created freely.
 7. Updates `user.md` freely when it learns something about the user — and **reports to the user exactly what was added, changed, or removed**.
@@ -399,6 +416,7 @@ Then it proposes a commit (section 14).
 - every page is connected to `user.md`, directly or indirectly;
 - every contact and company page links to its list (`<domain>-contacts.md`, `<domain>-companies.md`), and every list includes all pages of its folder;
 - every contact page meets the contact rules (a name and a way to reach them, or marked as family);
+- how-tos: `outdated` ones, `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
@@ -606,6 +624,8 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | New contact page | Requires validation; needs a name and a way to reach them (family: a name is enough) |
 | List pages | `<domain>-contacts.md` and `<domain>-companies.md` |
 | New company page | Created freely |
+| How-to pages | Created freely; only "Goal" required; `status` + `howto/<status>` tag |
+| Manual writing | Small edits only, except `howto` pages in `writing` status |
 | `user.md` updates | Free, always reported to the user |
 | Citations | Wiki pages and raw sources |
 | Keeping an answer | Agent proposes, user validates (synthesis page + conversation trace) |
