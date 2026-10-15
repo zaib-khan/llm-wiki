@@ -2,7 +2,7 @@
 
 A pattern for building a personal knowledge base — a second brain — with an LLM agent.
 
-Version: 0.10.0 · Source: https://github.com/zaib-khan/llm-wiki
+Version: 0.11.0 · Source: https://github.com/zaib-khan/llm-wiki
 
 This is a source file. Give it to your LLM agent (Claude Code, Codex, OpenCode, Cursor, or any other). The agent will read it, ask you a few short questions, and build your wiki with you: the folder structure, the templates, and the schema files (`CLAUDE.md` and `AGENTS.md`) that will guide every future session. The rules below are defaults: precise enough to be applied as-is, and every one of them can be changed to fit you.
 

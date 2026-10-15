@@ -11,6 +11,8 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-15
+
 ### Added
 - New page type `howto` (template `template-howto.md`, type subfolder `how-to/`, e.g. `comment-faire/` in a French wiki): step-by-step procedures. Only "Goal" is required. `status` (`writing`, `draft`, `tested`, `outdated`) with a synced `howto/<status>` tag, and `last_used`. The user may write `writing` how-tos by hand.
 

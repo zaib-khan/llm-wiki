@@ -2,7 +2,7 @@
 
 A prompt that turns your LLM agent (Claude Code, Codex, OpenCode, Cursor…) into the librarian of your personal second brain.
 
-**Current version: 0.10.0** — still in testing; `1.0.0` will mark the first stable release. See [`CHANGELOG.md`](CHANGELOG.md).
+**Current version: 0.11.0** — still in testing; `1.0.0` will mark the first stable release. See [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Why I built this
 
