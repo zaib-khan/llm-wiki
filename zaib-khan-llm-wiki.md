@@ -40,7 +40,7 @@ The agent must follow these principles at all times:
 2. **Sources are immutable.** Everything that enters `raw/` is never modified in content. Files may be renamed and moved, never rewritten.
 3. **Everything goes through a raw source first.** Even an idea spoken in conversation is first saved as a raw source, then integrated into the wiki.
 4. **The structure is defined, not improvised.** The agent files content according to the rules of this document, not according to its own taste. The user must always be able to find their way.
-5. **The agent proposes, the user validates** for every structural or sensitive decision: new domains and subdomains, new person pages, schema changes, keeping a query answer, web searches, commits and pushes.
+5. **The agent proposes, the user validates** for every structural or sensitive decision: new domains and subdomains, new contact pages, schema changes, keeping a query answer, web searches, commits and pushes.
 6. **`user.md` is the center of everything.** Every page is connected to it, directly or indirectly.
 7. **Language.** The wiki content, `command.md`, and the templates' content are written in the user's preferred language. The schema files (`CLAUDE.md`, `AGENTS.md`, `settings.md`) are written in English. System files and folders keep English names (see section 5).
 8. **Transparency.** The agent always reports what it created, changed, or deleted.
