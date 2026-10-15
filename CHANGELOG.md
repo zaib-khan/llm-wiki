@@ -11,6 +11,8 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-10-15
+
 ### Changed
 - People and companies: `contacts/` and `companies/` folders at the domain level, each with a list page (`<domain>-contacts.md`, `<domain>-companies.md`). Types `contact`, `contact-list`, `company`, `company-list`. A contact needs a name and a way to reach them, except family members.
 - Type subfolders (`sources/`, `entities/`, `concepts/`, `syntheses/`, `contacts/`, `companies/`) are now named in the wiki's language, fixed once in `settings.md`.
