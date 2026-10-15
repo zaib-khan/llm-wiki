@@ -13,6 +13,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ### Changed
 - People and companies: `contacts/` and `companies/` folders at the domain level, each with a list page (`<domain>-contacts.md`, `<domain>-companies.md`). Types `contact`, `contact-list`, `company`, `company-list`. A contact needs a name and a way to reach them, except family members.
+- Type subfolders (`sources/`, `entities/`, `concepts/`, `syntheses/`, `contacts/`, `companies/`) are now named in the wiki's language, fixed once in `settings.md`.
 - Update from an unknown version (section 9.6, step 2): every difference is now presented as a possible conflict, one at a time, and the user says whether it is a personal choice (keep) or an old rule (replace). If the user does not know, the new version is applied.
 
 ### Migration from 0.9.0
@@ -20,6 +21,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Rename `personne-<domain>.md` to `<domain>-contacts.md` (type `contact-list`); create `<domain>-companies.md`.
 - Change `type: person` to `contact`, `type: people` to `contact-list`; rename templates accordingly.
 - Contacts without a way to reach them and not marked as family: ask the user (keep with a contact detail, mark as family, or turn into plain text).
+- Choose the type subfolder names in the wiki's language, record them in `settings.md`, then rename the existing type subfolders and list pages in every domain (wikilinks resolve by file name, so links keep working).
 
 ## [0.9.0] - 2026-10-15
 

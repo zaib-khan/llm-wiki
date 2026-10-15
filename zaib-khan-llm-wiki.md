@@ -42,7 +42,7 @@ The agent must follow these principles at all times:
 4. **The structure is defined, not improvised.** The agent files content according to the rules of this document, not according to its own taste. The user must always be able to find their way.
 5. **The agent proposes, the user validates** for every structural or sensitive decision: new domains and subdomains, new contact pages, schema changes, keeping a query answer, web searches, commits and pushes.
 6. **`user.md` is the center of everything.** Every page is connected to it, directly or indirectly.
-7. **Language.** The wiki content, `command.md`, and the templates' content are written in the user's preferred language. The schema files (`CLAUDE.md`, `AGENTS.md`, `settings.md`) are written in English. System files and folders keep English names (see section 5).
+7. **Language.** The wiki content, `command.md`, and the templates' content are written in the user's preferred language. The schema files (`CLAUDE.md`, `AGENTS.md`, `settings.md`) are written in English. System files and folders keep English names, except the type subfolders, named in the wiki's language (section 5.5).
 8. **Transparency.** The agent always reports what it created, changed, or deleted.
 
 ---
@@ -140,7 +140,18 @@ wiki/family/
     └── mom.md
 ```
 
-Type subfolders keep English names and are reserved (never used as domain names): `sources/`, `entities/`, `concepts/`, `syntheses/`.
+Type subfolders are named **in the wiki's language** and are reserved (never used as domain names). Their names are chosen once, at first launch, from the language picked by the user, and recorded in `settings.md` so they never change. The agent always uses the names from `settings.md`. Example for a French wiki:
+
+| Type subfolder | English | French |
+|---|---|---|
+| Sources | `sources/` | `sources/` |
+| Entities | `entities/` | `entites/` |
+| Concepts | `concepts/` | `concepts/` |
+| Syntheses | `syntheses/` | `syntheses/` |
+| Contacts | `contacts/` | `contacts/` |
+| Companies | `companies/` | `entreprises/` |
+
+Folder names use lowercase letters without accents or spaces. The list pages follow the same names: `<domain>-contacts.md`, `<domain>-entreprises.md` in a French wiki. In this document, the English names are used.
 
 Contacts and companies have their own folders **at the domain level**, also created only when needed. Each one holds a list page that links all its pages. `entities/` keeps only the other entities:
 
@@ -180,7 +191,8 @@ wiki/football/
 
 | Item | Rule |
 |---|---|
-| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `<name>-open-questions.md`, `settings.md`, `command.md`, `.llm-wiki/`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/`, type subfolders |
+| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `<name>-open-questions.md`, `settings.md`, `command.md`, `.llm-wiki/`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/` |
+| Type subfolders | Wiki's language, fixed once in `settings.md` (section 5.5) |
 | Domains and subdomains | The word given by the user, as is (spelling checked) |
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
@@ -292,7 +304,7 @@ When the agent receives this document for the first time, it performs these step
    4. **Git:** "Do you want to use git for your wiki?" If the answer is **no**, the agent does nothing related to git, now or later (section 14). If the answer is **yes**, it asks: "What is the link of your remote repository?" (the user may answer that there is none yet).
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
-2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. If the agent is Claude Code, create the short skill `.claude/skills/update_wiki/SKILL.md` (section 9.6).
+2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. If the agent is Claude Code, create the short skill `.claude/skills/update_wiki/SKILL.md` (section 9.6).
 3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
 4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/` and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
@@ -569,6 +581,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Schema files language | English (`CLAUDE.md`, `AGENTS.md`, `settings.md`) |
 | `command.md` and templates language | User's language |
 | Template file names | `template-<type>.md` |
+| Type subfolder names | Wiki's language (fixed at first launch in `settings.md`) |
 | Domain names | The word given by the user, as is (spelling checked) |
 | Number of wikis | One (several possible) |
 | Domains | Chosen by the user; agent proposes, user validates |
