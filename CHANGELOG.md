@@ -11,6 +11,12 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+### Changed
+- Page type `concept` renamed to `knowledge` (template `template-knowledge.md`, type subfolder `knowledge/`, e.g. `connaissances/` in a French wiki).
+
+### Migration from 0.10.0
+- Rename every `concepts/` type subfolder to the `knowledge` folder name of the wiki's language (recorded in `settings.md`), change `type: concept` to `type: knowledge`, rename `template-concept.md` to `template-knowledge.md` and its "Related concepts" section to "Related knowledge". Wikilinks resolve by file name, so links keep working.
+
 ## [0.10.0] - 2026-10-15
 
 ### Changed

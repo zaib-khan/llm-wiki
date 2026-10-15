@@ -56,7 +56,7 @@ The agent must follow these principles at all times:
 - may make **small edits** directly in the wiki. Larger changes should go through the agent.
 
 **The agent (librarian):**
-- writes and maintains the whole wiki: summaries, entity and concept pages, syntheses, cross-references, index, log;
+- writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, index, log;
 - classifies everything according to the rules;
 - finds and synthesizes answers, with citations;
 - keeps the wiki consistent and healthy.
@@ -146,7 +146,7 @@ Type subfolders are named **in the wiki's language** and are reserved (never use
 |---|---|---|
 | Sources | `sources/` | `sources/` |
 | Entities | `entities/` | `entites/` |
-| Concepts | `concepts/` | `concepts/` |
+| Knowledge | `knowledge/` | `connaissances/` |
 | Syntheses | `syntheses/` | `syntheses/` |
 | Contacts | `contacts/` | `contacts/` |
 | Companies | `companies/` | `entreprises/` |
@@ -203,7 +203,7 @@ wiki/football/
 
 ## 6. Page Types and Templates
 
-The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-contact.md`, `template-contact-list.md`, `template-company.md`, `template-company-list.md`, `template-entity.md`, `template-concept.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
+The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-contact.md`, `template-contact-list.md`, `template-company.md`, `template-company-list.md`, `template-entity.md`, `template-knowledge.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
 
 | Type | Purpose |
 |---|---|
@@ -215,7 +215,7 @@ The `templates/` folder holds one template per page type, named `template-<type>
 | `company` | A company: identity, activity, location, relationship to the user, organization, people known there |
 | `company-list` | The list page of a `companies/` folder, linking all its company pages |
 | `entity` | Any other entity: place, object, tool, organization that is not a company |
-| `concept` | An idea, topic, method, theory — including the user's own ideas |
+| `knowledge` | What the user knows or has learned: an idea, topic, method, explanation — including the user's own ideas |
 | `source` | Summary of one raw source |
 | `synthesis` | Comparison, analysis, overview, or a kept answer to a question |
 
@@ -223,7 +223,7 @@ The `templates/` folder holds one template per page type, named `template-<type>
 
 ```yaml
 ---
-type: entity            # user | domain | project | contact | contact-list | company | company-list | entity | concept | source | synthesis
+type: entity            # user | domain | project | contact | contact-list | company | company-list | entity | knowledge | source | synthesis
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 sources: []             # links to raw files in raw/processed/
@@ -257,7 +257,7 @@ Each template then defines its sections (headings written in the user's language
 - **company-list**: Overview · Companies (table: name linked to the company page, industry, relationship to the user) · Links
 - **company**: Identity · Activity · Size & figures · Location · Relationship to the user · Organization · People known there (table, names linked to contact pages when they exist) · Culture & values · Tools & methods · Competitors & partners · News & history · Facts & information · Links
 - **entity**: Who / what · Relationship to the user · Facts · History · Links
-- **concept**: Summary · Details · The user's view · Evolution · Related concepts · Sources
+- **knowledge**: Summary · Details · The user's view · Evolution · Related knowledge · Sources
 - **source**: Metadata (author, date, URL, format) · Summary · Key points · Pages updated · Quotes worth keeping
 - **synthesis**: Question or purpose · Answer / analysis · Sources · Related pages
 
@@ -342,7 +342,7 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 3. Renames it to `YYYY-MM-DD-short-title.ext`.
 4. Determines its main domain (and related domains).
 5. Writes a `source` page.
-6. Creates or updates the related entity, concept, and synthesis pages. A single source may touch 10–15 pages.
+6. Creates or updates the related entity, knowledge, and synthesis pages. A single source may touch 10–15 pages.
    - The agent **creates pages freely** inside existing domains.
    - **Exceptions requiring validation:** a new **contact** page (only if the contact rules of section 5.5 are met), a new domain, a new subdomain. Company pages are created freely.
 7. Updates `user.md` freely when it learns something about the user — and **reports to the user exactly what was added, changed, or removed**.
@@ -385,7 +385,7 @@ Then it proposes a commit (section 14).
 - contradictions between pages;
 - stale claims superseded by newer sources;
 - orphan pages (no inbound links);
-- important concepts mentioned without their own page;
+- important topics mentioned without their own knowledge page;
 - missing cross-references;
 - gaps that a web search could fill;
 - `CLAUDE.md` and `AGENTS.md` are identical;
