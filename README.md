@@ -61,6 +61,12 @@ Open the wiki in [Obsidian](https://obsidian.md) to browse it, follow links, and
 
 Every rule in the prompt is a default: change anything by asking your agent.
 
+## Keeping your wiki up to date
+
+The prompt evolves. Each version is published as a git tag, and [`CHANGELOG.md`](CHANGELOG.md) describes what changed. Your wiki remembers which version it applies.
+
+Say `update wiki` (or `/update_wiki` in Claude Code): the agent checks the latest published version, shows you what changed, keeps your own customizations unless you choose otherwise, and secures your wiki first (a git commit, or a backup next to it). If something goes wrong, ask it to restore the previous state, and feel free to [open an issue](https://github.com/zaib-khan/llm-wiki/issues) — describe the problem, but never paste personal content from your wiki.
+
 ## Credits
 
 Inspired by Andrej Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).

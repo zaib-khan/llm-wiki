@@ -2,6 +2,8 @@
 
 A pattern for building a personal knowledge base — a second brain — with an LLM agent.
 
+Version: 0.9.0 · Source: https://github.com/zaib-khan/llm-wiki
+
 This is a source file. Give it to your LLM agent (Claude Code, Codex, OpenCode, Cursor, or any other). The agent will read it, ask you a few short questions, and build your wiki with you: the folder structure, the templates, and the schema files (`CLAUDE.md` and `AGENTS.md`) that will guide every future session. The rules below are defaults: precise enough to be applied as-is, and every one of them can be changed to fit you.
 
 ---
@@ -79,6 +81,8 @@ my-wiki/
 ├── AGENTS.md              ← schema (always identical to CLAUDE.md)
 ├── settings.md            ← user settings (see section 15)
 ├── command.md             ← commands the user can give the agent (see section 7)
+├── .llm-wiki/             ← copy of the prompt version applied (see section 9.6)
+├── .claude/skills/update_wiki/SKILL.md  ← short Claude Code skill for `/update_wiki`
 │
 ├── raw/                   ← inbox: everything arrives here
 │   ├── assets/            ← temporary: images downloaded by the agent
@@ -170,7 +174,7 @@ wiki/work/
 
 | Item | Rule |
 |---|---|
-| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `<name>-open-questions.md`, `settings.md`, `command.md`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/`, type subfolders |
+| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `<name>-open-questions.md`, `settings.md`, `command.md`, `.llm-wiki/`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/`, type subfolders |
 | Domains and subdomains | The word given by the user, as is (spelling checked) |
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
@@ -263,6 +267,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 | `close project` | Brings long-term value into the domains, then archives the project (section 9.5). |
 | `settings` | Shows the current settings and lets the user change one (section 15). |
 | `commands` | Shows the content of `command.md`. |
+| `update wiki` / `/update_wiki` | Checks whether a newer version of this prompt is published, shows what changed, and updates the wiki's rules, templates, and structure after validation (section 9.6). |
 
 `command.md` must stay in sync with the schema: whenever a command is added, changed, or removed, the agent proposes the update of `command.md` together with `CLAUDE.md` and `AGENTS.md`.
 
@@ -279,7 +284,7 @@ When the agent receives this document for the first time, it performs these step
    4. **Git:** "Do you want to use git for your wiki?" If the answer is **no**, the agent does nothing related to git, now or later (section 14). If the answer is **yes**, it asks: "What is the link of your remote repository?" (the user may answer that there is none yet).
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
-2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md`, `command.md`.
+2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. If the agent is Claude Code, create the short skill `.claude/skills/update_wiki/SKILL.md` (section 9.6).
 3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
 4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/` and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
@@ -367,7 +372,8 @@ Then it proposes a commit (section 14).
 - projects that seem inactive (propose to close and archive them);
 - pages not updated for a long time (`user.md`, person pages…);
 - every page is connected to `user.md`, directly or indirectly;
-- every person page links to its common page `personne-<domain>.md`, and every common page lists all person pages of its folder.
+- every person page links to its common page `personne-<domain>.md`, and every common page lists all person pages of its folder;
+- a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
 
@@ -390,6 +396,43 @@ The lint ends with a report, is logged (`lint`), and is followed by a commit pro
 
 - **Start:** a project is created in `wiki/projects/` (proposed by the agent or asked by the user).
 - **End:** when the user says a project is finished, or after the user accepts a lint proposal: bring long-term value up into the domains, then move the project to `wiki/archive/` (and its raw sources accordingly). Logged as `archive`.
+
+### 9.6 Update — keeping the wiki in line with new versions of this prompt
+
+This document evolves. A wiki created with an older version keeps its old rules until it is updated.
+
+**Versioning.**
+- This document carries a version (`Version: X.Y.Z`, at the top), following `MAJOR.MINOR.PATCH`: PATCH for clarifications with no impact on the wiki, MINOR for new rules or templates with a simple migration, MAJOR for structural changes.
+- The source repository publishes each version as a **git tag** (`vX.Y.Z`) and describes what changed in `CHANGELOG.md`.
+- The wiki stores, in `settings.md`, the version it applies (`prompt_version`) and where the prompt comes from (`prompt_source`, by default `https://github.com/zaib-khan/llm-wiki`).
+- The wiki keeps a copy of the applied prompt in `.llm-wiki/prompt-<version>.md`. It is the reference used to detect the user's customizations. `.llm-wiki/` is a hidden folder, so Obsidian does not show it.
+
+**Trigger:** on demand (`update wiki`, or `/update_wiki` in Claude Code). The lint also checks for a newer version and suggests an update (section 9.4).
+
+**The procedure is written once, in `CLAUDE.md` and `AGENTS.md`**, so it works with any agent. In Claude Code, the skill `.claude/skills/update_wiki/SKILL.md` is only a shortcut: it tells the agent to apply the `update wiki` procedure of the schema, without repeating it.
+
+**Procedure:**
+
+1. **Check the versions.** Read `prompt_version` in `settings.md`. Find the **latest tag** of `prompt_source` (only tagged versions count; untagged changes on the main branch are ignored). If both are equal, say the wiki is up to date and stop.
+2. **Read what changed.** Fetch the new version of this document and `CHANGELOG.md` at that tag, and list the changes between the two versions.
+   - **Unknown version** (no `prompt_version` or no copy in `.llm-wiki/`): compare the whole wiki (schema, templates, `command.md`, structure) with the new version and list every difference.
+3. **Detect customizations** by comparing three versions: the copy in `.llm-wiki/` (what was applied), the current wiki (what the user has now), and the new version. Anything that differs between the copy and the current wiki is a user customization.
+4. **Secure the wiki before changing anything.**
+   - **With git:** ask the user to commit their pending changes first, so everything can be undone.
+   - **Without git:** copy the whole wiki to `../<wiki-name>_backup/` (next to the wiki, outside Obsidian, qmd, and the lint). A new backup replaces the previous one. Record its date in `settings.md`.
+5. **Present the changes and get validation.**
+   - **Simple changes** (new rule, new command, updated template, new setting): validated all at once.
+   - **Changes touching the user's content** (moving, renaming, or modifying existing pages and files): validated one by one, each with an explanation.
+   - **Conflicts with a customization:** show the user's version and the new version side by side; the user chooses.
+6. **Apply** the validated changes: `CLAUDE.md` and `AGENTS.md` (always identical), templates, `command.md`, `settings.md`, structure, and pages. Re-index search.
+7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, log the operation (`update`), and propose a commit (if git is used).
+8. **Report.** Summarize what changed. Then:
+   - **Without git:** explain that a backup was created in `../<wiki-name>_backup/`, and that the user can ask the agent to restore the previous state if the update does not suit them or broke something.
+   - **For everyone:** briefly mention that problems can be reported by opening an issue on the source repository. **Remind the user never to paste wiki content in a public issue** (the wiki holds personal data): describe the problem only.
+
+**If the user reports a problem after an update** ("it broke", "restore the previous state"): restore the previous state (git revert, or the backup), then suggest more strongly to open an issue on the source repository, with the same reminder about personal data.
+
+**Backup cleanup:** the first time the agent is used more than 5 days after a backup, it asks the user before deleting `../<wiki-name>_backup/`.
 
 ---
 
@@ -435,7 +478,7 @@ Short summary (1–3 lines).
 - Sources: raw/processed/...
 ```
 
-**Event types:** `ingest`, `query` (only queries that used the wiki), `lint`, `capture`, `schema`, `domain`, `archive`, `user`, `manual`, `init`.
+**Event types:** `ingest`, `query` (only queries that used the wiki), `lint`, `capture`, `schema`, `domain`, `archive`, `user`, `manual`, `init`, `update`.
 
 **Monthly rotation:** `log.md` holds the current month. When a new month starts, its content is moved to `wiki/log/YYYY-MM.md` and `log.md` starts empty.
 
@@ -550,6 +593,9 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Git | Optional, chosen at first launch (remote link asked if used) |
 | Commits / push | Proposed at the end of each operation, user validates (commit only if no remote) |
 | AI mention in commits | Never |
+| Prompt updates | On demand (`update wiki` / `/update_wiki`) + checked by the lint; latest tag of `prompt_source` |
+| Update validation | Simple changes: all at once · Content changes: one by one · Conflicts: user chooses |
+| Update safety | Git: commit first · No git: `../<wiki-name>_backup/`, deleted after 5 days with confirmation |
 
 ---
 
