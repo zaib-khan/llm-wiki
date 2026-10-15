@@ -11,6 +11,8 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-15
+
 ### Added
 - First versioned release of the prompt (`Version: 0.9.0`).
 - `update wiki` command and `/update_wiki` Claude Code skill (section 9.6): checks the latest tagged version, shows the changes, detects user customizations, secures the wiki (git commit or `../<wiki-name>_backup/`), and applies the update after validation.
