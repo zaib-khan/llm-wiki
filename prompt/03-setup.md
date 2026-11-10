@@ -92,6 +92,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Answer format | Best suited to the question |
 | Proactive section | 💡 section at the end, only when relevant |
 | Web search | Permission before searching and before integrating |
+| Web page extraction | Defuddle (`npx -y defuddle parse <url> --md`), plain fetch as fallback |
 | Lint trigger | On demand + suggested after 10 ingests or 30 days |
 | Lint fixes | Mechanical: automatic · Content: user decides |
 | Open questions | One `<name>-open-questions.md` per domain, subdomain, and project (created when needed, deleted when empty); `wiki/open-questions.md` holds general questions and links |

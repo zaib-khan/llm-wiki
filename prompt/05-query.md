@@ -8,7 +8,7 @@
 6. **When the wiki is not enough:**
    1. the agent says so and **asks permission** to search the web;
    2. it proposes an answer;
-   3. if the answer suits the user, it fetches the raw content of the sites or documents used and saves it to `raw/`;
+   3. if the answer suits the user, it fetches the raw content of the sites or documents used and saves it to `raw/` (web pages with Defuddle first, as in ingest);
    4. it **asks permission** to integrate these sources, then integrates them with all relevant links.
 7. Queries that used the wiki are logged (`query`).
 

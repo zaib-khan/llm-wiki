@@ -23,7 +23,7 @@ When a decision is needed before a source can be filed or a page can be created,
 **For each source, the agent:**
 
 1. Reads it (for a non-text source, creates the text version first).
-2. If the user gave a URL: fetches the content (article text, video transcript) and saves it as a raw source. Useful images (diagrams, charts) are downloaded to `raw/assets/`. If the content cannot be fetched, keeps the link with a note "content not retrieved".
+2. If the user gave a URL: fetches the content (article text, video transcript) and saves it as a raw source. For web pages, uses [Defuddle](https://github.com/kepano/defuddle) first: `npx -y defuddle parse <url> --md` gives the clean article in markdown (no menus, ads, or clutter); `--json` also gives the title, author, and publication date for the source page's metadata. If Defuddle fails (or Node/npx is unavailable), falls back to a plain fetch. Useful images (diagrams, charts) are downloaded to `raw/assets/`. If the content cannot be fetched, keeps the link with a note "content not retrieved".
 3. Renames it to `YYYY-MM-DD-short-title.ext`.
 4. Determines its main domain (and related domains), applying the domain's filing rule from `settings.md` when there is one (section 5.4); if filing is ambiguous and no rule exists, proposes one in the end-of-ingest questions.
 5. Writes a `source` page.

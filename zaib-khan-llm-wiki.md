@@ -368,7 +368,7 @@ When a decision is needed before a source can be filed or a page can be created,
 **For each source, the agent:**
 
 1. Reads it (for a non-text source, creates the text version first).
-2. If the user gave a URL: fetches the content (article text, video transcript) and saves it as a raw source. Useful images (diagrams, charts) are downloaded to `raw/assets/`. If the content cannot be fetched, keeps the link with a note "content not retrieved".
+2. If the user gave a URL: fetches the content (article text, video transcript) and saves it as a raw source. For web pages, uses [Defuddle](https://github.com/kepano/defuddle) first: `npx -y defuddle parse <url> --md` gives the clean article in markdown (no menus, ads, or clutter); `--json` also gives the title, author, and publication date for the source page's metadata. If Defuddle fails (or Node/npx is unavailable), falls back to a plain fetch. Useful images (diagrams, charts) are downloaded to `raw/assets/`. If the content cannot be fetched, keeps the link with a note "content not retrieved".
 3. Renames it to `YYYY-MM-DD-short-title.ext`.
 4. Determines its main domain (and related domains), applying the domain's filing rule from `settings.md` when there is one (section 5.4); if filing is ambiguous and no rule exists, proposes one in the end-of-ingest questions.
 5. Writes a `source` page.
@@ -403,7 +403,7 @@ Then it proposes a commit (section 14).
 6. **When the wiki is not enough:**
    1. the agent says so and **asks permission** to search the web;
    2. it proposes an answer;
-   3. if the answer suits the user, it fetches the raw content of the sites or documents used and saves it to `raw/`;
+   3. if the answer suits the user, it fetches the raw content of the sites or documents used and saves it to `raw/` (web pages with Defuddle first, as in ingest);
    4. it **asks permission** to integrate these sources, then integrates them with all relevant links.
 7. Queries that used the wiki are logged (`query`).
 
@@ -650,6 +650,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Answer format | Best suited to the question |
 | Proactive section | 💡 section at the end, only when relevant |
 | Web search | Permission before searching and before integrating |
+| Web page extraction | Defuddle (`npx -y defuddle parse <url> --md`), plain fetch as fallback |
 | Lint trigger | On demand + suggested after 10 ingests or 30 days |
 | Lint fixes | Mechanical: automatic · Content: user decides |
 | Open questions | One `<name>-open-questions.md` per domain, subdomain, and project (created when needed, deleted when empty); `wiki/open-questions.md` holds general questions and links |
