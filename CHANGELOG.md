@@ -22,6 +22,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Web page extraction: ingest (and saving web-search results to `raw/`) uses Defuddle first (`npx -y defuddle parse <url> --md`, `--json` for title, author, and date), with a plain fetch as fallback. Video transcripts and other content are unchanged.
 - Sub-agents for a large ingest (optional, section 9.2): when the agent can launch sub-agents, independent sources may be processed in parallel, one sub-agent per source. Sub-agents write only their source's own pages and report back; only the main agent writes shared files (index, log, domain and list pages, `user.md`, open questions), asks the user's questions at the end, and commits. Sources touching the same existing page are handled sequentially; each source is still completed as a unit.
 - Question style setting: at first launch, the welcome interview asks whether the user prefers questions one at a time or all together in a list (recorded in `settings.md`, "Question style": `one by one` or `list`; default `one by one`). It applies wherever the agent asks several questions (end of ingest, lint, update, open questions review). In both styles, each question keeps the context needed to answer it. The user can change it for good or just for the current batch.
+- Commit mode and push frequency: at first launch, when git is used, the welcome interview asks (after the remote) whether the agent should propose each commit or commit on its own ("Commit mode": `propose`, default, or `automatic`, recorded in `settings.md`), and how many commits between pushes ("Push frequency": N, default 5; 1 = after every commit). `propose`: commits and pushes are proposed for validation; `automatic`: the agent commits at the end of each operation and reports the hash, and pushes are done and reported. Pending commits are also pushed at the end of a work session. No remote: commits only. Both settings can be changed at any time.
 - "I don't know" answers: an open question answered "I don't know" is closed. The related page records the information as unknown with the date (e.g. "Current medication: unknown (2026-11-08)"), the question leaves the open questions files and is not asked again, unless a new source brings the information. Skipping ("not now") still keeps the question open.
 
 ### Migration
@@ -36,6 +37,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Sub-agents for ingest: none.
 - Question style: existing wikis get the "Question style" setting in `settings.md` at update; the agent asks the user the question once (default `one by one`).
 - "I don't know" answers: none.
+- Commit mode and push frequency: existing wikis keep their current behavior until updated. At update, the agent asks the two questions once (commit mode, push frequency) and records the answers in `settings.md`.
 
 ## [0.11.0] - 2026-10-15
 

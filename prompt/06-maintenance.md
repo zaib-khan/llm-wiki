@@ -39,7 +39,7 @@
 
 **Asking and skipping questions:** questions are asked according to the question style (section 15). The user may skip any question ("not now"). Skipped questions are stored in the open questions files (section 11.3) and asked again at the next lint or at any other time. Once answered, they are removed. "I don't know" is an answer, not a skip: the information is recorded as unknown and the question is closed (section 11.3).
 
-The lint ends with a report, is logged (`lint`), and is followed by a commit proposal.
+The lint ends with a report, is logged (`lint`), and is followed by a commit according to the commit mode (section 14).
 
 ### 9.5 Project lifecycle
 
@@ -80,7 +80,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
      - **Keep all content and all links**: migrating a page never deletes information.
    - **Conflicts with a customization:** show the user's version and the new version side by side; the user chooses.
 6. **Apply** the validated changes: `CLAUDE.md` and `AGENTS.md` (always identical), templates, `command.md`, `settings.md`, structure, and pages. Re-index search.
-7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, log the operation (`update`), and propose a commit (if git is used).
+7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, log the operation (`update`), and commit according to the commit mode (if git is used, section 14).
 8. **Report.** Summarize what changed. Then:
    - **Without git:** explain that a backup was created in `../<wiki-name>_backup/`, and that the user can ask the agent to restore the previous state if the update does not suit them or broke something.
    - **For everyone:** briefly mention that problems can be reported by opening an issue on the source repository. **Remind the user never to paste wiki content in a public issue** (the wiki holds personal data): describe the problem only.

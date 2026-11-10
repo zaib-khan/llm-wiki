@@ -36,7 +36,9 @@ When the agent receives this document for the first time, it performs these step
    1. **Language:** "Which language do you want your wiki in?"
    2. **Name:** "What is your name?" — nothing more. It creates `wiki/user.md` with the name only.
    3. **First domain:** "What first domain do you want to create?" (work, family, or anything else). It creates the domain folder and its domain page.
-   4. **Git:** "Do you want to use git for your wiki?" If the answer is **no**, the agent does nothing related to git, now or later (section 14). If the answer is **yes**, it asks: "What is the link of your remote repository?" (the user may answer that there is none yet).
+   4. **Git:** "Do you want to use git for your wiki?" If the answer is **no**, the agent does nothing related to git, now or later (section 14). If the answer is **yes**, it asks: "What is the link of your remote repository?" (the user may answer that there is none yet). Then, one at a time:
+      - **Commit mode:** "Shall I propose each commit for you to validate, or commit on my own?" Recorded in `settings.md`, "Commit mode": `propose` or `automatic`; if the user does not know, `propose`.
+      - **Push frequency:** "How many commits between pushes? (1 = push after every commit)" Recorded in `settings.md`, "Push frequency": a number N; if the user does not know, 5.
    5. **Question style:** "Do you prefer my questions one at a time, or all together in a list?" The answer is recorded in `settings.md` (section 15); if the user does not know, `one by one`.
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
@@ -57,6 +59,8 @@ Every rule in this document is a default. The user can change them:
 User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4) and domain-specific frontmatter fields (section 6); changing them is proposed, validated, and logged `schema`, like any other rule.
 
 **Question style** (`settings.md`, "Question style": `one by one` or `list`): how the agent asks the user several questions — at the end of an ingest, during a lint or an update, and when reviewing open questions. `one by one`: one question, wait for the answer, then the next. `list`: all questions together, numbered. In both styles, each question carries the context needed to answer it (keep useful details, drop only filler). The user can change the style for good (customization rule above) or just for the current batch ("ask everything as a list this time").
+
+**Commit mode and push frequency** (`settings.md`, "Commit mode": `propose` or `automatic`; "Push frequency": a number N): how the agent commits and pushes when git is used (section 14). The user can change either at any time (customization rule above).
 
 ---
 
@@ -110,7 +114,8 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Reading tool | Obsidian |
 | Link format | Wikilinks `[[...]]` |
 | Git | Optional, chosen at first launch (remote link asked if used) |
-| Commits / push | Proposed at the end of each operation, user validates (commit only if no remote) |
+| Commit mode | Asked at first launch: `propose` (default) or `automatic` |
+| Push frequency | Every N unpushed commits (asked at first launch, default 5), plus at the end of a work session; commit only if no remote |
 | AI mention in commits | Never |
 | Prompt updates | On demand (`update wiki` / `/update_wiki`) + checked by the lint; latest tag of `prompt_source` |
 | Update validation | Simple changes: all at once · Content changes: one by one · Conflicts: user chooses |

@@ -53,7 +53,7 @@ When a decision is needed before a source can be filed or a page can be created,
 - changes made to `user.md`;
 - pending questions (asked now, according to the question style, section 15).
 
-Then it proposes a commit (section 14).
+Then it commits according to the commit mode (section 14).
 
 ## 10. Contradictions and Evolution
 

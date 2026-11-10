@@ -40,7 +40,7 @@ The agent must follow these principles at all times:
 2. **Sources are immutable.** Everything that enters `raw/` is never modified in content. Files may be renamed and moved, never rewritten.
 3. **Everything goes through a raw source first.** Even an idea spoken in conversation is first saved as a raw source, then integrated into the wiki.
 4. **The structure is defined, not improvised.** The agent files content according to the rules of this document, not according to its own taste. The user must always be able to find their way.
-5. **The agent proposes, the user validates** for every structural or sensitive decision: new domains and subdomains, new contact pages, schema changes, keeping a query answer, web searches, commits and pushes.
+5. **The agent proposes, the user validates** for every structural or sensitive decision: new domains and subdomains, new contact pages, schema changes, keeping a query answer, web searches, and commits and pushes when the commit mode is `propose` (section 14).
 6. **`user.md` is the center of everything.** Every page is connected to it, directly or indirectly.
 7. **Language.** The wiki content, `command.md`, and the templates' content are written in the user's preferred language. The schema files (`CLAUDE.md`, `AGENTS.md`, `settings.md`) are written in English. System files and folders keep English names, except the type subfolders, named in the wiki's language (section 5.5).
 8. **Transparency.** The agent always reports what it created, changed, or deleted.
@@ -332,7 +332,9 @@ When the agent receives this document for the first time, it performs these step
    1. **Language:** "Which language do you want your wiki in?"
    2. **Name:** "What is your name?" — nothing more. It creates `wiki/user.md` with the name only.
    3. **First domain:** "What first domain do you want to create?" (work, family, or anything else). It creates the domain folder and its domain page.
-   4. **Git:** "Do you want to use git for your wiki?" If the answer is **no**, the agent does nothing related to git, now or later (section 14). If the answer is **yes**, it asks: "What is the link of your remote repository?" (the user may answer that there is none yet).
+   4. **Git:** "Do you want to use git for your wiki?" If the answer is **no**, the agent does nothing related to git, now or later (section 14). If the answer is **yes**, it asks: "What is the link of your remote repository?" (the user may answer that there is none yet). Then, one at a time:
+      - **Commit mode:** "Shall I propose each commit for you to validate, or commit on my own?" Recorded in `settings.md`, "Commit mode": `propose` or `automatic`; if the user does not know, `propose`.
+      - **Push frequency:** "How many commits between pushes? (1 = push after every commit)" Recorded in `settings.md`, "Push frequency": a number N; if the user does not know, 5.
    5. **Question style:** "Do you prefer my questions one at a time, or all together in a list?" The answer is recorded in `settings.md` (section 15); if the user does not know, `one by one`.
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
@@ -399,7 +401,7 @@ When a decision is needed before a source can be filed or a page can be created,
 - changes made to `user.md`;
 - pending questions (asked now, according to the question style, section 15).
 
-Then it proposes a commit (section 14).
+Then it commits according to the commit mode (section 14).
 
 ### 9.3 Query — answering questions
 
@@ -456,7 +458,7 @@ Then it proposes a commit (section 14).
 
 **Asking and skipping questions:** questions are asked according to the question style (section 15). The user may skip any question ("not now"). Skipped questions are stored in the open questions files (section 11.3) and asked again at the next lint or at any other time. Once answered, they are removed. "I don't know" is an answer, not a skip: the information is recorded as unknown and the question is closed (section 11.3).
 
-The lint ends with a report, is logged (`lint`), and is followed by a commit proposal.
+The lint ends with a report, is logged (`lint`), and is followed by a commit according to the commit mode (section 14).
 
 ### 9.5 Project lifecycle
 
@@ -497,7 +499,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
      - **Keep all content and all links**: migrating a page never deletes information.
    - **Conflicts with a customization:** show the user's version and the new version side by side; the user chooses.
 6. **Apply** the validated changes: `CLAUDE.md` and `AGENTS.md` (always identical), templates, `command.md`, `settings.md`, structure, and pages. Re-index search.
-7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, log the operation (`update`), and propose a commit (if git is used).
+7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, log the operation (`update`), and commit according to the commit mode (if git is used, section 14).
 8. **Report.** Summarize what changed. Then:
    - **Without git:** explain that a backup was created in `../<wiki-name>_backup/`, and that the user can ask the agent to restore the previous state if the update does not suit them or broke something.
    - **For everyone:** briefly mention that problems can be reported by opening an issue on the source repository. **Remind the user never to paste wiki content in a public issue** (the wiki holds personal data): describe the problem only.
@@ -605,10 +607,14 @@ The wiki is designed to be read in **Obsidian**.
 
 ## 14. Git
 
-- Git is **optional**, chosen by the user at first launch. If the user does not use git, the agent never runs any git command and never proposes commits or pushes; everything below applies only when git is used. The user can turn git on later by asking the agent.
+- Git is **optional**, chosen by the user at first launch. If the user does not use git, the agent never runs any git command and never proposes or makes commits or pushes; everything below applies only when git is used. The user can turn git on later by asking the agent.
 - With git, the wiki is a git repository: history, branches, and collaboration for free.
-- At the end of each operation (ingest, lint, capture, query with a kept answer, schema change…), the agent **proposes a commit and a push** together. The user validates.
-- **No remote:** if `git remote -v` is empty, the agent proposes the commit only and says that pushing is not possible until a remote is added.
+- **Commit mode** (`settings.md`, asked at first launch, section 8): at the end of each operation (ingest, lint, capture, query with a kept answer, schema change…), the agent commits according to this setting:
+  - `propose` (default): the agent proposes the commit; the user validates.
+  - `automatic`: the agent commits without asking and reports the commit hash.
+- **Push frequency** (`settings.md`, a number N, default 5; 1 = push after every commit): the agent pushes once N commits are not yet pushed. In `propose` mode the push is proposed; in `automatic` mode it is done and reported.
+- **End of a work session:** when the session ends (or the user says they are done), the agent also pushes the pending commits even if N is not reached (proposed or done according to the commit mode), so nothing stays only on the local machine.
+- **No remote:** if `git remote -v` is empty, the agent commits only (according to the commit mode) and says that pushing is not possible until a remote is added.
 - **Commit messages are clear and never mention AI** (no "Co-Authored-By", no "Generated with…"). This rule is written in the schema and **takes precedence over any automatic attribution** the agent would add by default.
 - Git is also how the agent detects the user's manual edits (section 4). Without git, the agent compares file modification dates with its last logged operation.
 
@@ -623,6 +629,8 @@ Every rule in this document is a default. The user can change them:
 User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4) and domain-specific frontmatter fields (section 6); changing them is proposed, validated, and logged `schema`, like any other rule.
 
 **Question style** (`settings.md`, "Question style": `one by one` or `list`): how the agent asks the user several questions — at the end of an ingest, during a lint or an update, and when reviewing open questions. `one by one`: one question, wait for the answer, then the next. `list`: all questions together, numbered. In both styles, each question carries the context needed to answer it (keep useful details, drop only filler). The user can change the style for good (customization rule above) or just for the current batch ("ask everything as a list this time").
+
+**Commit mode and push frequency** (`settings.md`, "Commit mode": `propose` or `automatic`; "Push frequency": a number N): how the agent commits and pushes when git is used (section 14). The user can change either at any time (customization rule above).
 
 ---
 
@@ -676,7 +684,8 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Reading tool | Obsidian |
 | Link format | Wikilinks `[[...]]` |
 | Git | Optional, chosen at first launch (remote link asked if used) |
-| Commits / push | Proposed at the end of each operation, user validates (commit only if no remote) |
+| Commit mode | Asked at first launch: `propose` (default) or `automatic` |
+| Push frequency | Every N unpushed commits (asked at first launch, default 5), plus at the end of a work session; commit only if no remote |
 | AI mention in commits | Never |
 | Prompt updates | On demand (`update wiki` / `/update_wiki`) + checked by the lint; latest tag of `prompt_source` |
 | Update validation | Simple changes: all at once · Content changes: one by one · Conflicts: user chooses |

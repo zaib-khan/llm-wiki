@@ -24,10 +24,14 @@ The wiki is designed to be read in **Obsidian**.
 
 ## 14. Git
 
-- Git is **optional**, chosen by the user at first launch. If the user does not use git, the agent never runs any git command and never proposes commits or pushes; everything below applies only when git is used. The user can turn git on later by asking the agent.
+- Git is **optional**, chosen by the user at first launch. If the user does not use git, the agent never runs any git command and never proposes or makes commits or pushes; everything below applies only when git is used. The user can turn git on later by asking the agent.
 - With git, the wiki is a git repository: history, branches, and collaboration for free.
-- At the end of each operation (ingest, lint, capture, query with a kept answer, schema change…), the agent **proposes a commit and a push** together. The user validates.
-- **No remote:** if `git remote -v` is empty, the agent proposes the commit only and says that pushing is not possible until a remote is added.
+- **Commit mode** (`settings.md`, asked at first launch, section 8): at the end of each operation (ingest, lint, capture, query with a kept answer, schema change…), the agent commits according to this setting:
+  - `propose` (default): the agent proposes the commit; the user validates.
+  - `automatic`: the agent commits without asking and reports the commit hash.
+- **Push frequency** (`settings.md`, a number N, default 5; 1 = push after every commit): the agent pushes once N commits are not yet pushed. In `propose` mode the push is proposed; in `automatic` mode it is done and reported.
+- **End of a work session:** when the session ends (or the user says they are done), the agent also pushes the pending commits even if N is not reached (proposed or done according to the commit mode), so nothing stays only on the local machine.
+- **No remote:** if `git remote -v` is empty, the agent commits only (according to the commit mode) and says that pushing is not possible until a remote is added.
 - **Commit messages are clear and never mention AI** (no "Co-Authored-By", no "Generated with…"). This rule is written in the schema and **takes precedence over any automatic attribution** the agent would add by default.
 - Git is also how the agent detects the user's manual edits (section 4). Without git, the agent compares file modification dates with its last logged operation.
 
