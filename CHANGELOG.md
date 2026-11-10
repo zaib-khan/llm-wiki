@@ -11,6 +11,8 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-11-10
+
 ### Changed
 - Large index (sections 9.4, 11.1, 16): when `wiki/index.md` becomes too large to read efficiently (default about 50 KB, configurable in `settings.md`, "Index size"), the lint proposes to split it by domain: each domain gets `<domain>-index.md` in its folder (same entry format), and `wiki/index.md` keeps only an overview with links to the domain indexes, plus cross-domain projects and general pages. Applied only after validation; the index rules then apply to each domain index, and the agent reads the root index, then the relevant domain index, when answering. Migration: none; the split is proposed by the lint when the threshold is reached.
 - Forgotten temporary files (section 9.4): the lint check on forgotten update review files (`changes-<version>.md` or its translation) now covers any temporary file the agent created and should have deleted (e.g. other temporary notes). The agent flags them and asks before deleting them. Migration: none.
@@ -36,7 +38,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Obsidian skills: at first launch, the agent proposes to install kepano's Obsidian skills (`npx skills add https://github.com/kepano/obsidian-skills`), only after validation and only if it supports skills. Once installed, it uses `obsidian-markdown`, `obsidian-bases`, `json-canvas` and `defuddle` when writing pages, bases, or canvases. If installation fails or is declined, nothing changes.
 - Obsidian configuration: `app.json` gets `"alwaysUpdateLinks": true` (links are updated automatically, without asking, when a page is renamed or moved). When git is used, `.gitignore` also ignores `.obsidian/cache` and `.trash/` (Obsidian's cache and trash).
 
-### Migration
+### Migration from 0.11.0
 - The source split requires no wiki migration: installation, tagged updates and the saved prompt copy still use `zaib-khan-llm-wiki.md`.
 - No file migration. Existing wikis adopt this ingest procedure when they update the schema.
 - Update safety tag and review checklist: none. If old `changes-*.md` review files from earlier updates are still in the wiki, the agent asks the user and deletes them.
