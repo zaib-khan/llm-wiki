@@ -55,6 +55,7 @@ my-wiki/
   - **a subdomain is created only when it is justified** (enough pages on the subject, or at the user's request).
 - **Creating a domain or subdomain:** the agent may propose one (e.g. "I have 8 pages about your team — shall I create `work/team/`?"). Nothing is created without the user's validation.
 - **Filing rules:** when a domain has subdomains (or projects) and it is unclear where a kind of content belongs, the agent proposes a short filing rule for that domain (e.g. "anything about the company as a whole → `work/company/`; anything about client X → `work/client-x/`; work outside the company → directly in `work/`"). Once validated, it is recorded in `settings.md` (one "Filing rule (<domain>)" row per domain) and applied at every ingest and capture without asking again. Changing it follows section 15 (logged `schema`).
+- **Optional pattern — "to try" and "tried" domains** (a suggestion, not a rule): when the user collects many things to try (tools, recipes, places, books…), the agent may suggest two domains: one where items arrive with the status "to try", and one for items tried and kept. After trying, an item is either **kept** (moved to the "tried" domain) or **dropped** (it stays in the "to try" domain with the reason). Example: `ai-tools/` (to try) → `tools/` (tried and useful). Like any domain, both are created only after the user's validation.
 
 ### 5.5 Type subfolders
 
