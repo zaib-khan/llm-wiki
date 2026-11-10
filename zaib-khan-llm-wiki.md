@@ -442,6 +442,7 @@ Then it commits according to the commit mode (section 14).
 - how-tos: `outdated` ones (may propose archiving them), `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
 - pages of a domain with domain-specific fields (section 6) have those fields, with allowed values, and their mirrored tags match;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
+- no forgotten update review file (`changes-<version>.md` or its translation) remains at the wiki root: if one does, finish the review with the user, then delete it.
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
 
@@ -486,7 +487,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
    - **Unknown version** (no `prompt_version` or no copy in `.llm-wiki/`): compare the whole wiki (schema, templates, `command.md`, `settings.md`, structure) with the new version. Without the copy, the agent cannot tell a user customization from an old rule of the prompt (e.g. automatic commits instead of proposed commits). So **every difference is presented as a possible conflict, one at a time**: the current version and the new version side by side, with the question "Is this your personal choice (keep it) or an old rule (replace it)?". If the user does not know, the new version is applied. Step 3 is skipped; the answers replace it.
 3. **Detect customizations** by comparing three versions: the copy in `.llm-wiki/` (what was applied), the current wiki (what the user has now), and the new version. Anything that differs between the copy and the current wiki is a user customization.
 4. **Secure the wiki before changing anything.**
-   - **With git:** ask the user to commit their pending changes first, so everything can be undone.
+   - **With git:** ask the user to commit their pending changes first, so everything can be undone. Then create a local git tag `pre-update-<new version>` on that commit (pushed only if pushing is normally done, section 14), and tell the user how to go back entirely: `git reset --hard pre-update-<version>`.
    - **Without git:** copy the whole wiki to `../<wiki-name>_backup/` (next to the wiki, outside Obsidian, qmd, and the lint). A new backup replaces the previous one. Record its date in `settings.md`.
 5. **Present the changes and get validation.** Questions to the user follow the question style (section 15).
    - **Simple changes** (new rule, new command, updated template, new setting): validated all at once.
@@ -501,10 +502,11 @@ This document evolves. A wiki created with an older version keeps its old rules 
 6. **Apply** the validated changes: `CLAUDE.md` and `AGENTS.md` (always identical), templates, `command.md`, `settings.md`, structure, and pages. Re-index search.
 7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, log the operation (`update`), and commit according to the commit mode (if git is used, section 14).
 8. **Report.** Summarize what changed. Then:
+   - **Review checklist:** create a temporary file at the wiki root, named in the wiki's language (`changes-<version>.md` by default; e.g. `changements-<version>.md` in a French wiki). It lists every change applied, grouped (rules and system files, templates, structure, pages), each with a checkbox `- [ ]`, plus the safety commit hash and tag (with git). The user ticks what suits them, notes what does not, and tells the agent. The agent undoes or adjusts the refused points, then **deletes the file**: it is never left in the wiki.
    - **Without git:** explain that a backup was created in `../<wiki-name>_backup/`, and that the user can ask the agent to restore the previous state if the update does not suit them or broke something.
    - **For everyone:** briefly mention that problems can be reported by opening an issue on the source repository. **Remind the user never to paste wiki content in a public issue** (the wiki holds personal data): describe the problem only.
 
-**If the user reports a problem after an update** ("it broke", "restore the previous state"): restore the previous state (git revert, or the backup), then suggest more strongly to open an issue on the source repository, with the same reminder about personal data.
+**If the user reports a problem after an update** ("it broke", "restore the previous state"): restore the previous state (git revert; for a full rollback, `git reset --hard pre-update-<version>`; or the backup), then suggest more strongly to open an issue on the source repository, with the same reminder about personal data.
 
 **Backup cleanup:** the first time the agent is used more than 5 days after a backup, it asks the user before deleting `../<wiki-name>_backup/`.
 
@@ -689,7 +691,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | AI mention in commits | Never |
 | Prompt updates | On demand (`update wiki` / `/update_wiki`) + checked by the lint; latest tag of `prompt_source` |
 | Update validation | Simple changes: all at once · Content changes: one by one · Conflicts: user chooses |
-| Update safety | Git: commit first · No git: `../<wiki-name>_backup/`, deleted after 5 days with confirmation |
+| Update safety | Git: commit + `pre-update-<version>` tag · Review file `changes-<version>.md`, deleted once reviewed · No git: `../<wiki-name>_backup/`, deleted after 5 days with confirmation |
 
 ---
 

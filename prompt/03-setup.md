@@ -119,7 +119,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | AI mention in commits | Never |
 | Prompt updates | On demand (`update wiki` / `/update_wiki`) + checked by the lint; latest tag of `prompt_source` |
 | Update validation | Simple changes: all at once · Content changes: one by one · Conflicts: user chooses |
-| Update safety | Git: commit first · No git: `../<wiki-name>_backup/`, deleted after 5 days with confirmation |
+| Update safety | Git: commit + `pre-update-<version>` tag · Review file `changes-<version>.md`, deleted once reviewed · No git: `../<wiki-name>_backup/`, deleted after 5 days with confirmation |
 
 ---
 
