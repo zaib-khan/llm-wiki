@@ -106,6 +106,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Web page extraction | Defuddle (`npx -y defuddle parse <url> --md`), plain fetch as fallback |
 | Lint trigger | On demand + suggested after 10 ingests or 30 days |
 | Lint fixes | Mechanical: automatic · Content: user decides |
+| Index size | Split by domain proposed above ~50 KB, after validation |
 | Open questions | One `<name>-open-questions.md` per domain, subdomain, and project (created when needed, deleted when empty); `wiki/open-questions.md` holds general questions and links |
 | Contradictions | ⚠️ flag in page + user decides |
 | Idea evolution | Visible dated history in the page |

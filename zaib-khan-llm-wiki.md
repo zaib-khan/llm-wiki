@@ -472,6 +472,7 @@ Then it commits according to the commit mode (section 14).
 - pages of a domain with domain-specific fields (section 6) have those fields, with allowed values, and their mirrored tags match;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - no forgotten temporary file the agent created and should have deleted: an update review file (`changes-<version>.md` or its translation) at the wiki root, or any other temporary note. The agent flags it and asks the user before deleting it; for a review file, it first offers to finish the review;
+- `wiki/index.md` is not too large to read efficiently (default threshold about 50 KB, configurable in `settings.md`, "Index size"): if it is, the lint proposes to split it by domain (section 11.1), applied only after validation;
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
 
@@ -570,6 +571,8 @@ The full catalog of the wiki, organized by domain and type. Updated at every ope
 - tags (an `archived` page is marked as archived).
 
 In addition, **each domain page lists its own pages**, so the agent can navigate both globally and domain by domain.
+
+**Large index:** when the lint finds `wiki/index.md` too large (section 9.4) and the user validates the split, each domain gets `<domain>-index.md` in its folder, with the same entry format, and `wiki/index.md` keeps only an overview: links to the domain indexes, plus the cross-domain projects and general pages. The rules of this section then apply to each domain index, and when answering, the agent reads the root index, then the relevant domain index.
 
 ### 11.2 `wiki/log.md`
 
@@ -804,6 +807,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Web page extraction | Defuddle (`npx -y defuddle parse <url> --md`), plain fetch as fallback |
 | Lint trigger | On demand + suggested after 10 ingests or 30 days |
 | Lint fixes | Mechanical: automatic · Content: user decides |
+| Index size | Split by domain proposed above ~50 KB, after validation |
 | Open questions | One `<name>-open-questions.md` per domain, subdomain, and project (created when needed, deleted when empty); `wiki/open-questions.md` holds general questions and links |
 | Contradictions | ⚠️ flag in page + user decides |
 | Idea evolution | Visible dated history in the page |
