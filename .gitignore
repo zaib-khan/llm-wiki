@@ -19,3 +19,6 @@ CLAUDE.md
 
 # Analyse du prompt de Karpathy (notes de travail)
 analyse-karpathy/
+
+# Serena (configuration locale de l’outil)
+.serena/
