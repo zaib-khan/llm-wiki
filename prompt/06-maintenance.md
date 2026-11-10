@@ -12,6 +12,7 @@
 - `CLAUDE.md` and `AGENTS.md` are identical;
 - each skill's two copies (`.claude/skills/<name>/SKILL.md` and `.agents/skills/<name>/SKILL.md`) are identical;
 - file names are unique across the wiki;
+- every page's frontmatter is valid YAML (no unclosed quotes, broken lists, or bad indentation): Obsidian, Bases, and queries cannot read a broken one;
 - pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
 - no link points to a folder or to a non-note file (including `wiki/dashboard.base`), and no empty note was created by mistake;
 - no empty or useless subfolders, including empty agent folders in `.claude/` and `.agents/` (section 5.8) (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
@@ -29,7 +30,7 @@
 - no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
 
 **Fixes:**
-- **Mechanical, safe fixes** are done automatically: links, index, orphans, template formatting, empty folders.
+- **Mechanical, safe fixes** are done automatically: links, index, orphans, template formatting, frontmatter syntax (fixed without changing any value), empty folders.
 - **Content decisions** need the user: contradictions, stale claims, merging or deleting pages.
 - **Web searches** follow the Query rule: permission before searching, permission before integrating.
 
