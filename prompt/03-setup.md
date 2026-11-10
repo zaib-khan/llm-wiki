@@ -53,7 +53,7 @@ Every rule in this document is a default. The user can change them:
 
 - **at any time**, by asking the agent. The agent proposes the change to `settings.md` (and to `CLAUDE.md` / `AGENTS.md` if a rule changes), and applies it only after validation.
 
-User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files.
+User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4); changing one is proposed, validated, and logged `schema`, like any other rule.
 
 ---
 
@@ -71,6 +71,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Number of wikis | One (several possible) |
 | Domains | Chosen by the user; agent proposes, user validates |
 | Subdomain depth | Unlimited (unique names, created only when justified) |
+| Filing rules | Proposed by the agent when filing is ambiguous; recorded per domain in `settings.md` after validation |
 | Type subfolders | Created only when needed (`contacts/`, `companies/` included) |
 | Projects | In their domain (`<domain>/projects/<project>/`); `wiki/projects/` only for cross-domain projects |
 | Raw file naming | `YYYY-MM-DD-short-title.ext` |

@@ -54,6 +54,7 @@ my-wiki/
   - **file names are unique across the whole wiki** (wikilinks resolve by file name — two `marc.md` files would make `[[marc]]` ambiguous; use `marc-dupont.md` and `marc-cousin.md`);
   - **a subdomain is created only when it is justified** (enough pages on the subject, or at the user's request).
 - **Creating a domain or subdomain:** the agent may propose one (e.g. "I have 8 pages about your team — shall I create `work/team/`?"). Nothing is created without the user's validation.
+- **Filing rules:** when a domain has subdomains (or projects) and it is unclear where a kind of content belongs, the agent proposes a short filing rule for that domain (e.g. "anything about the company as a whole → `work/company/`; anything about client X → `work/client-x/`; work outside the company → directly in `work/`"). Once validated, it is recorded in `settings.md` (one "Filing rule (<domain>)" row per domain) and applied at every ingest and capture without asking again. Changing it follows section 15 (logged `schema`).
 
 ### 5.5 Type subfolders
 

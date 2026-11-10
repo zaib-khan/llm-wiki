@@ -127,6 +127,7 @@ my-wiki/
   - **file names are unique across the whole wiki** (wikilinks resolve by file name — two `marc.md` files would make `[[marc]]` ambiguous; use `marc-dupont.md` and `marc-cousin.md`);
   - **a subdomain is created only when it is justified** (enough pages on the subject, or at the user's request).
 - **Creating a domain or subdomain:** the agent may propose one (e.g. "I have 8 pages about your team — shall I create `work/team/`?"). Nothing is created without the user's validation.
+- **Filing rules:** when a domain has subdomains (or projects) and it is unclear where a kind of content belongs, the agent proposes a short filing rule for that domain (e.g. "anything about the company as a whole → `work/company/`; anything about client X → `work/client-x/`; work outside the company → directly in `work/`"). Once validated, it is recorded in `settings.md` (one "Filing rule (<domain>)" row per domain) and applied at every ingest and capture without asking again. Changing it follows section 15 (logged `schema`).
 
 ### 5.5 Type subfolders
 
@@ -365,7 +366,7 @@ When a decision is needed before a source can be filed or a page can be created,
 1. Reads it (for a non-text source, creates the text version first).
 2. If the user gave a URL: fetches the content (article text, video transcript) and saves it as a raw source. Useful images (diagrams, charts) are downloaded to `raw/assets/`. If the content cannot be fetched, keeps the link with a note "content not retrieved".
 3. Renames it to `YYYY-MM-DD-short-title.ext`.
-4. Determines its main domain (and related domains).
+4. Determines its main domain (and related domains), applying the domain's filing rule from `settings.md` when there is one (section 5.4); if filing is ambiguous and no rule exists, proposes one in the end-of-ingest questions.
 5. Writes a `source` page.
 6. Creates or updates the related entity, knowledge, how-to, and synthesis pages. A single source may touch 10–15 pages.
    - The agent **creates pages freely** inside existing domains.
@@ -605,7 +606,7 @@ Every rule in this document is a default. The user can change them:
 
 - **at any time**, by asking the agent. The agent proposes the change to `settings.md` (and to `CLAUDE.md` / `AGENTS.md` if a rule changes), and applies it only after validation.
 
-User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files.
+User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4); changing one is proposed, validated, and logged `schema`, like any other rule.
 
 ---
 
@@ -623,6 +624,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Number of wikis | One (several possible) |
 | Domains | Chosen by the user; agent proposes, user validates |
 | Subdomain depth | Unlimited (unique names, created only when justified) |
+| Filing rules | Proposed by the agent when filing is ambiguous; recorded per domain in `settings.md` after validation |
 | Type subfolders | Created only when needed (`contacts/`, `companies/` included) |
 | Projects | In their domain (`<domain>/projects/<project>/`); `wiki/projects/` only for cross-domain projects |
 | Raw file naming | `YYYY-MM-DD-short-title.ext` |
