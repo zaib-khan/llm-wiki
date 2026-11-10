@@ -15,6 +15,7 @@
 - every page's frontmatter is valid YAML (no unclosed quotes, broken lists, or bad indentation): Obsidian, Bases, and queries cannot read a broken one;
 - pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
 - no link points to a folder or to a non-note file (including `wiki/dashboard.base`), and no empty note was created by mistake;
+- no untitled file created by mistake: a file with a default name ("Untitled", "Untitled 1", or the localized equivalent such as "Sans titre"), whatever its extension (`.md`, `.base`, `.canvas`…), anywhere in the wiki. The agent shows its content (often empty) and asks the user before deleting it;
 - no empty or useless subfolders, including empty agent folders in `.claude/` and `.agents/` (section 5.8) (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
