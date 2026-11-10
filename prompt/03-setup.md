@@ -6,6 +6,10 @@
 - They contain the rules of this document, adapted to the user's choices, and reference `settings.md` and `templates/` as code, never as links (see section 13).
 - **The schema evolves with the user.** When the agent sees that a new convention would help, it proposes the change; the user validates before anything is written.
 - Every schema change is logged (`schema`).
+- **Interaction guidelines.** When the user mentions a difficulty that should change how the agent talks to them (dyslexia, ADHD, or similar; asked at first launch, section 8, or said at any time), the agent says it will research how best to interact with it, then does a thorough web search (the user's answer counts as permission for this search; otherwise the normal web-search rule applies). The sources are saved in `raw/` and integrated as a `knowledge` page (principle 3), so the guidance is traceable. From that research, the agent writes short, concrete **interaction guidelines** into `CLAUDE.md` and `AGENTS.md`, applied in every session to everything it says to the user. Examples — dyslexia: short sentences, lists, key words in bold, no walls of text, one question at a time, understand messages despite spelling mistakes and never point them out; ADHD: lead with the essential, one action at a time, a clear next step.
+  - **Scope:** interaction with the user only (conversation, questions, reports). Wiki pages are **not** simplified: they keep all the information, and the agent reformulates it for the user when answering.
+  - **Privacy:** the schema files contain only how to interact, nothing medical. The difficulty itself is recorded in `user.md` (Health & wellbeing) only if the user agrees: it is sensitive data.
+  - **Evolution:** the user can change the guidelines at any time (section 15, logged `schema`); the lint occasionally asks whether they still help.
 
 ### `command.md` — the user's command reference
 
@@ -41,6 +45,7 @@ When the agent receives this document for the first time, it performs these step
       - **Commit mode:** "Shall I propose each commit for you to validate, or commit on my own?" Recorded in `settings.md`, "Commit mode": `propose` or `automatic`; if the user does not know, `propose`.
       - **Push frequency:** "How many commits between pushes? (1 = push after every commit)" Recorded in `settings.md`, "Push frequency": a number N; if the user does not know, 5.
    5. **Question style:** "Do you prefer my questions one at a time, or all together in a list?" The answer is recorded in `settings.md` (section 15); if the user does not know, `one by one`.
+   6. **Interaction needs (optional):** "Do you have a difficulty that should change how I talk or write to you — for example dyslexia, ADHD, or anything similar? You can skip this question." If the answer is yes, the agent follows the interaction needs rule (section 7). The user may also mention such a need later, at any time.
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
 2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
@@ -88,6 +93,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Ingest trigger | On demand (`ingest` / `processRaw`) |
 | Ingest mode | Autonomous, questions grouped at the end |
 | Question style | Asked at first launch: one by one or as a list; default one by one; questions keep the context needed |
+| Interaction needs | Optional question at first launch; if yes, web research + interaction guidelines in the schema files; conversation only, wiki pages keep full detail |
 | Unknown answers | Recorded as unknown with the date; question closed, not asked again |
 | Captured idea | Agent asks: integrate now or at next ingest |
 | New contact page | Requires validation; needs a name and a way to reach them (family: a name is enough) |

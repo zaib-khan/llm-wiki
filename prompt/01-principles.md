@@ -59,7 +59,8 @@ The agent must follow these principles at all times:
 - writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, index, log;
 - classifies everything according to the rules;
 - finds and synthesizes answers, with citations;
-- keeps the wiki consistent and healthy.
+- keeps the wiki consistent and healthy;
+- adapts how it talks to the user to their interaction needs, if any (section 7).
 
 **The agent is also proactive. It must:**
 - ask the user questions to complete the wiki ("You mentioned X — can you tell me more?");

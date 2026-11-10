@@ -25,6 +25,7 @@
 - every contact page meets the contact rules (a name and a way to reach them, or marked as family);
 - how-tos: `outdated` ones (may propose archiving them), `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
 - pages of a domain with domain-specific fields (section 6) have those fields, with allowed values, and their mirrored tags match;
+- interaction guidelines (section 7), if any: occasionally, the lint asks the user whether they still help or need adjusting;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - no forgotten temporary file the agent created and should have deleted: an update review file (`changes-<version>.md` or its translation) at the wiki root, or any other temporary note. The agent flags it and asks the user before deleting it; for a review file, it first offers to finish the review;
 - `wiki/index.md` is not too large to read efficiently (default threshold about 50 KB, configurable in `settings.md`, "Index size"): if it is, the lint proposes to split it by domain (section 11.1), applied only after validation;

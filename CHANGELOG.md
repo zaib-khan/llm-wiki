@@ -11,6 +11,9 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+### Added
+- Interaction needs (sections 4, 7, 8, 9.4, 16): the welcome interview asks one optional question about a difficulty that should change how the agent talks to the user (dyslexia, ADHD, or similar); the user may also mention it at any time. If so, the agent says it will research it and does a thorough web search (the answer counts as permission), saves the sources in `raw/` and integrates them as a `knowledge` page, then writes short, concrete interaction guidelines into `CLAUDE.md` and `AGENTS.md`, applied in every session. Scope: conversation, questions and reports only; wiki pages keep full detail. The schema holds only how to interact, nothing medical; the difficulty is recorded in `user.md` (Health & wellbeing) only if the user agrees. The user can change the guidelines at any time (logged `schema`); the lint occasionally asks whether they still help. Migration: at update, the agent asks the user the new optional question once.
+
 ## [0.12.0] - 2026-11-10
 
 ### Changed
