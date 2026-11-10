@@ -216,5 +216,7 @@ Each template then defines its sections (headings written in the user's language
 - A `writing` how-to may be used to answer a question, but the agent says so: "⚠️ this how-to is still being written". The agent never completes it on its own.
 - When the user says a how-to is finished, the agent sets its status to `draft` (or `tested` if the user has already followed it).
 
+**Archived pages:** a page that is no longer useful but worth keeping is not deleted: after the user's validation, it gets the tag `archived` (the agent may propose it, e.g. when a decision makes a procedure obsolete). Deleting a page remains the user's decision. An `archived` page stays in place and keeps its links and its index entry (marked as archived). The agent no longer uses it to answer, except for history ("what did we plan before?"), and then says so. This differs from `wiki/archive/`, which holds finished projects.
+
 ---
 

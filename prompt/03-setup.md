@@ -84,6 +84,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | List pages | `<domain>-contacts.md` and `<domain>-companies.md` |
 | New company page | Created freely |
 | How-to pages | Created freely; only "Goal" required; `status` + `howto/<status>` tag |
+| Outdated pages | Tag `archived` after validation, kept in place, ignored by staleness checks |
 | Manual writing | Small edits only, except `howto` pages in `writing` status |
 | `user.md` updates | Free, always reported to the user |
 | Citations | Wiki pages and raw sources |

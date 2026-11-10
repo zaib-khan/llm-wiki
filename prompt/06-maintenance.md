@@ -4,7 +4,7 @@
 
 **Checks:**
 - contradictions between pages;
-- stale claims superseded by newer sources;
+- stale claims superseded by newer sources (may propose archiving the page, section 6);
 - orphan pages (no inbound links);
 - important topics mentioned without their own knowledge page;
 - missing cross-references;
@@ -16,11 +16,11 @@
 - no empty or useless subfolders (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
-- pages not updated for a long time (`user.md`, contact pages…);
+- pages not updated for a long time (`user.md`, contact pages…), ignoring `archived` pages;
 - every page is connected to `user.md`, directly or indirectly;
 - every contact and company page links to its list (`<domain>-contacts.md`, `<domain>-companies.md`), and every list includes all pages of its folder;
 - every contact page meets the contact rules (a name and a way to reach them, or marked as family);
-- how-tos: `outdated` ones, `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
+- how-tos: `outdated` ones (may propose archiving them), `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
 - pages of a domain with domain-specific fields (section 6) have those fields, with allowed values, and their mirrored tags match;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
@@ -103,7 +103,7 @@ The full catalog of the wiki, organized by domain and type. Updated at every ope
 - the creation date;
 - the last update date;
 - the number of sources feeding the page;
-- tags.
+- tags (an `archived` page is marked as archived).
 
 In addition, **each domain page lists its own pages**, so the agent can navigate both globally and domain by domain.
 
