@@ -11,6 +11,12 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+### Changed
+- Split prompt authoring into seven thematic files in `prompt/`. A dependency-free Python script assembles the same complete prompt, preserving its text and section order; `--check` detects an outdated generated file.
+
+### Migration
+- The source split requires no wiki migration: installation, tagged updates and the saved prompt copy still use `zaib-khan-llm-wiki.md`.
+
 ## [0.11.0] - 2026-10-15
 
 ### Added

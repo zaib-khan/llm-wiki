@@ -70,6 +70,46 @@ The prompt evolves. Each version is published as a git tag, and [`CHANGELOG.md`]
 
 Say `update wiki` (or `/update_wiki` in Claude Code): the agent checks the latest published version, shows you what changed, keeps your own customizations unless you choose otherwise, and secures your wiki first (a git commit, or a backup next to it). If something goes wrong, ask it to restore the previous state, and feel free to [open an issue](https://github.com/zaib-khan/llm-wiki/issues) — describe the problem, but never paste personal content from your wiki.
 
+## Maintaining the prompt
+
+The editable sources live in [`prompt/`](prompt/). The distributed file
+[`zaib-khan-llm-wiki.md`](zaib-khan-llm-wiki.md) is generated and committed to the
+repository, so users can still give a single file to their agent.
+
+| Source | Contents |
+|---|---|
+| [`01-principles.md`](prompt/01-principles.md) | Introduction, version, vision, roles, shared principles, credits |
+| [`02-structure.md`](prompt/02-structure.md) | Folders, naming, page types and templates |
+| [`03-setup.md`](prompt/03-setup.md) | Schema files, first launch, customization and defaults |
+| [`04-ingest.md`](prompt/04-ingest.md) | Capture, ingestion, contradictions and idea evolution |
+| [`05-query.md`](prompt/05-query.md) | Answers, citations and search |
+| [`06-maintenance.md`](prompt/06-maintenance.md) | Lint, project lifecycle, updates, index, log and open questions |
+| [`07-integrations.md`](prompt/07-integrations.md) | Obsidian and Git |
+
+Edit these source files rather than the generated prompt, then run:
+
+```sh
+python3 scripts/build_prompt.py
+python3 scripts/build_prompt.py --check
+```
+
+The script requires Python 3 and no additional packages. It restores the original
+section order and preserves the text exactly, including section numbers and
+cross-references. Source files group related sections even when they appear at
+different places in the complete prompt. The section ownership and output order
+are defined in [`scripts/build_prompt.py`](scripts/build_prompt.py); update those
+lists if you add, remove or move a numbered section between source files.
+
+`--check` does not modify files and exits with an error if the complete prompt is
+missing or out of date. The builder also rejects missing, duplicate or unexpected
+sections. Its checks can be tested with `python3 -m unittest discover -s tests`.
+
+Include source changes, the regenerated prompt and the corresponding
+`CHANGELOG.md` entry together. Change the version in `prompt/01-principles.md`
+only when preparing an explicitly requested release, then regenerate the prompt.
+Existing wikis still use the complete prompt from a published tag; splitting the
+repository sources requires no wiki migration.
+
 ## Credits
 
 Inspired by Andrej Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
