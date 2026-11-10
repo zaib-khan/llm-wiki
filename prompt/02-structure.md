@@ -147,6 +147,17 @@ wiki/football/
 - **Scripts stay in `scripts/`** at the wiki root (section 12), not in `.claude/`, so every agent and the user can run them.
 - **No subfolder is created in advance** (core principle 1): each one is created only when its first file is needed, with a short README in the wiki's language explaining its role, its prerequisites, and how its content is used. The lint flags empty agent folders like any other empty folder (section 9.4).
 
+### 5.9 Personal integrations
+
+When the user wants the agent to use a personal tool on its own (a task manager, a calendar, an e-mail tool; e.g. "remind me…" creates a task in their task manager), the agent proposes the integration and, after validation:
+
+1. creates a skill describing how to use the tool, as two identical copies in `.claude/skills/<name>/` and `.agents/skills/<name>/` (section 7);
+2. adds a trigger rule saying when to use it (the user's phrasings, even when the skill is not named), referenced from both `CLAUDE.md` and `AGENTS.md` (it may live in `.claude/rules/<name>.md`, section 5.8);
+3. adds a row to `settings.md` and the command to `command.md`, so the user knows they can ask for it;
+4. logs it as `schema`.
+
+The tool's credentials or tokens never go into the wiki: they stay in the tool's own configuration, outside the wiki. Only the user's personal requests trigger an integration: the word used to ask the agent for work (e.g. "task") is not enough on its own.
+
 ---
 
 ## 6. Page Types and Templates

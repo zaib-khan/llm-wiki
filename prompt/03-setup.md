@@ -98,6 +98,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Manual writing | Small edits only, except `howto` pages in `writing` status |
 | `user.md` updates | Free, always reported to the user |
 | Citations | Wiki pages and raw sources |
+| Personal integrations | Skill (two copies) + trigger rule referenced from both schema files + `settings.md` + `command.md`, after validation |
 | Keeping an answer | Agent proposes, user validates (synthesis page + conversation trace) |
 | Answer format | Best suited to the question |
 | Proactive section | 💡 section at the end, only when relevant |
