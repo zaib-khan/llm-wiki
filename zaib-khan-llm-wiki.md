@@ -696,10 +696,10 @@ The wiki is designed to be read in **Obsidian**.
   ```
 - **Graph view:** the best way to see the shape of the wiki — hubs, clusters, orphans.
 - **Configuration at first launch:** the agent writes these settings to `.obsidian/`, so the setup is reproducible:
-  - `app.json`: `"useMarkdownLinks": false` (wikilinks), `"newLinkFormat": "shortest"`, `"attachmentFolderPath": "raw/assets"`, and `"userIgnoreFilters": ["templates/"]` (templates are excluded from search, graph, and link suggestions);
+  - `app.json`: `"useMarkdownLinks": false` (wikilinks), `"newLinkFormat": "shortest"`, `"attachmentFolderPath": "raw/assets"`, `"alwaysUpdateLinks": true` (links are updated automatically when a page is renamed or moved), and `"userIgnoreFilters": ["templates/"]` (templates are excluded from search, graph, and link suggestions);
   - `templates.json`: `"folder": "templates"` (core Templates plugin);
   - `core-plugins.json`: enable the core plugins used by the wiki (templates, graph, backlinks, canvas, file explorer, search, bases);
-  - `.gitignore`: add `.obsidian/workspace*.json`.
+  - `.gitignore` (when git is used): add `.obsidian/workspace*.json`, `.obsidian/cache`, and `.trash/`.
 
   The agent then guides the user step by step for the rest (installing community plugins, the browser extension).
 - **Images:** the agent downloads only useful images (diagrams, charts) when fetching web content. To view an article with images, it reads the text first, then looks at the images separately.

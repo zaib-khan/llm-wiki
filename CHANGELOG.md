@@ -27,6 +27,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Update safety and review: with git, after the user's pending changes are committed, the update creates a local tag `pre-update-<version>` on that commit and tells the user that `git reset --hard pre-update-<version>` undoes the whole update. After applying, the agent creates a temporary review checklist at the wiki root (`changes-<version>.md`, named in the wiki's language), listing every applied change with a checkbox plus the safety commit and tag; the user ticks or comments, the agent undoes or adjusts refused points, then deletes the file. The lint flags a forgotten review file.
 - Obsidian Bases dashboard: at first launch the agent creates `wiki/dashboard.base` (core Bases plugin, enabled in `core-plugins.json`) with five generic views: recently updated, how-tos by status, dormant pages (over 60 days, contacts and companies excluded), orphans (`user` excluded), contacts as cards. View and column names are in the wiki's language. When a domain gets its own fields, the agent may propose a dedicated view (e.g. bills by due date with a total). Bases is the recommended tool for dynamic tables; Dataview stays optional. The lint never flags the dashboard as an orphan or empty note.
 - Obsidian skills: at first launch, the agent proposes to install kepano's Obsidian skills (`npx skills add https://github.com/kepano/obsidian-skills`), only after validation and only if it supports skills. Once installed, it uses `obsidian-markdown`, `obsidian-bases`, `json-canvas` and `defuddle` when writing pages, bases, or canvases. If installation fails or is declined, nothing changes.
+- Obsidian configuration: `app.json` gets `"alwaysUpdateLinks": true` (links are updated automatically, without asking, when a page is renamed or moved). When git is used, `.gitignore` also ignores `.obsidian/cache` and `.trash/` (Obsidian's cache and trash).
 
 ### Migration
 - The source split requires no wiki migration: installation, tagged updates and the saved prompt copy still use `zaib-khan-llm-wiki.md`.
@@ -44,6 +45,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Commit mode and push frequency: existing wikis keep their current behavior until updated. At update, the agent asks the two questions once (commit mode, push frequency) and records the answers in `settings.md`.
 - Obsidian Bases dashboard: at update, after validation, the agent creates `wiki/dashboard.base` (translating view and column names, adding views for domains that already have their own fields if the user wants) and adds `bases` to `.obsidian/core-plugins.json`.
 - Obsidian skills: at update, the agent proposes installing kepano's Obsidian skills; installed only after validation and if the agent supports skills.
+- Obsidian configuration: at update, add `"alwaysUpdateLinks": true` to `.obsidian/app.json`, and (when git is used) `.obsidian/cache` and `.trash/` to `.gitignore`.
 
 ## [0.11.0] - 2026-10-15
 
