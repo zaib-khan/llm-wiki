@@ -12,6 +12,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 ## [Unreleased]
 
 ### Changed
+- Skills for Claude Code and Codex: every skill of the wiki (starting with `update_wiki`) exists as two real files with identical content, `.claude/skills/<name>/SKILL.md` (Claude Code) and `.agents/skills/<name>/SKILL.md` (Codex and other agents), created at first launch whatever the agent used. No symbolic link; whenever one copy changes, the other changes the same way. The lint checks that both copies are identical. Migration: at update, the agent creates `.agents/skills/update_wiki/SKILL.md` as an identical copy of the Claude Code one.
 - Split prompt authoring into seven thematic files in `prompt/`. A dependency-free Python script assembles the same complete prompt, preserving its text and section order; `--check` detects an outdated generated file.
 - Ingest checks for partially processed sources, completes each source before moving it, and resumes interrupted work without duplicating pages or facts. Sources needing a filing decision stay pending while independent sources continue.
 - Projects attached to a domain or subdomain now live inside it (`wiki/<domain>/projects/<project>/<project>.md`, `projects/` being a reserved name); the domain page and template list its projects. `wiki/projects/` is kept only for cross-domain projects without a main domain.

@@ -9,7 +9,8 @@ my-wiki/
 ├── settings.md            ← user settings (see section 15)
 ├── command.md             ← commands the user can give the agent (see section 7)
 ├── .llm-wiki/             ← copy of the prompt version applied (see section 9.6)
-├── .claude/skills/update_wiki/SKILL.md  ← short Claude Code skill for `/update_wiki`
+├── .claude/skills/update_wiki/SKILL.md  ← skill for `/update_wiki` (Claude Code)
+├── .agents/skills/update_wiki/SKILL.md  ← identical copy (Codex and other agents)
 │
 ├── raw/                   ← inbox: everything arrives here
 │   ├── assets/            ← temporary: images downloaded by the agent

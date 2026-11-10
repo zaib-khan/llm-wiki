@@ -10,6 +10,7 @@
 - missing cross-references;
 - gaps that a web search could fill;
 - `CLAUDE.md` and `AGENTS.md` are identical;
+- each skill's two copies (`.claude/skills/<name>/SKILL.md` and `.agents/skills/<name>/SKILL.md`) are identical;
 - file names are unique across the wiki;
 - pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
 - no link points to a folder or to a non-note file (including `wiki/dashboard.base`), and no empty note was created by mistake;
@@ -59,7 +60,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
 
 **Trigger:** on demand (`update wiki`, or `/update_wiki` in Claude Code). The lint also checks for a newer version and suggests an update (section 9.4).
 
-**The procedure is written once, in `CLAUDE.md` and `AGENTS.md`**, so it works with any agent. In Claude Code, the skill `.claude/skills/update_wiki/SKILL.md` is only a shortcut: it tells the agent to apply the `update wiki` procedure of the schema, without repeating it.
+**The procedure is written once, in `CLAUDE.md` and `AGENTS.md`**, so it works with any agent. The skill `update_wiki` (`.claude/skills/update_wiki/SKILL.md` and its identical copy `.agents/skills/update_wiki/SKILL.md`) is only a shortcut: it tells the agent to apply the `update wiki` procedure of the schema, without repeating it.
 
 **Procedure:**
 

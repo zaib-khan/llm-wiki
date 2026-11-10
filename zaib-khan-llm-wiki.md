@@ -82,7 +82,8 @@ my-wiki/
 ├── settings.md            ← user settings (see section 15)
 ├── command.md             ← commands the user can give the agent (see section 7)
 ├── .llm-wiki/             ← copy of the prompt version applied (see section 9.6)
-├── .claude/skills/update_wiki/SKILL.md  ← short Claude Code skill for `/update_wiki`
+├── .claude/skills/update_wiki/SKILL.md  ← skill for `/update_wiki` (Claude Code)
+├── .agents/skills/update_wiki/SKILL.md  ← identical copy (Codex and other agents)
 │
 ├── raw/                   ← inbox: everything arrives here
 │   ├── assets/            ← temporary: images downloaded by the agent
@@ -299,6 +300,7 @@ Each template then defines its sections (headings written in the user's language
 
 - The wiki has **two schema files: `CLAUDE.md` and `AGENTS.md`**, so that any agent can use it. They are two real files with **identical content**.
 - **Whenever one is modified, the other must be modified in the same way, at the same time.** They must never differ.
+- **Skills follow the same rule.** Every skill of the wiki (starting with `update_wiki`) exists as two real files with identical content: `.claude/skills/<name>/SKILL.md` (Claude Code) and `.agents/skills/<name>/SKILL.md` (Codex and other agents reading `.agents/skills/`). No symbolic link. Whenever one copy is modified, the other is modified in the same way, at the same time; they must never differ.
 - They contain the rules of this document, adapted to the user's choices, and reference `settings.md` and `templates/` as code, never as links (see section 13).
 - **The schema evolves with the user.** When the agent sees that a new convention would help, it proposes the change; the user validates before anything is written.
 - Every schema change is logged (`schema`).
@@ -339,7 +341,7 @@ When the agent receives this document for the first time, it performs these step
    5. **Question style:** "Do you prefer my questions one at a time, or all together in a list?" The answer is recorded in `settings.md` (section 15); if the user does not know, `one by one`.
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
-2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. If the agent is Claude Code, create the short skill `.claude/skills/update_wiki/SKILL.md` (section 9.6).
+2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
 3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
 4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/`, create the dashboard `wiki/dashboard.base` (section 13), propose installing kepano's Obsidian skills (section 13; only after validation and if the agent supports skills), and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
@@ -430,6 +432,7 @@ Then it commits according to the commit mode (section 14).
 - missing cross-references;
 - gaps that a web search could fill;
 - `CLAUDE.md` and `AGENTS.md` are identical;
+- each skill's two copies (`.claude/skills/<name>/SKILL.md` and `.agents/skills/<name>/SKILL.md`) are identical;
 - file names are unique across the wiki;
 - pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
 - no link points to a folder or to a non-note file (including `wiki/dashboard.base`), and no empty note was created by mistake;
@@ -479,7 +482,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
 
 **Trigger:** on demand (`update wiki`, or `/update_wiki` in Claude Code). The lint also checks for a newer version and suggests an update (section 9.4).
 
-**The procedure is written once, in `CLAUDE.md` and `AGENTS.md`**, so it works with any agent. In Claude Code, the skill `.claude/skills/update_wiki/SKILL.md` is only a shortcut: it tells the agent to apply the `update wiki` procedure of the schema, without repeating it.
+**The procedure is written once, in `CLAUDE.md` and `AGENTS.md`**, so it works with any agent. The skill `update_wiki` (`.claude/skills/update_wiki/SKILL.md` and its identical copy `.agents/skills/update_wiki/SKILL.md`) is only a shortcut: it tells the agent to apply the `update wiki` procedure of the schema, without repeating it.
 
 **Procedure:**
 
