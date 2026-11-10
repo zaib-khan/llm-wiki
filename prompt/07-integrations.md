@@ -6,15 +6,112 @@ The wiki is designed to be read in **Obsidian**.
 - **Never link to a folder or to a file that is not a note** (no markdown link, no wikilink). In Obsidian, clicking a link that leads to no note creates an empty note with that name. Folder paths and system file paths are written as code (`raw/`, `templates/`), never as links. This applies everywhere, including `CLAUDE.md` and `AGENTS.md`.
 - **Recommended plugins and tools:**
   - **Obsidian Web Clipper** (browser extension): converts web articles to markdown; configure it to save into `raw/`.
-  - **Dataview**: dynamic tables and lists from the templates' frontmatter (e.g. all family members, all ongoing projects).
+  - **Bases** (core plugin, no install): the recommended way to build dynamic tables and card views from the templates' frontmatter (e.g. all family members, all ongoing projects); used by the dashboard below.
+  - **Dataview** (optional community plugin): an alternative for dynamic tables and lists written as queries inside notes.
   - **Templater** / core **Templates**: use the templates in `templates/` when editing by hand.
   - **Marp**: slide decks in markdown.
   - **Excalidraw** / **Canvas**: diagrams and visual maps of ideas.
+- **Dashboard:** `wiki/dashboard.base`, an Obsidian Bases file (YAML), created at first launch. The file name stays in English; view names and column display names are written in the wiki's language. Its base filter keeps markdown pages with a `type`, except `source` pages. Five generic views:
+  - **Recently updated**: the 30 most recently updated pages;
+  - **How-tos by status**: how-tos grouped by `status`;
+  - **Dormant pages**: not updated for more than 60 days, excluding contact and company pages;
+  - **Orphans**: pages without backlinks, excluding `user`;
+  - **Contacts**: contact pages as cards.
+
+  When a domain gets its own fields (section 6), the agent may propose a dedicated view for it (e.g. bills filtered on that domain's folder, sorted by due date, with a sum of the amounts); nothing is added without validation. Generic content (display names to translate):
+
+  ```yaml
+  filters:
+    and:
+      - file.ext == "md"
+      - type
+      - type != "source"
+  formulas:
+    days_since_update: if(updated, (today() - date(updated)).days, "")
+    domain: file.folder.split("/").slice(1, 2).join("")
+    source_count: if(sources, list(sources).length, 0)
+  properties:
+    file.name:
+      displayName: Page
+    formula.domain:
+      displayName: Domain
+    formula.days_since_update:
+      displayName: Days since update
+    formula.source_count:
+      displayName: Sources
+    last_used:
+      displayName: Last used
+  views:
+    - type: table
+      name: Recently updated
+      order:
+        - file.name
+        - type
+        - formula.domain
+        - updated
+        - formula.source_count
+      sort:
+        - property: updated
+          direction: DESC
+      limit: 30
+    - type: table
+      name: How-tos by status
+      filters:
+        and:
+          - type == "howto"
+      groupBy:
+        property: status
+        direction: ASC
+      order:
+        - file.name
+        - formula.domain
+        - status
+        - last_used
+        - updated
+    - type: table
+      name: Dormant pages
+      filters:
+        and:
+          - formula.days_since_update > 60
+          - type != "contact"
+          - type != "company"
+      order:
+        - file.name
+        - type
+        - formula.domain
+        - updated
+        - formula.days_since_update
+      sort:
+        - property: formula.days_since_update
+          direction: DESC
+    - type: table
+      name: Orphans
+      filters:
+        and:
+          - file.backlinks.isEmpty()
+          - type != "user"
+      order:
+        - file.name
+        - type
+        - formula.domain
+        - updated
+    - type: cards
+      name: Contacts
+      filters:
+        and:
+          - type == "contact"
+      order:
+        - file.name
+        - relationship
+        - role
+        - company
+        - formula.domain
+  ```
 - **Graph view:** the best way to see the shape of the wiki — hubs, clusters, orphans.
 - **Configuration at first launch:** the agent writes these settings to `.obsidian/`, so the setup is reproducible:
   - `app.json`: `"useMarkdownLinks": false` (wikilinks), `"newLinkFormat": "shortest"`, `"attachmentFolderPath": "raw/assets"`, and `"userIgnoreFilters": ["templates/"]` (templates are excluded from search, graph, and link suggestions);
   - `templates.json`: `"folder": "templates"` (core Templates plugin);
-  - `core-plugins.json`: enable the core plugins used by the wiki (templates, graph, backlinks, canvas, file explorer, search);
+  - `core-plugins.json`: enable the core plugins used by the wiki (templates, graph, backlinks, canvas, file explorer, search, bases);
   - `.gitignore`: add `.obsidian/workspace*.json`.
 
   The agent then guides the user step by step for the rest (installing community plugins, the browser extension).

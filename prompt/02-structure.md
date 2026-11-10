@@ -22,6 +22,7 @@ my-wiki/
     ├── log.md             ← log of the current month
     ├── log/               ← archived monthly logs (YYYY-MM.md)
     ├── open-questions.md  ← general questions + links to domain question files
+    ├── dashboard.base     ← Obsidian Bases dashboard (see section 13)
     ├── user.md            ← the center of the wiki
     ├── <domain>/          ← one folder per domain (named with the user's word), with its projects in `projects/`
     ├── projects/          ← cross-domain projects without a main domain
@@ -171,7 +172,7 @@ tags: []
 - **contact**: `relationship`, `birthday`, `company` (link to the company page), `role`, `address`
 - **howto**: `status` (`writing` · `draft` · `tested` · `outdated`), `last_used`. The matching tag `howto/<status>` is always added and kept in sync with `status`; `status` is the reference.
 - **company**: `relationship`, `industry`, `website`, `size`, `founded`, `address` (headquarters)
-- **domain-specific fields**: a domain may have its own extra fields for its pages (e.g. a `bills` domain: `amount` (number), `due_date` (`YYYY-MM-DD`, empty if unknown), `status` (`to-pay` · `urgent` · `payment-plan` · `disputed` · `paid`)). The agent proposes them when they would help sort, filter, or track that domain's pages; nothing is added without the user's validation. Once validated, they are recorded in `settings.md` (one "Fields (<domain>)" row per domain: field names, format, allowed values), and the agent fills them on every new page of that domain and when updating existing ones, only when the value is known or deducible (otherwise left empty). When tags mirror a field, the field is the reference and the tags stay in sync (as for howto `status`).
+- **domain-specific fields**: a domain may have its own extra fields for its pages (e.g. a `bills` domain: `amount` (number), `due_date` (`YYYY-MM-DD`, empty if unknown), `status` (`to-pay` · `urgent` · `payment-plan` · `disputed` · `paid`)). The agent proposes them when they would help sort, filter, or track that domain's pages; nothing is added without the user's validation. Once validated, they are recorded in `settings.md` (one "Fields (<domain>)" row per domain: field names, format, allowed values), and the agent fills them on every new page of that domain and when updating existing ones, only when the value is known or deducible (otherwise left empty). When tags mirror a field, the field is the reference and the tags stay in sync (as for howto `status`). The agent may then propose a dedicated view for that domain in `wiki/dashboard.base` (section 13).
 
 `address` is detailed as much as possible:
 

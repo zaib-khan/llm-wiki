@@ -44,7 +44,7 @@ When the agent receives this document for the first time, it performs these step
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
 2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. If the agent is Claude Code, create the short skill `.claude/skills/update_wiki/SKILL.md` (section 9.6).
 3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
-4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/` and give the user a step-by-step guide for the rest.
+4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/`, create the dashboard `wiki/dashboard.base` (section 13), and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
 6. **Log** the initialization and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
 
@@ -112,6 +112,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`), fallback index + grep |
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
+| Dashboard | `wiki/dashboard.base` (Obsidian Bases), 5 generic views + views proposed for domains with their own fields |
 | Link format | Wikilinks `[[...]]` |
 | Git | Optional, chosen at first launch (remote link asked if used) |
 | Commit mode | Asked at first launch: `propose` (default) or `automatic` |

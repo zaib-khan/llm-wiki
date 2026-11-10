@@ -95,6 +95,7 @@ my-wiki/
     ├── log.md             ← log of the current month
     ├── log/               ← archived monthly logs (YYYY-MM.md)
     ├── open-questions.md  ← general questions + links to domain question files
+    ├── dashboard.base     ← Obsidian Bases dashboard (see section 13)
     ├── user.md            ← the center of the wiki
     ├── <domain>/          ← one folder per domain (named with the user's word), with its projects in `projects/`
     ├── projects/          ← cross-domain projects without a main domain
@@ -244,7 +245,7 @@ tags: []
 - **contact**: `relationship`, `birthday`, `company` (link to the company page), `role`, `address`
 - **howto**: `status` (`writing` · `draft` · `tested` · `outdated`), `last_used`. The matching tag `howto/<status>` is always added and kept in sync with `status`; `status` is the reference.
 - **company**: `relationship`, `industry`, `website`, `size`, `founded`, `address` (headquarters)
-- **domain-specific fields**: a domain may have its own extra fields for its pages (e.g. a `bills` domain: `amount` (number), `due_date` (`YYYY-MM-DD`, empty if unknown), `status` (`to-pay` · `urgent` · `payment-plan` · `disputed` · `paid`)). The agent proposes them when they would help sort, filter, or track that domain's pages; nothing is added without the user's validation. Once validated, they are recorded in `settings.md` (one "Fields (<domain>)" row per domain: field names, format, allowed values), and the agent fills them on every new page of that domain and when updating existing ones, only when the value is known or deducible (otherwise left empty). When tags mirror a field, the field is the reference and the tags stay in sync (as for howto `status`).
+- **domain-specific fields**: a domain may have its own extra fields for its pages (e.g. a `bills` domain: `amount` (number), `due_date` (`YYYY-MM-DD`, empty if unknown), `status` (`to-pay` · `urgent` · `payment-plan` · `disputed` · `paid`)). The agent proposes them when they would help sort, filter, or track that domain's pages; nothing is added without the user's validation. Once validated, they are recorded in `settings.md` (one "Fields (<domain>)" row per domain: field names, format, allowed values), and the agent fills them on every new page of that domain and when updating existing ones, only when the value is known or deducible (otherwise left empty). When tags mirror a field, the field is the reference and the tags stay in sync (as for howto `status`). The agent may then propose a dedicated view for that domain in `wiki/dashboard.base` (section 13).
 
 `address` is detailed as much as possible:
 
@@ -340,7 +341,7 @@ When the agent receives this document for the first time, it performs these step
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
 2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. If the agent is Claude Code, create the short skill `.claude/skills/update_wiki/SKILL.md` (section 9.6).
 3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
-4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/` and give the user a step-by-step guide for the rest.
+4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/`, create the dashboard `wiki/dashboard.base` (section 13), and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
 6. **Log** the initialization and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
 
@@ -424,14 +425,14 @@ Then it commits according to the commit mode (section 14).
 **Checks:**
 - contradictions between pages;
 - stale claims superseded by newer sources (may propose archiving the page, section 6);
-- orphan pages (no inbound links);
+- orphan pages (no inbound links; markdown notes only, so `wiki/dashboard.base` is never flagged);
 - important topics mentioned without their own knowledge page;
 - missing cross-references;
 - gaps that a web search could fill;
 - `CLAUDE.md` and `AGENTS.md` are identical;
 - file names are unique across the wiki;
 - pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
-- no link points to a folder or to a non-note file, and no empty note was created by mistake;
+- no link points to a folder or to a non-note file (including `wiki/dashboard.base`), and no empty note was created by mistake;
 - no empty or useless subfolders (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
@@ -591,15 +592,112 @@ The wiki is designed to be read in **Obsidian**.
 - **Never link to a folder or to a file that is not a note** (no markdown link, no wikilink). In Obsidian, clicking a link that leads to no note creates an empty note with that name. Folder paths and system file paths are written as code (`raw/`, `templates/`), never as links. This applies everywhere, including `CLAUDE.md` and `AGENTS.md`.
 - **Recommended plugins and tools:**
   - **Obsidian Web Clipper** (browser extension): converts web articles to markdown; configure it to save into `raw/`.
-  - **Dataview**: dynamic tables and lists from the templates' frontmatter (e.g. all family members, all ongoing projects).
+  - **Bases** (core plugin, no install): the recommended way to build dynamic tables and card views from the templates' frontmatter (e.g. all family members, all ongoing projects); used by the dashboard below.
+  - **Dataview** (optional community plugin): an alternative for dynamic tables and lists written as queries inside notes.
   - **Templater** / core **Templates**: use the templates in `templates/` when editing by hand.
   - **Marp**: slide decks in markdown.
   - **Excalidraw** / **Canvas**: diagrams and visual maps of ideas.
+- **Dashboard:** `wiki/dashboard.base`, an Obsidian Bases file (YAML), created at first launch. The file name stays in English; view names and column display names are written in the wiki's language. Its base filter keeps markdown pages with a `type`, except `source` pages. Five generic views:
+  - **Recently updated**: the 30 most recently updated pages;
+  - **How-tos by status**: how-tos grouped by `status`;
+  - **Dormant pages**: not updated for more than 60 days, excluding contact and company pages;
+  - **Orphans**: pages without backlinks, excluding `user`;
+  - **Contacts**: contact pages as cards.
+
+  When a domain gets its own fields (section 6), the agent may propose a dedicated view for it (e.g. bills filtered on that domain's folder, sorted by due date, with a sum of the amounts); nothing is added without validation. Generic content (display names to translate):
+
+  ```yaml
+  filters:
+    and:
+      - file.ext == "md"
+      - type
+      - type != "source"
+  formulas:
+    days_since_update: if(updated, (today() - date(updated)).days, "")
+    domain: file.folder.split("/").slice(1, 2).join("")
+    source_count: if(sources, list(sources).length, 0)
+  properties:
+    file.name:
+      displayName: Page
+    formula.domain:
+      displayName: Domain
+    formula.days_since_update:
+      displayName: Days since update
+    formula.source_count:
+      displayName: Sources
+    last_used:
+      displayName: Last used
+  views:
+    - type: table
+      name: Recently updated
+      order:
+        - file.name
+        - type
+        - formula.domain
+        - updated
+        - formula.source_count
+      sort:
+        - property: updated
+          direction: DESC
+      limit: 30
+    - type: table
+      name: How-tos by status
+      filters:
+        and:
+          - type == "howto"
+      groupBy:
+        property: status
+        direction: ASC
+      order:
+        - file.name
+        - formula.domain
+        - status
+        - last_used
+        - updated
+    - type: table
+      name: Dormant pages
+      filters:
+        and:
+          - formula.days_since_update > 60
+          - type != "contact"
+          - type != "company"
+      order:
+        - file.name
+        - type
+        - formula.domain
+        - updated
+        - formula.days_since_update
+      sort:
+        - property: formula.days_since_update
+          direction: DESC
+    - type: table
+      name: Orphans
+      filters:
+        and:
+          - file.backlinks.isEmpty()
+          - type != "user"
+      order:
+        - file.name
+        - type
+        - formula.domain
+        - updated
+    - type: cards
+      name: Contacts
+      filters:
+        and:
+          - type == "contact"
+      order:
+        - file.name
+        - relationship
+        - role
+        - company
+        - formula.domain
+  ```
 - **Graph view:** the best way to see the shape of the wiki — hubs, clusters, orphans.
 - **Configuration at first launch:** the agent writes these settings to `.obsidian/`, so the setup is reproducible:
   - `app.json`: `"useMarkdownLinks": false` (wikilinks), `"newLinkFormat": "shortest"`, `"attachmentFolderPath": "raw/assets"`, and `"userIgnoreFilters": ["templates/"]` (templates are excluded from search, graph, and link suggestions);
   - `templates.json`: `"folder": "templates"` (core Templates plugin);
-  - `core-plugins.json`: enable the core plugins used by the wiki (templates, graph, backlinks, canvas, file explorer, search);
+  - `core-plugins.json`: enable the core plugins used by the wiki (templates, graph, backlinks, canvas, file explorer, search, bases);
   - `.gitignore`: add `.obsidian/workspace*.json`.
 
   The agent then guides the user step by step for the rest (installing community plugins, the browser extension).
@@ -684,6 +782,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`), fallback index + grep |
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
+| Dashboard | `wiki/dashboard.base` (Obsidian Bases), 5 generic views + views proposed for domains with their own fields |
 | Link format | Wikilinks `[[...]]` |
 | Git | Optional, chosen at first launch (remote link asked if used) |
 | Commit mode | Asked at first launch: `propose` (default) or `automatic` |

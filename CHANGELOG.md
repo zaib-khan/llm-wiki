@@ -25,6 +25,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Commit mode and push frequency: at first launch, when git is used, the welcome interview asks (after the remote) whether the agent should propose each commit or commit on its own ("Commit mode": `propose`, default, or `automatic`, recorded in `settings.md`), and how many commits between pushes ("Push frequency": N, default 5; 1 = after every commit). `propose`: commits and pushes are proposed for validation; `automatic`: the agent commits at the end of each operation and reports the hash, and pushes are done and reported. Pending commits are also pushed at the end of a work session. No remote: commits only. Both settings can be changed at any time.
 - "I don't know" answers: an open question answered "I don't know" is closed. The related page records the information as unknown with the date (e.g. "Current medication: unknown (2026-11-08)"), the question leaves the open questions files and is not asked again, unless a new source brings the information. Skipping ("not now") still keeps the question open.
 - Update safety and review: with git, after the user's pending changes are committed, the update creates a local tag `pre-update-<version>` on that commit and tells the user that `git reset --hard pre-update-<version>` undoes the whole update. After applying, the agent creates a temporary review checklist at the wiki root (`changes-<version>.md`, named in the wiki's language), listing every applied change with a checkbox plus the safety commit and tag; the user ticks or comments, the agent undoes or adjusts refused points, then deletes the file. The lint flags a forgotten review file.
+- Obsidian Bases dashboard: at first launch the agent creates `wiki/dashboard.base` (core Bases plugin, enabled in `core-plugins.json`) with five generic views: recently updated, how-tos by status, dormant pages (over 60 days, contacts and companies excluded), orphans (`user` excluded), contacts as cards. View and column names are in the wiki's language. When a domain gets its own fields, the agent may propose a dedicated view (e.g. bills by due date with a total). Bases is the recommended tool for dynamic tables; Dataview stays optional. The lint never flags the dashboard as an orphan or empty note.
 
 ### Migration
 - The source split requires no wiki migration: installation, tagged updates and the saved prompt copy still use `zaib-khan-llm-wiki.md`.
@@ -40,6 +41,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Question style: existing wikis get the "Question style" setting in `settings.md` at update; the agent asks the user the question once (default `one by one`).
 - "I don't know" answers: none.
 - Commit mode and push frequency: existing wikis keep their current behavior until updated. At update, the agent asks the two questions once (commit mode, push frequency) and records the answers in `settings.md`.
+- Obsidian Bases dashboard: at update, after validation, the agent creates `wiki/dashboard.base` (translating view and column names, adding views for domains that already have their own fields if the user wants) and adds `bases` to `.obsidian/core-plugins.json`.
 
 ## [0.11.0] - 2026-10-15
 

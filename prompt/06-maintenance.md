@@ -5,14 +5,14 @@
 **Checks:**
 - contradictions between pages;
 - stale claims superseded by newer sources (may propose archiving the page, section 6);
-- orphan pages (no inbound links);
+- orphan pages (no inbound links; markdown notes only, so `wiki/dashboard.base` is never flagged);
 - important topics mentioned without their own knowledge page;
 - missing cross-references;
 - gaps that a web search could fill;
 - `CLAUDE.md` and `AGENTS.md` are identical;
 - file names are unique across the wiki;
 - pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
-- no link points to a folder or to a non-note file, and no empty note was created by mistake;
+- no link points to a folder or to a non-note file (including `wiki/dashboard.base`), and no empty note was created by mistake;
 - no empty or useless subfolders (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
