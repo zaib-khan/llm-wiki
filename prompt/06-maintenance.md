@@ -14,7 +14,7 @@
 - file names are unique across the wiki;
 - pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
 - no link points to a folder or to a non-note file (including `wiki/dashboard.base`), and no empty note was created by mistake;
-- no empty or useless subfolders (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
+- no empty or useless subfolders, including empty agent folders in `.claude/` and `.agents/` (section 5.8) (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
 - pages not updated for a long time (`user.md`, contact pages…), ignoring `archived` pages;

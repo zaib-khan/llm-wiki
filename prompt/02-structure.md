@@ -9,8 +9,10 @@ my-wiki/
 ├── settings.md            ← user settings (see section 15)
 ├── command.md             ← commands the user can give the agent (see section 7)
 ├── .llm-wiki/             ← copy of the prompt version applied (see section 9.6)
-├── .claude/skills/update_wiki/SKILL.md  ← skill for `/update_wiki` (Claude Code)
-├── .agents/skills/update_wiki/SKILL.md  ← identical copy (Codex and other agents)
+├── .claude/               ← Claude Code's folder (see section 5.8)
+│   └── skills/update_wiki/SKILL.md  ← skill for `/update_wiki`
+├── .agents/               ← folder read by Codex and other agents (see section 5.8)
+│   └── skills/update_wiki/SKILL.md  ← identical copy
 │
 ├── raw/                   ← inbox: everything arrives here
 │   ├── assets/            ← temporary: images downloaded by the agent
@@ -134,6 +136,16 @@ wiki/football/
 | Contacts and companies | `<domain>/contacts/` with `<domain>-contacts.md`, `<domain>/companies/` with `<domain>-companies.md` |
 | Projects | `<domain>/projects/<project>/<project>.md`; `wiki/projects/<project>/` only for cross-domain projects |
 | Templates | `templates/template-<type>.md` (e.g. `template-user.md`), so they never share a name with a wiki page |
+
+### 5.8 Agent folders: `.claude/` and `.agents/`
+
+- **`.claude/`** is Claude Code's folder:
+  - `skills/<name>/SKILL.md`: specialized procedures (e.g. `update_wiki`), invoked with `/<name>`. Each skill has an identical copy in `.agents/skills/` (section 7).
+  - `rules/`: extra instructions for Claude Code only. A rule meant for every agent must be referenced from both `CLAUDE.md` and `AGENTS.md`; a file in `.claude/rules/` alone is not read by Codex.
+  - `hooks/`: automatic checks run by Claude Code at certain moments (e.g. after a file is edited). A script placed there does nothing until it is activated in Claude Code's settings; nothing is activated without the user's validation.
+- **`.agents/`** is the folder read by Codex and other agents that support `.agents/skills/`: it holds the identical copies of the skills.
+- **Scripts stay in `scripts/`** at the wiki root (section 12), not in `.claude/`, so every agent and the user can run them.
+- **No subfolder is created in advance** (core principle 1): each one is created only when its first file is needed, with a short README in the wiki's language explaining its role, its prerequisites, and how its content is used. The lint flags empty agent folders like any other empty folder (section 9.4).
 
 ---
 
