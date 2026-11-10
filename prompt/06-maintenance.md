@@ -37,7 +37,7 @@
 - 💡 insights: recurring patterns, links between domains, forgotten ideas worth revisiting;
 - confused ideas to clarify together.
 
-**Asking and skipping questions:** questions are asked according to the question style (section 15). The user may skip any question. Skipped questions are stored in the open questions files (section 11.3) and asked again at the next lint or at any other time. Once answered, they are removed.
+**Asking and skipping questions:** questions are asked according to the question style (section 15). The user may skip any question ("not now"). Skipped questions are stored in the open questions files (section 11.3) and asked again at the next lint or at any other time. Once answered, they are removed. "I don't know" is an answer, not a skip: the information is recorded as unknown and the question is closed (section 11.3).
 
 The lint ends with a report, is logged (`lint`), and is followed by a commit proposal.
 
@@ -132,6 +132,7 @@ Questions waiting for the user's answer (skipped during a lint or an ingest, or 
   - a **General** section for questions about the user (`user.md`) or spanning several domains;
   - **links to the domain and project files that still have open questions**.
 - **Links follow the hierarchy:** the root links to domains and projects, and a domain file links to its subdomains' files, like the index.
+- **"I don't know" closes a question:** it counts as an answer. The related page records the information as unknown, with the date (e.g. "Current medication: unknown (2026-11-08)"), and the question is removed from the open questions files. The agent does not ask it again, unless a new source brings the information: then it updates the page and replaces "unknown". Skipping ("not now") is different: the question stays open and is asked again later.
 - **Created only when needed, deleted when empty:** a `<name>-open-questions.md` file is created with its first question. When all its questions are answered, the file is deleted and the link to it disappears from the parent level.
 
 ---

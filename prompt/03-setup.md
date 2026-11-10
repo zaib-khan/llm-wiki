@@ -83,6 +83,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Ingest trigger | On demand (`ingest` / `processRaw`) |
 | Ingest mode | Autonomous, questions grouped at the end |
 | Question style | Asked at first launch: one by one or as a list; default one by one; questions keep the context needed |
+| Unknown answers | Recorded as unknown with the date; question closed, not asked again |
 | Captured idea | Agent asks: integrate now or at next ingest |
 | New contact page | Requires validation; needs a name and a way to reach them (family: a name is enough) |
 | List pages | `<domain>-contacts.md` and `<domain>-companies.md` |
