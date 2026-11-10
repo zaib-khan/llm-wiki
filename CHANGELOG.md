@@ -20,6 +20,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Outdated pages: a page that is no longer useful but worth keeping gets the tag `archived` after the user's validation (the agent may propose it). It stays in place with its links and index entry (marked as archived), is no longer used to answer except for history, and is ignored by the lint's staleness check. Distinct from `wiki/archive/` (finished projects).
 - Optional "to try" / "tried" domain pattern: when the user collects many things to try, the agent may suggest a "to try" domain feeding a "tried" domain; tried items are kept (moved) or dropped (left with the reason). A suggestion, not a rule; domains still need validation.
 - Web page extraction: ingest (and saving web-search results to `raw/`) uses Defuddle first (`npx -y defuddle parse <url> --md`, `--json` for title, author, and date), with a plain fetch as fallback. Video transcripts and other content are unchanged.
+- Sub-agents for a large ingest (optional, section 9.2): when the agent can launch sub-agents, independent sources may be processed in parallel, one sub-agent per source. Sub-agents write only their source's own pages and report back; only the main agent writes shared files (index, log, domain and list pages, `user.md`, open questions), asks the user's questions at the end, and commits. Sources touching the same existing page are handled sequentially; each source is still completed as a unit.
 
 ### Migration
 - The source split requires no wiki migration: installation, tagged updates and the saved prompt copy still use `zaib-khan-llm-wiki.md`.
@@ -30,6 +31,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Archived tag: none needed.
 - To-try / tried pattern: none needed.
 - Defuddle: none needed. Existing wikis adopt it when they update.
+- Sub-agents for ingest: none.
 
 ## [0.11.0] - 2026-10-15
 

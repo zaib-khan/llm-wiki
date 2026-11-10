@@ -365,6 +365,13 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 
 When a decision is needed before a source can be filed or a page can be created, leave that source pending in `raw/` and ask at the end. Continue with independent sources. A text extraction beside a PDF, image, audio, or video is part of the same source, not a second item to ingest.
 
+**Sub-agents (optional):** for a large ingest, if the agent can launch sub-agents, it may hand each independent source to its own sub-agent, working in parallel.
+- Each sub-agent handles one source and writes only that source's own pages (source page and its entity, knowledge, how-to pages). It reports back the pages it created or changed, what the shared files need, and its pending questions.
+- Only the main agent writes the shared files (`index.md`, the log, domain pages, list pages, `user.md`, open questions) and makes the commit, so two agents never write the same file.
+- Sub-agents never create domains, subdomains, or contact pages; questions needing the user's judgment go back to the main agent, who asks them all at the end.
+- Two sub-agents never update the same existing page: sources touching the same page are handled one after the other by the main agent.
+- Each source is still completed as a unit (safe progress above): once its sub-agent reports, the main agent finalizes the shared files, then moves the raw file and logs that source.
+
 **For each source, the agent:**
 
 1. Reads it (for a non-text source, creates the text version first).
