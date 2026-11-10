@@ -341,7 +341,7 @@ When the agent receives this document for the first time, it performs these step
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
 2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. If the agent is Claude Code, create the short skill `.claude/skills/update_wiki/SKILL.md` (section 9.6).
 3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
-4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/`, create the dashboard `wiki/dashboard.base` (section 13), and give the user a step-by-step guide for the rest.
+4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/`, create the dashboard `wiki/dashboard.base` (section 13), propose installing kepano's Obsidian skills (section 13; only after validation and if the agent supports skills), and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
 6. **Log** the initialization and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
 
@@ -597,6 +597,7 @@ The wiki is designed to be read in **Obsidian**.
   - **Templater** / core **Templates**: use the templates in `templates/` when editing by hand.
   - **Marp**: slide decks in markdown.
   - **Excalidraw** / **Canvas**: diagrams and visual maps of ideas.
+- **Obsidian skills:** [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills), by the creator of Obsidian, in the Agent Skills format (Claude Code, Codex, and other agents supporting skills). At first launch the agent proposes to install them; it installs only after the user's validation and only if it supports skills: `npx skills add https://github.com/kepano/obsidian-skills` (other methods are described in the repository). Useful skills: `obsidian-markdown` (wikilinks, embeds, callouts, properties), `obsidian-bases` (valid `.base` files: views, filters, formulas, used for `wiki/dashboard.base`), `json-canvas` (`.canvas` files), `defuddle` (web extraction, used in ingest). Once installed, the agent uses them when writing pages, bases, or canvases. If installation fails or is declined, nothing changes: the rules of this document still apply.
 - **Dashboard:** `wiki/dashboard.base`, an Obsidian Bases file (YAML), created at first launch. The file name stays in English; view names and column display names are written in the wiki's language. Its base filter keeps markdown pages with a `type`, except `source` pages. Five generic views:
   - **Recently updated**: the 30 most recently updated pages;
   - **How-tos by status**: how-tos grouped by `status`;
@@ -784,6 +785,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Reading tool | Obsidian |
 | Dashboard | `wiki/dashboard.base` (Obsidian Bases), 5 generic views + views proposed for domains with their own fields |
 | Link format | Wikilinks `[[...]]` |
+| Obsidian skills | kepano/obsidian-skills proposed at first launch, installed after validation |
 | Git | Optional, chosen at first launch (remote link asked if used) |
 | Commit mode | Asked at first launch: `propose` (default) or `automatic` |
 | Push frequency | Every N unpushed commits (asked at first launch, default 5), plus at the end of a work session; commit only if no remote |

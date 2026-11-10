@@ -11,6 +11,7 @@ The wiki is designed to be read in **Obsidian**.
   - **Templater** / core **Templates**: use the templates in `templates/` when editing by hand.
   - **Marp**: slide decks in markdown.
   - **Excalidraw** / **Canvas**: diagrams and visual maps of ideas.
+- **Obsidian skills:** [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills), by the creator of Obsidian, in the Agent Skills format (Claude Code, Codex, and other agents supporting skills). At first launch the agent proposes to install them; it installs only after the user's validation and only if it supports skills: `npx skills add https://github.com/kepano/obsidian-skills` (other methods are described in the repository). Useful skills: `obsidian-markdown` (wikilinks, embeds, callouts, properties), `obsidian-bases` (valid `.base` files: views, filters, formulas, used for `wiki/dashboard.base`), `json-canvas` (`.canvas` files), `defuddle` (web extraction, used in ingest). Once installed, the agent uses them when writing pages, bases, or canvases. If installation fails or is declined, nothing changes: the rules of this document still apply.
 - **Dashboard:** `wiki/dashboard.base`, an Obsidian Bases file (YAML), created at first launch. The file name stays in English; view names and column display names are written in the wiki's language. Its base filter keeps markdown pages with a `type`, except `source` pages. Five generic views:
   - **Recently updated**: the 30 most recently updated pages;
   - **How-tos by status**: how-tos grouped by `status`;
