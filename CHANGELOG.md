@@ -13,9 +13,11 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ### Changed
 - Split prompt authoring into seven thematic files in `prompt/`. A dependency-free Python script assembles the same complete prompt, preserving its text and section order; `--check` detects an outdated generated file.
+- Ingest checks for partially processed sources, completes each source before moving it, and resumes interrupted work without duplicating pages or facts. Sources needing a filing decision stay pending while independent sources continue.
 
 ### Migration
 - The source split requires no wiki migration: installation, tagged updates and the saved prompt copy still use `zaib-khan-llm-wiki.md`.
+- No file migration. Existing wikis adopt this ingest procedure when they update the schema.
 
 ## [0.11.0] - 2026-10-15
 
