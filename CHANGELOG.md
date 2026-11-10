@@ -14,10 +14,12 @@ Versions follow `MAJOR.MINOR.PATCH`:
 ### Changed
 - Split prompt authoring into seven thematic files in `prompt/`. A dependency-free Python script assembles the same complete prompt, preserving its text and section order; `--check` detects an outdated generated file.
 - Ingest checks for partially processed sources, completes each source before moving it, and resumes interrupted work without duplicating pages or facts. Sources needing a filing decision stay pending while independent sources continue.
+- Projects attached to a domain or subdomain now live inside it (`wiki/<domain>/projects/<project>/<project>.md`, `projects/` being a reserved name); the domain page and template list its projects. `wiki/projects/` is kept only for cross-domain projects without a main domain.
 
 ### Migration
 - The source split requires no wiki migration: installation, tagged updates and the saved prompt copy still use `zaib-khan-llm-wiki.md`.
 - No file migration. Existing wikis adopt this ingest procedure when they update the schema.
+- Projects attached to a domain: projects currently in `wiki/projects/` that clearly belong to one domain are proposed to the user one by one and, after validation, moved to `wiki/<domain>/projects/<project>/` (their raw sources move to `raw/processed/<domain>/projects/<project>/`), and the domain page links them. Wikilinks resolve by file name, so links keep working. Cross-domain projects stay in `wiki/projects/`.
 
 ## [0.11.0] - 2026-10-15
 

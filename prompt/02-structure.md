@@ -23,8 +23,8 @@ my-wiki/
     ├── log/               ← archived monthly logs (YYYY-MM.md)
     ├── open-questions.md  ← general questions + links to domain question files
     ├── user.md            ← the center of the wiki
-    ├── <domain>/          ← one folder per domain (named with the user's word)
-    ├── projects/          ← ongoing, time-bound projects
+    ├── <domain>/          ← one folder per domain (named with the user's word), with its projects in `projects/`
+    ├── projects/          ← cross-domain projects without a main domain
     └── archive/           ← finished projects
 ```
 
@@ -96,7 +96,7 @@ wiki/football/
     └── stade-de-france.md      ← any other entity
 ```
 
-`contacts/` and `companies/` are reserved names too.
+`contacts/` and `companies/` are reserved names too, and so is `projects/` (a domain's projects, section 5.6).
 
 **Contact rules:**
 
@@ -112,7 +112,10 @@ wiki/football/
 
 ### 5.6 Projects and archive
 
-- Time-bound topics (reading a book, planning a trip, a research of a few weeks) live in `wiki/projects/<project>/`, with a project page `<project>.md`, following the same rules as domains.
+- Time-bound topics (reading a book, planning a trip, a research of a few weeks) are projects, with a project page `<project>.md`, following the same rules as domains.
+- **A project attached to a domain or subdomain lives inside it:** `wiki/<domain>/projects/<project>/<project>.md` (e.g. `wiki/family/projects/japan-trip/japan-trip.md`). The domain page links its projects. Its raw sources mirror this path: `raw/processed/<domain>/projects/<project>/`.
+- `projects/` inside a domain is a reserved name (like the type subfolders, never used as a domain or subdomain name), created only when the domain's first project exists.
+- **Cross-domain projects without a main domain** live in `wiki/projects/<project>/`. When the main domain is unclear, the agent chooses it with the user.
 - When a project is finished: the agent first **brings what has long-term value up into the relevant domains** (a lesson learned, a fact about a person, a reusable idea), then **moves the project to `wiki/archive/`**. Its raw sources follow the same move in `raw/processed/`.
 
 ### 5.7 Naming rules (summary)
@@ -125,6 +128,7 @@ wiki/football/
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
 | Contacts and companies | `<domain>/contacts/` with `<domain>-contacts.md`, `<domain>/companies/` with `<domain>-companies.md` |
+| Projects | `<domain>/projects/<project>/<project>.md`; `wiki/projects/<project>/` only for cross-domain projects |
 | Templates | `templates/template-<type>.md` (e.g. `template-user.md`), so they never share a name with a wiki page |
 
 ---
@@ -180,7 +184,7 @@ address:
 Each template then defines its sections (headings written in the user's language). Suggested defaults:
 
 - **user**: Identity · Current situation · Goals · Values & preferences · Health & wellbeing · Personality · Key people · Domains · History
-- **domain**: Overview · Pages (by type) · Contacts (link to `<domain>-contacts.md`) · Companies (link to `<domain>-companies.md`) · Subdomains · Key facts · Open points
+- **domain**: Overview · Pages (by type) · Contacts (link to `<domain>-contacts.md`) · Companies (link to `<domain>-companies.md`) · Subdomains · Projects (links to the domain's projects) · Key facts · Open points
 - **project**: Goal · Status · Timeline · Key information · Related pages · Outcome (when finished)
 - **contact**: Identity · Relationship to the user · Contact details · Work · Personality · Interests · Important dates · Close circle · Facts & information · Interaction history · Ideas & gifts · Links
 - **contact-list**: Overview · Contacts (table: name linked to the contact page, relationship, role, organization) · Links

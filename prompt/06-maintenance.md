@@ -42,7 +42,7 @@ The lint ends with a report, is logged (`lint`), and is followed by a commit pro
 
 ### 9.5 Project lifecycle
 
-- **Start:** a project is created in `wiki/projects/` (proposed by the agent or asked by the user).
+- **Start:** a project is created in its domain, `wiki/<domain>/projects/<project>/`, or in `wiki/projects/<project>/` when it is cross-domain with no main domain (proposed by the agent or asked by the user; section 5.6).
 - **End:** when the user says a project is finished, or after the user accepts a lint proposal: bring long-term value up into the domains, then move the project to `wiki/archive/` (and its raw sources accordingly). Logged as `archive`.
 
 ### 9.6 Update — keeping the wiki in line with new versions of this prompt
@@ -126,7 +126,7 @@ Short summary (1–3 lines).
 
 Questions waiting for the user's answer (skipped during a lint or an ingest, or born from the welcome interview) are split by domain, so no single file holds questions about everything.
 
-- **Per domain, subdomain, and project:** each one has its own file, named `<name>-open-questions.md` and placed in its folder (e.g. `wiki/family/family-open-questions.md`, `wiki/work/company/company-open-questions.md`, `wiki/projects/japan-trip/japan-trip-open-questions.md`). The prefix keeps file names unique. Each question has its date and the related page.
+- **Per domain, subdomain, and project:** each one has its own file, named `<name>-open-questions.md` and placed in its folder (e.g. `wiki/family/family-open-questions.md`, `wiki/work/company/company-open-questions.md`, `wiki/family/projects/japan-trip/japan-trip-open-questions.md`). The prefix keeps file names unique. Each question has its date and the related page.
 - **Root file `wiki/open-questions.md`:**
   - a **General** section for questions about the user (`user.md`) or spanning several domains;
   - **links to the domain and project files that still have open questions**.

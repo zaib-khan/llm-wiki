@@ -18,7 +18,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
 | `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.3) so the user can answer them. The user can also ask for the questions of one domain only. |
 | `new contact` | Creates a contact page after validation, in the right domain's `contacts/`, and adds it to the list `<domain>-contacts.md` (section 5.5). |
-| `new domain` / `new project` | Creates a domain, subdomain, or project after validation. |
+| `new domain` / `new project` | Creates a domain, subdomain, or project after validation (a project goes in its domain's `projects/` folder, section 5.6). |
 | `close project` | Brings long-term value into the domains, then archives the project (section 9.5). |
 | `settings` | Shows the current settings and lets the user change one (section 15). |
 | `commands` | Shows the content of `command.md`. |
@@ -72,6 +72,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Domains | Chosen by the user; agent proposes, user validates |
 | Subdomain depth | Unlimited (unique names, created only when justified) |
 | Type subfolders | Created only when needed (`contacts/`, `companies/` included) |
+| Projects | In their domain (`<domain>/projects/<project>/`); `wiki/projects/` only for cross-domain projects |
 | Raw file naming | `YYYY-MM-DD-short-title.ext` |
 | Raw capture fidelity | Errors corrected, meaning and wording unchanged |
 | Ingest trigger | On demand (`ingest` / `processRaw`) |
