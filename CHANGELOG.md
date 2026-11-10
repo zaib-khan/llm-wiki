@@ -21,6 +21,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Optional "to try" / "tried" domain pattern: when the user collects many things to try, the agent may suggest a "to try" domain feeding a "tried" domain; tried items are kept (moved) or dropped (left with the reason). A suggestion, not a rule; domains still need validation.
 - Web page extraction: ingest (and saving web-search results to `raw/`) uses Defuddle first (`npx -y defuddle parse <url> --md`, `--json` for title, author, and date), with a plain fetch as fallback. Video transcripts and other content are unchanged.
 - Sub-agents for a large ingest (optional, section 9.2): when the agent can launch sub-agents, independent sources may be processed in parallel, one sub-agent per source. Sub-agents write only their source's own pages and report back; only the main agent writes shared files (index, log, domain and list pages, `user.md`, open questions), asks the user's questions at the end, and commits. Sources touching the same existing page are handled sequentially; each source is still completed as a unit.
+- Question style setting: at first launch, the welcome interview asks whether the user prefers questions one at a time or all together in a list (recorded in `settings.md`, "Question style": `one by one` or `list`; default `one by one`). It applies wherever the agent asks several questions (end of ingest, lint, update, open questions review). In both styles, each question keeps the context needed to answer it. The user can change it for good or just for the current batch.
 
 ### Migration
 - The source split requires no wiki migration: installation, tagged updates and the saved prompt copy still use `zaib-khan-llm-wiki.md`.
@@ -32,6 +33,7 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - To-try / tried pattern: none needed.
 - Defuddle: none needed. Existing wikis adopt it when they update.
 - Sub-agents for ingest: none.
+- Question style: existing wikis get the "Question style" setting in `settings.md` at update; the agent asks the user the question once (default `one by one`).
 
 ## [0.11.0] - 2026-10-15
 

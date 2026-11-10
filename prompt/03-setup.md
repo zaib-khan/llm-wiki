@@ -12,11 +12,11 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 
 | Command | What it does |
 |---|---|
-| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the index, moves the file to `raw/processed/`, then reports and asks the pending questions at the end (section 9.2). |
+| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the index, moves the file to `raw/processed/`, then reports and asks the pending questions at the end, in the question style (section 9.2). |
 | `lint` | Runs a health check of the wiki: fixes mechanical issues, asks about content issues, and brings questions, sources to look for, and 💡 insights (section 9.4). |
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
-| `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.3) so the user can answer them. The user can also ask for the questions of one domain only. |
+| `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.3), in the question style, so the user can answer them. The user can also ask for the questions of one domain only. |
 | `new contact` | Creates a contact page after validation, in the right domain's `contacts/`, and adds it to the list `<domain>-contacts.md` (section 5.5). |
 | `new domain` / `new project` | Creates a domain, subdomain, or project after validation (a project goes in its domain's `projects/` folder, section 5.6). |
 | `close project` | Brings long-term value into the domains, then archives the project (section 9.5). |
@@ -37,6 +37,7 @@ When the agent receives this document for the first time, it performs these step
    2. **Name:** "What is your name?" — nothing more. It creates `wiki/user.md` with the name only.
    3. **First domain:** "What first domain do you want to create?" (work, family, or anything else). It creates the domain folder and its domain page.
    4. **Git:** "Do you want to use git for your wiki?" If the answer is **no**, the agent does nothing related to git, now or later (section 14). If the answer is **yes**, it asks: "What is the link of your remote repository?" (the user may answer that there is none yet).
+   5. **Question style:** "Do you prefer my questions one at a time, or all together in a list?" The answer is recorded in `settings.md` (section 15); if the user does not know, `one by one`.
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
 2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. If the agent is Claude Code, create the short skill `.claude/skills/update_wiki/SKILL.md` (section 9.6).
@@ -54,6 +55,8 @@ Every rule in this document is a default. The user can change them:
 - **at any time**, by asking the agent. The agent proposes the change to `settings.md` (and to `CLAUDE.md` / `AGENTS.md` if a rule changes), and applies it only after validation.
 
 User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4) and domain-specific frontmatter fields (section 6); changing them is proposed, validated, and logged `schema`, like any other rule.
+
+**Question style** (`settings.md`, "Question style": `one by one` or `list`): how the agent asks the user several questions — at the end of an ingest, during a lint or an update, and when reviewing open questions. `one by one`: one question, wait for the answer, then the next. `list`: all questions together, numbered. In both styles, each question carries the context needed to answer it (keep useful details, drop only filler). The user can change the style for good (customization rule above) or just for the current batch ("ask everything as a list this time").
 
 ---
 
@@ -79,6 +82,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Raw capture fidelity | Errors corrected, meaning and wording unchanged |
 | Ingest trigger | On demand (`ingest` / `processRaw`) |
 | Ingest mode | Autonomous, questions grouped at the end |
+| Question style | Asked at first launch: one by one or as a list; default one by one; questions keep the context needed |
 | Captured idea | Agent asks: integrate now or at next ingest |
 | New contact page | Requires validation; needs a name and a way to reach them (family: a name is enough) |
 | List pages | `<domain>-contacts.md` and `<domain>-companies.md` |

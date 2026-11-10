@@ -37,7 +37,7 @@
 - 💡 insights: recurring patterns, links between domains, forgotten ideas worth revisiting;
 - confused ideas to clarify together.
 
-**Skipping questions:** the user may skip any question. Skipped questions are stored in the open questions files (section 11.3) and asked again at the next lint or at any other time. Once answered, they are removed.
+**Asking and skipping questions:** questions are asked according to the question style (section 15). The user may skip any question. Skipped questions are stored in the open questions files (section 11.3) and asked again at the next lint or at any other time. Once answered, they are removed.
 
 The lint ends with a report, is logged (`lint`), and is followed by a commit proposal.
 
@@ -69,7 +69,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
 4. **Secure the wiki before changing anything.**
    - **With git:** ask the user to commit their pending changes first, so everything can be undone.
    - **Without git:** copy the whole wiki to `../<wiki-name>_backup/` (next to the wiki, outside Obsidian, qmd, and the lint). A new backup replaces the previous one. Record its date in `settings.md`.
-5. **Present the changes and get validation.**
+5. **Present the changes and get validation.** Questions to the user follow the question style (section 15).
    - **Simple changes** (new rule, new command, updated template, new setting): validated all at once.
    - **Changes touching the user's content** (moving, renaming, or modifying existing pages and files): validated one by one, each with an explanation.
    - **Migrating pages to a new template** (e.g. an old type replaced by a new one):
