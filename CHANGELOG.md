@@ -16,12 +16,14 @@ Versions follow `MAJOR.MINOR.PATCH`:
 - Ingest checks for partially processed sources, completes each source before moving it, and resumes interrupted work without duplicating pages or facts. Sources needing a filing decision stay pending while independent sources continue.
 - Projects attached to a domain or subdomain now live inside it (`wiki/<domain>/projects/<project>/<project>.md`, `projects/` being a reserved name); the domain page and template list its projects. `wiki/projects/` is kept only for cross-domain projects without a main domain.
 - Per-domain filing rules: when it is unclear where content belongs among a domain's subdomains or projects, the agent proposes a short filing rule; once validated, it is recorded in `settings.md` ("Filing rule (<domain>)") and applied at every ingest and capture without asking again.
+- Domain-specific frontmatter fields: a domain may have its own extra fields (e.g. `amount`, `due_date`, `status` for bills). The agent proposes them; once validated, they are recorded per domain in `settings.md`, filled on new and updated pages when known, and checked by the lint. When tags mirror a field, the field is the reference.
 
 ### Migration
 - The source split requires no wiki migration: installation, tagged updates and the saved prompt copy still use `zaib-khan-llm-wiki.md`.
 - No file migration. Existing wikis adopt this ingest procedure when they update the schema.
 - Projects attached to a domain: projects currently in `wiki/projects/` that clearly belong to one domain are proposed to the user one by one and, after validation, moved to `wiki/<domain>/projects/<project>/` (their raw sources move to `raw/processed/<domain>/projects/<project>/`), and the domain page links them. Wikilinks resolve by file name, so links keep working. Cross-domain projects stay in `wiki/projects/`.
 - Filing rules: none needed. Existing wikis adopt them when they update; rules are added to `settings.md` as filing questions arise.
+- Domain-specific fields: none needed.
 
 ## [0.11.0] - 2026-10-15
 

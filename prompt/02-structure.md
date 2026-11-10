@@ -170,6 +170,7 @@ tags: []
 - **contact**: `relationship`, `birthday`, `company` (link to the company page), `role`, `address`
 - **howto**: `status` (`writing` · `draft` · `tested` · `outdated`), `last_used`. The matching tag `howto/<status>` is always added and kept in sync with `status`; `status` is the reference.
 - **company**: `relationship`, `industry`, `website`, `size`, `founded`, `address` (headquarters)
+- **domain-specific fields**: a domain may have its own extra fields for its pages (e.g. a `bills` domain: `amount` (number), `due_date` (`YYYY-MM-DD`, empty if unknown), `status` (`to-pay` · `urgent` · `payment-plan` · `disputed` · `paid`)). The agent proposes them when they would help sort, filter, or track that domain's pages; nothing is added without the user's validation. Once validated, they are recorded in `settings.md` (one "Fields (<domain>)" row per domain: field names, format, allowed values), and the agent fills them on every new page of that domain and when updating existing ones, only when the value is known or deducible (otherwise left empty). When tags mirror a field, the field is the reference and the tags stay in sync (as for howto `status`).
 
 `address` is detailed as much as possible:
 

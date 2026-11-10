@@ -21,6 +21,7 @@
 - every contact and company page links to its list (`<domain>-contacts.md`, `<domain>-companies.md`), and every list includes all pages of its folder;
 - every contact page meets the contact rules (a name and a way to reach them, or marked as family);
 - how-tos: `outdated` ones, `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
+- pages of a domain with domain-specific fields (section 6) have those fields, with allowed values, and their mirrored tags match;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.

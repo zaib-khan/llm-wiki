@@ -243,6 +243,7 @@ tags: []
 - **contact**: `relationship`, `birthday`, `company` (link to the company page), `role`, `address`
 - **howto**: `status` (`writing` · `draft` · `tested` · `outdated`), `last_used`. The matching tag `howto/<status>` is always added and kept in sync with `status`; `status` is the reference.
 - **company**: `relationship`, `industry`, `website`, `size`, `founded`, `address` (headquarters)
+- **domain-specific fields**: a domain may have its own extra fields for its pages (e.g. a `bills` domain: `amount` (number), `due_date` (`YYYY-MM-DD`, empty if unknown), `status` (`to-pay` · `urgent` · `payment-plan` · `disputed` · `paid`)). The agent proposes them when they would help sort, filter, or track that domain's pages; nothing is added without the user's validation. Once validated, they are recorded in `settings.md` (one "Fields (<domain>)" row per domain: field names, format, allowed values), and the agent fills them on every new page of that domain and when updating existing ones, only when the value is known or deducible (otherwise left empty). When tags mirror a field, the field is the reference and the tags stay in sync (as for howto `status`).
 
 `address` is detailed as much as possible:
 
@@ -426,6 +427,7 @@ Then it proposes a commit (section 14).
 - every contact and company page links to its list (`<domain>-contacts.md`, `<domain>-companies.md`), and every list includes all pages of its folder;
 - every contact page meets the contact rules (a name and a way to reach them, or marked as family);
 - how-tos: `outdated` ones, `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
+- pages of a domain with domain-specific fields (section 6) have those fields, with allowed values, and their mirrored tags match;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
@@ -606,7 +608,7 @@ Every rule in this document is a default. The user can change them:
 
 - **at any time**, by asking the agent. The agent proposes the change to `settings.md` (and to `CLAUDE.md` / `AGENTS.md` if a rule changes), and applies it only after validation.
 
-User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4); changing one is proposed, validated, and logged `schema`, like any other rule.
+User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4) and domain-specific frontmatter fields (section 6); changing them is proposed, validated, and logged `schema`, like any other rule.
 
 ---
 
@@ -625,6 +627,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Domains | Chosen by the user; agent proposes, user validates |
 | Subdomain depth | Unlimited (unique names, created only when justified) |
 | Filing rules | Proposed by the agent when filing is ambiguous; recorded per domain in `settings.md` after validation |
+| Domain-specific fields | Proposed by the agent, recorded per domain in `settings.md` after validation |
 | Type subfolders | Created only when needed (`contacts/`, `companies/` included) |
 | Projects | In their domain (`<domain>/projects/<project>/`); `wiki/projects/` only for cross-domain projects |
 | Raw file naming | `YYYY-MM-DD-short-title.ext` |
