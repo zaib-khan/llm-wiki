@@ -26,7 +26,7 @@
 - how-tos: `outdated` ones (may propose archiving them), `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
 - pages of a domain with domain-specific fields (section 6) have those fields, with allowed values, and their mirrored tags match;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
-- no forgotten update review file (`changes-<version>.md` or its translation) remains at the wiki root: if one does, finish the review with the user, then delete it.
+- no forgotten temporary file the agent created and should have deleted: an update review file (`changes-<version>.md` or its translation) at the wiki root, or any other temporary note. The agent flags it and asks the user before deleting it; for a review file, it first offers to finish the review;
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
 
