@@ -17,7 +17,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 
 | Command | What it does |
 |---|---|
-| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the index, moves the file to `raw/processed/`, then reports and asks the pending questions at the end, in the question style (section 9.2). |
+| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the domain pages, moves the file to `raw/processed/`, then reports and asks the pending questions at the end, in the question style (section 9.2). |
 | `lint` | Runs a health check of the wiki: fixes mechanical issues, asks about content issues, and brings questions, sources to look for, and 💡 insights (section 9.4). |
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
@@ -48,8 +48,8 @@ When the agent receives this document for the first time, it performs these step
    6. **Interaction needs (optional):** "Do you have a difficulty that should change how I talk or write to you — for example dyslexia, ADHD, or anything similar? You can skip this question." If the answer is yes, the agent follows the interaction needs rule (section 7). The user may also mention such a need later, at any time.
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.2). The defaults (section 16) apply until the user changes them.
-2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
-3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
+2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md` listing the first domain and the general pages, section 11.1; `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
+3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the tree `index.md` → domain pages, plus grep (section 12).
 4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/`, create the dashboard `wiki/dashboard.base` (section 13), propose installing kepano's Obsidian skills (section 13; only after validation and if the agent supports skills), and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
 6. **Commit** the initialization (`init:`, if git is used, section 14) and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
@@ -112,12 +112,12 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Web page extraction | Defuddle (`npx -y defuddle parse <url> --md`), plain fetch as fallback |
 | Lint trigger | On demand + suggested after 10 ingests or 30 days |
 | Lint fixes | Mechanical: automatic · Content: user decides |
-| Index size | Split by domain proposed above ~50 KB, after validation |
+| Navigation | `wiki/index.md` lists only the main domains, general pages, and cross-domain projects; each domain page lists its direct pages and subdomains (overview at most 15 lines, key facts at most 20) |
 | Open questions | One `<name>-open-questions.md` per domain, subdomain, and project (created when needed, deleted when empty); `wiki/open-questions.md` holds general questions and links |
 | Contradictions | ⚠️ flag in page + user decides |
 | Idea evolution | Visible dated history in the page |
 | Log | None: commit messages are the trace of operations (section 14) |
-| Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`), fallback index + grep |
+| Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`); without qmd, the tree `index.md` → domain → subdomain → page, then grep |
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
 | Dashboard | `wiki/dashboard.base` (Obsidian Bases), 5 generic views + views proposed for domains with their own fields |

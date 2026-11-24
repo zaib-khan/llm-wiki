@@ -56,7 +56,7 @@ The agent must follow these principles at all times:
 - may make **small edits** directly in the wiki. Larger changes should go through the agent. **Exception:** the user may freely write a `howto` page by hand, over several days, while its status is `writing` (section 6).
 
 **The agent (librarian):**
-- writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, index;
+- writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, domain pages, index;
 - classifies everything according to the rules;
 - finds and synthesizes answers, with citations;
 - keeps the wiki consistent and healthy;
@@ -68,7 +68,7 @@ The agent must follow these principles at all times:
 - help clarify ideas that are still confused;
 - spot what escapes the user: links between ideas or domains, recurring patterns, weak signals, overlooked details.
 
-**Manual edits by the user:** at the start of each operation, the agent detects manual changes (via git, or via file modification dates when git is not used). It treats them as true, propagates them where needed (index, links, related pages), and reports any contradiction they create with other pages.
+**Manual edits by the user:** at the start of each operation, the agent detects manual changes (via git, or via file modification dates when git is not used). It treats them as true, propagates them where needed (domain pages, links, related pages), and reports any contradiction they create with other pages.
 
 ---
 
@@ -95,7 +95,7 @@ my-wiki/
 ├── templates/             ← one template per page type
 │
 └── wiki/
-    ├── index.md           ← full catalog of all pages
+    ├── index.md           ← main domains, general pages, cross-domain projects
     ├── open-questions.md  ← general questions + links to domain question files
     ├── dashboard.base     ← Obsidian Bases dashboard (see section 13)
     ├── user.md            ← the center of the wiki
@@ -123,7 +123,7 @@ my-wiki/
 
 ### 5.4 `wiki/` — domains
 
-- **A domain is a folder.** Each domain folder contains a domain page with the same name: `wiki/family/family.md`. The domain page gives an overview and lists all pages of the domain.
+- **A domain is a folder.** Each domain folder contains a domain page with the same name: `wiki/family/family.md`. The domain page is the navigation page of its level: it gives an overview and lists the domain's direct pages and direct subdomains and projects (section 6, "Domain and project pages"). There is no separate index per domain.
 - Domains are **chosen by the user** (family, work, health, a hobby — anything). Domain folders are named **exactly with the word the user gives**, whatever its language (e.g. "work" stays `work/` in a French wiki): no translation, no confirmation needed. The agent only checks the spelling: if it spots a typo, it proposes the corrected name before creating the folder.
 - **Subdomains** follow exactly the same rule, recursively: `wiki/work/company/company.md`.
 - **No depth limit**, with two safeguards:
@@ -239,8 +239,8 @@ The `templates/` folder holds one template per page type, named `template-<type>
 | Type | Purpose |
 |---|---|
 | `user` | The user: identity, situation, goals, values, preferences, health, psychology, relationships — the center of the wiki |
-| `domain` | Overview of a domain or subdomain, with the list of its pages |
-| `project` | A time-bound project: goal, status, dates, related pages |
+| `domain` | Navigation page of a domain or subdomain: overview, direct subdomains and projects, direct pages, key facts |
+| `project` | A time-bound project, with the same navigation structure as a domain page |
 | `contact` | A person: identity, relationship to the user, contact details, work, personality, history |
 | `contact-list` | The list page of a `contacts/` folder, linking all its contact pages |
 | `company` | A company: identity, activity, location, relationship to the user, organization, people known there |
@@ -284,8 +284,8 @@ address:
 Each template then defines its sections (headings written in the user's language). Suggested defaults:
 
 - **user**: Identity · Current situation · Goals · Values & preferences · Health & wellbeing · Personality · Key people · Domains · History
-- **domain**: Overview · Pages (by type) · Contacts (link to `<domain>-contacts.md`) · Companies (link to `<domain>-companies.md`) · Subdomains · Projects (links to the domain's projects) · Key facts · Open points
-- **project**: Goal · Status · Timeline · Key information · Related pages · Outcome (when finished)
+- **domain**: Overview · Subdomains and projects · Pages (subsections by type: Entities · Knowledge · How-tos · Sources · Syntheses) · Contacts and companies · Key facts · Open points (see "Domain and project pages" below)
+- **project**: the same sections as a domain page
 - **contact**: Identity · Relationship to the user · Contact details · Work · Personality · Interests · Important dates · Close circle · Facts & information · Interaction history · Ideas & gifts · Links
 - **contact-list**: Overview · Contacts (table: name linked to the contact page, relationship, role, organization) · Links
 - **company-list**: Overview · Companies (table: name linked to the company page, industry, relationship to the user) · Links
@@ -302,6 +302,17 @@ Each template then defines its sections (headings written in the user's language
 - For **`contact` and `company` pages, every section is optional**: the page keeps the order and the names of its template's sections, but only shows the sections that have content. A new section is added when there is something to put in it. (What a contact needs to exist is defined in section 5.5.)
 - For **`howto` pages, only "Goal" is required**; the other sections are optional.
 
+**Domain and project pages:** the page of a domain, subdomain, or project is the navigation page of its level. A project's goal, status, and timeline go in the overview and key facts; when it is finished, its outcome is one "Outcome" line in the key facts. Its sections, in this order, are always present, even empty (headings in the wiki's language):
+
+1. **Overview:** at most 15 non-empty lines (title excluded), what the domain is about and where it stands. No minimum: a short page is not padded.
+2. **Subdomains and projects:** the direct subdomains and projects only, each as `[[link]] — one-line summary`.
+3. **Pages:** the direct pages only (those in the domain's own type subfolders), grouped in one subsection per type (entities, knowledge, how-tos, sources, syntheses), each as `[[link]] — one-line summary`.
+4. **Contacts and companies:** only the links to `<domain>-contacts.md` and `<domain>-companies.md`, when they exist. A subdomain or project without its own contacts or companies links to its parent's lists.
+5. **Key facts:** at most 20 points, the most important ones. No minimum.
+6. **Open points:** only the link to `<domain>-open-questions.md`, when it exists.
+
+A domain page never lists the pages of its subdomains or projects: each level lists only its own. **Every page of the wiki is listed exactly once, by the page of its own domain**, except contact and company pages (listed by their list pages), open-questions files (linked from Open points), and the domain page itself (listed by its parent's page, or by `index.md` for a main domain or a cross-domain project). When the overview or the key facts overflow, the surplus goes to a `synthesis` page of the domain, linked from the domain page.
+
 **How-to status:**
 
 | `status` | Meaning |
@@ -314,7 +325,7 @@ Each template then defines its sections (headings written in the user's language
 - A `writing` how-to may be used to answer a question, but the agent says so: "⚠️ this how-to is still being written". The agent never completes it on its own.
 - When the user says a how-to is finished, the agent sets its status to `draft` (or `tested` if the user has already followed it).
 
-**Archived pages:** a page that is no longer useful but worth keeping is not deleted: after the user's validation, it gets the tag `archived` (the agent may propose it, e.g. when a decision makes a procedure obsolete). Deleting a page remains the user's decision. An `archived` page stays in place and keeps its links and its index entry (marked as archived). The agent no longer uses it to answer, except for history ("what did we plan before?"), and then says so. This differs from `wiki/archive/`, which holds finished projects.
+**Archived pages:** a page that is no longer useful but worth keeping is not deleted: after the user's validation, it gets the tag `archived` (the agent may propose it, e.g. when a decision makes a procedure obsolete). Deleting a page remains the user's decision. An `archived` page stays in place and keeps its links and its entry in its domain page (marked as archived). The agent no longer uses it to answer, except for history ("what did we plan before?"), and then says so. This differs from `wiki/archive/`, which holds finished projects.
 
 ---
 
@@ -337,7 +348,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 
 | Command | What it does |
 |---|---|
-| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the index, moves the file to `raw/processed/`, then reports and asks the pending questions at the end, in the question style (section 9.2). |
+| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the domain pages, moves the file to `raw/processed/`, then reports and asks the pending questions at the end, in the question style (section 9.2). |
 | `lint` | Runs a health check of the wiki: fixes mechanical issues, asks about content issues, and brings questions, sources to look for, and 💡 insights (section 9.4). |
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
@@ -368,8 +379,8 @@ When the agent receives this document for the first time, it performs these step
    6. **Interaction needs (optional):** "Do you have a difficulty that should change how I talk or write to you — for example dyslexia, ADHD, or anything similar? You can skip this question." If the answer is yes, the agent follows the interaction needs rule (section 7). The user may also mention such a need later, at any time.
 
    That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.2). The defaults (section 16) apply until the user changes them.
-2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
-3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
+2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md` listing the first domain and the general pages, section 11.1; `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
+3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the tree `index.md` → domain pages, plus grep (section 12).
 4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/`, create the dashboard `wiki/dashboard.base` (section 13), propose installing kepano's Obsidian skills (section 13; only after validation and if the agent supports skills), and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
 6. **Commit** the initialization (`init:`, if git is used, section 14) and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
@@ -394,13 +405,13 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 
 **Rhythm:** the agent processes all sources in `raw/` **autonomously**. It only needs the user for things that require their judgment (contradictions, new domains or subdomains, new contact pages, classification doubts). It **does not stop**: it sets these points aside and asks **all its questions at the end**, according to the question style (section 15).
 
-**Safe progress:** before writing, list the files waiting directly in `raw/` and check whether any already has a source page or a copy in `raw/processed/` (including after an interrupted ingest). Process one source at a time. A source is complete only when its raw file, source page, related pages, links, domain page, and index agree. Only then move the raw file. If processing stops midway, the next ingest reconciles those existing files and finishes the source instead of creating a second source page or duplicating facts. Report any incomplete source that cannot be reconciled; never silently discard it.
+**Safe progress:** before writing, list the files waiting directly in `raw/` and check whether any already has a source page or a copy in `raw/processed/` (including after an interrupted ingest). Process one source at a time. A source is complete only when its raw file, source page, related pages, links, and domain page agree. Only then move the raw file. If processing stops midway, the next ingest reconciles those existing files and finishes the source instead of creating a second source page or duplicating facts. Report any incomplete source that cannot be reconciled; never silently discard it.
 
 When a decision is needed before a source can be filed or a page can be created, leave that source pending in `raw/` and ask at the end. Continue with independent sources. A text extraction beside a PDF, image, audio, or video is part of the same source, not a second item to ingest.
 
 **Sub-agents (optional):** for a large ingest, if the agent can launch sub-agents, it may hand each independent source to its own sub-agent, working in parallel.
 - Each sub-agent handles one source and writes only that source's own pages (source page and its entity, knowledge, how-to pages). It reports back the pages it created or changed, what the shared files need, and its pending questions.
-- Only the main agent writes the shared files (`index.md`, domain pages, list pages, `user.md`, open questions) and makes the commit, so two agents never write the same file.
+- Only the main agent writes the shared files (domain pages, list pages, `index.md` when a domain changes, `user.md`, open questions) and makes the commit, so two agents never write the same file.
 - Sub-agents never create domains, subdomains, or contact pages; questions needing the user's judgment go back to the main agent, who asks them all at the end.
 - Two sub-agents never update the same existing page: sources touching the same page are handled one after the other by the main agent.
 - Each source is still completed as a unit (safe progress above): once its sub-agent reports, the main agent finalizes the shared files, then moves the raw file.
@@ -418,7 +429,7 @@ When a decision is needed before a source can be filed or a page can be created,
 7. Updates `user.md` freely when it learns something about the user — and **reports to the user exactly what was added, changed, or removed**.
 8. Flags contradictions (section 10) and records the evolution of the user's ideas.
 9. Adds all links (wikilinks) both ways where relevant.
-10. Updates the domain pages and `index.md`.
+10. Updates the domain page of each page created, renamed, moved, or deleted (or whose summary changed), and only that one; a new subdomain or project is added to its parent's page. `index.md` changes only when a main domain is created, renamed, or archived, or when its summary changes (section 11.1).
 11. Moves the source (and its assets) to `raw/processed/<main domain>/`.
 
 **After all sources, the agent re-indexes search and presents a report:**
@@ -434,7 +445,7 @@ Then it commits (`ingest:`) according to the commit mode (section 14).
 
 ### 9.3 Query — answering questions
 
-1. The agent reads `index.md` and the relevant domain pages, searches (qmd) across `wiki/` and `raw/processed/`, and reads the relevant pages.
+1. The agent searches first with the search engine (qmd, section 12) across `wiki/` and `raw/processed/`. Without it, it walks the tree `index.md` → domain page → subdomain page → page, and uses grep only as a last resort. Then it reads the relevant pages.
 2. It answers in **the format best suited to the question** (text, markdown page, table, Mermaid diagram, chart, Marp slides, Obsidian canvas…).
 3. **Citations:** it cites both the wiki pages (`[[page]]`) and, when useful, the original raw sources.
 4. **Proactive section:** when — and only when — something relevant exists, the answer ends with a dedicated section where each item starts with 💡: forgotten ideas related to the question, details from the user's life that shed light on it, links the user may have missed.
@@ -476,12 +487,12 @@ Then it commits (`ingest:`) according to the commit mode (section 14).
 - interaction guidelines (section 7), if any: occasionally, the lint asks the user whether they still help or need adjusting;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - no forgotten temporary file the agent created and should have deleted: an update review file (`changes-<version>.md` or its translation) at the wiki root, or any other temporary note. The agent flags it and asks the user before deleting it; for a review file, it first offers to finish the review;
-- `wiki/index.md` is not too large to read efficiently (default threshold about 50 KB, configurable in `settings.md`, "Index size"): if it is, the lint proposes to split it by domain (section 11.1), applied only after validation;
+- navigation (sections 6 and 11.1): every page is listed exactly once, by the page of its own domain (except contact and company pages, listed by their list pages, open-questions files, linked from Open points, and domain pages, listed by their parent's page or by `index.md`); every subdomain and project is linked from its parent's page; no domain page lists the pages of its subdomains or projects; `wiki/index.md` lists every main domain and nothing more than planned (general pages, cross-domain projects); domain and project pages respect their limits (overview at most 15 non-empty lines, key facts at most 20 points);
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page: it is turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates an empty note at the root.
 
 **Fixes:**
-- **Mechanical, safe fixes** are done automatically: links, index, orphans, template formatting, frontmatter syntax (fixed without changing any value), empty folders.
+- **Mechanical, safe fixes** are done automatically: links, domain pages, index, orphans, template formatting, frontmatter syntax (fixed without changing any value), empty folders.
 - **Content decisions** need the user: contradictions, stale claims, merging or deleting pages.
 - **Web searches** follow the Query rule: permission before searching, permission before integrating.
 
@@ -560,23 +571,20 @@ This document evolves. A wiki created with an older version keeps its old rules 
 
 ---
 
-## 11. Index and Open Questions
+## 11. Index, Domain Pages and Open Questions
 
-### 11.1 `wiki/index.md`
+### 11.1 `wiki/index.md` and domain pages
 
-The full catalog of the wiki, organized by domain and type. Updated at every operation that creates or changes pages. When answering a question, the agent reads it first. Each entry contains:
+Navigation is a tree: `wiki/index.md` → domain page → subdomain or project page → page. Each level lists only the level just below it, so the agent reads only what it needs and no page is listed twice.
 
-- the link `[[page]]`;
-- a one-line summary;
-- the type;
-- the creation date;
-- the last update date;
-- the number of sources feeding the page;
-- tags (an `archived` page is marked as archived).
+- **`wiki/index.md`** lists only:
+  - the main domains, each with its link and a summary of 1 to 3 lines;
+  - the general pages: `user.md`, `open-questions.md`, and the dashboard `wiki/dashboard.base` when it exists (written as code, never as a link, section 13);
+  - the cross-domain projects of `wiki/projects/`.
 
-In addition, **each domain page lists its own pages**, so the agent can navigate both globally and domain by domain.
-
-**Large index:** when the lint finds `wiki/index.md` too large (section 9.4) and the user validates the split, each domain gets `<domain>-index.md` in its folder, with the same entry format, and `wiki/index.md` keeps only an overview: links to the domain indexes, plus the cross-domain projects and general pages. The rules of this section then apply to each domain index, and when answering, the agent reads the root index, then the relevant domain index.
+  It is changed only when a main domain (or cross-domain project) is created, renamed, or archived, or when its summary changes. There is no `<domain>-index.md` file.
+- **Domain pages** (domains, subdomains, and projects) are the navigation pages of their level; their sections and limits are defined in section 6 ("Domain and project pages").
+- **Upkeep:** when a page is created, renamed, moved, or deleted, or its summary changes, the agent updates the page of its domain, and only that one. A new subdomain or project is added to its parent's page. When the overview or the key facts overflow their limits, the surplus goes to a `synthesis` page of the domain.
 
 ### 11.2 Open questions
 
@@ -586,7 +594,7 @@ Questions waiting for the user's answer (skipped during a lint or an ingest, or 
 - **Root file `wiki/open-questions.md`:**
   - a **General** section for questions about the user (`user.md`) or spanning several domains;
   - **links to the domain and project files that still have open questions**.
-- **Links follow the hierarchy:** the root links to domains and projects, and a domain file links to its subdomains' files, like the index.
+- **Links follow the hierarchy:** the root links to domains and projects, and a domain file links to its subdomains' files, like the domain pages.
 - **"I don't know" closes a question:** it counts as an answer. The related page records the information as unknown, with the date (e.g. "Current medication: unknown (2026-11-08)"), and the question is removed from the open questions files. The agent does not ask it again, unless a new source brings the information: then it updates the page and replaces "unknown". Skipping ("not now") is different: the question stays open and is asked again later.
 - **Created only when needed, deleted when empty:** a `<name>-open-questions.md` file is created with its first question. When all its questions are answered, the file is deleted and the link to it disappears from the parent level.
 
@@ -598,7 +606,7 @@ Questions waiting for the user's answer (skipped during a lint or an ingest, or 
 - **Scope:** `wiki/` **and** `raw/processed/`, so a precise detail can be found even if it was not carried into the wiki.
 - **Collection names:** qmd collections are global to the machine, so generic names like `wiki` or `raw` would clash with another wiki. Prefix them with the wiki's folder name: `<wiki>-wiki` (on `wiki/`) and `<wiki>-raw` (on `raw/processed/`).
 - **Re-indexing:** after every ingest and after any change to the wiki or the sources, run `qmd update && qmd embed`. Run `qmd cleanup` if qmd reports orphaned chunks.
-- **Fallback:** if qmd cannot be installed or fails, the agent uses `index.md`, the domain pages, and grep.
+- **Search order:** qmd first. If qmd is not installed or fails, the agent walks the tree `index.md` → domain page → subdomain page → page (section 11.1); grep comes last.
 - **Other scripts:** when a mechanical task becomes repetitive (checking that `CLAUDE.md` = `AGENTS.md`, unique names, broken links…), the agent may **propose** to write a small script in `scripts/`. Nothing is created without validation.
 
 ---
@@ -802,12 +810,12 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Web page extraction | Defuddle (`npx -y defuddle parse <url> --md`), plain fetch as fallback |
 | Lint trigger | On demand + suggested after 10 ingests or 30 days |
 | Lint fixes | Mechanical: automatic · Content: user decides |
-| Index size | Split by domain proposed above ~50 KB, after validation |
+| Navigation | `wiki/index.md` lists only the main domains, general pages, and cross-domain projects; each domain page lists its direct pages and subdomains (overview at most 15 lines, key facts at most 20) |
 | Open questions | One `<name>-open-questions.md` per domain, subdomain, and project (created when needed, deleted when empty); `wiki/open-questions.md` holds general questions and links |
 | Contradictions | ⚠️ flag in page + user decides |
 | Idea evolution | Visible dated history in the page |
 | Log | None: commit messages are the trace of operations (section 14) |
-| Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`), fallback index + grep |
+| Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`); without qmd, the tree `index.md` → domain → subdomain → page, then grep |
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
 | Dashboard | `wiki/dashboard.base` (Obsidian Bases), 5 generic views + views proposed for domains with their own fields |

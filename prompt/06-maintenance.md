@@ -28,12 +28,12 @@
 - interaction guidelines (section 7), if any: occasionally, the lint asks the user whether they still help or need adjusting;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - no forgotten temporary file the agent created and should have deleted: an update review file (`changes-<version>.md` or its translation) at the wiki root, or any other temporary note. The agent flags it and asks the user before deleting it; for a review file, it first offers to finish the review;
-- `wiki/index.md` is not too large to read efficiently (default threshold about 50 KB, configurable in `settings.md`, "Index size"): if it is, the lint proposes to split it by domain (section 11.1), applied only after validation;
+- navigation (sections 6 and 11.1): every page is listed exactly once, by the page of its own domain (except contact and company pages, listed by their list pages, open-questions files, linked from Open points, and domain pages, listed by their parent's page or by `index.md`); every subdomain and project is linked from its parent's page; no domain page lists the pages of its subdomains or projects; `wiki/index.md` lists every main domain and nothing more than planned (general pages, cross-domain projects); domain and project pages respect their limits (overview at most 15 non-empty lines, key facts at most 20 points);
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page: it is turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates an empty note at the root.
 
 **Fixes:**
-- **Mechanical, safe fixes** are done automatically: links, index, orphans, template formatting, frontmatter syntax (fixed without changing any value), empty folders.
+- **Mechanical, safe fixes** are done automatically: links, domain pages, index, orphans, template formatting, frontmatter syntax (fixed without changing any value), empty folders.
 - **Content decisions** need the user: contradictions, stale claims, merging or deleting pages.
 - **Web searches** follow the Query rule: permission before searching, permission before integrating.
 
@@ -98,23 +98,20 @@ This document evolves. A wiki created with an older version keeps its old rules 
 
 ---
 
-## 11. Index and Open Questions
+## 11. Index, Domain Pages and Open Questions
 
-### 11.1 `wiki/index.md`
+### 11.1 `wiki/index.md` and domain pages
 
-The full catalog of the wiki, organized by domain and type. Updated at every operation that creates or changes pages. When answering a question, the agent reads it first. Each entry contains:
+Navigation is a tree: `wiki/index.md` → domain page → subdomain or project page → page. Each level lists only the level just below it, so the agent reads only what it needs and no page is listed twice.
 
-- the link `[[page]]`;
-- a one-line summary;
-- the type;
-- the creation date;
-- the last update date;
-- the number of sources feeding the page;
-- tags (an `archived` page is marked as archived).
+- **`wiki/index.md`** lists only:
+  - the main domains, each with its link and a summary of 1 to 3 lines;
+  - the general pages: `user.md`, `open-questions.md`, and the dashboard `wiki/dashboard.base` when it exists (written as code, never as a link, section 13);
+  - the cross-domain projects of `wiki/projects/`.
 
-In addition, **each domain page lists its own pages**, so the agent can navigate both globally and domain by domain.
-
-**Large index:** when the lint finds `wiki/index.md` too large (section 9.4) and the user validates the split, each domain gets `<domain>-index.md` in its folder, with the same entry format, and `wiki/index.md` keeps only an overview: links to the domain indexes, plus the cross-domain projects and general pages. The rules of this section then apply to each domain index, and when answering, the agent reads the root index, then the relevant domain index.
+  It is changed only when a main domain (or cross-domain project) is created, renamed, or archived, or when its summary changes. There is no `<domain>-index.md` file.
+- **Domain pages** (domains, subdomains, and projects) are the navigation pages of their level; their sections and limits are defined in section 6 ("Domain and project pages").
+- **Upkeep:** when a page is created, renamed, moved, or deleted, or its summary changes, the agent updates the page of its domain, and only that one. A new subdomain or project is added to its parent's page. When the overview or the key facts overflow their limits, the surplus goes to a `synthesis` page of the domain.
 
 ### 11.2 Open questions
 
@@ -124,7 +121,7 @@ Questions waiting for the user's answer (skipped during a lint or an ingest, or 
 - **Root file `wiki/open-questions.md`:**
   - a **General** section for questions about the user (`user.md`) or spanning several domains;
   - **links to the domain and project files that still have open questions**.
-- **Links follow the hierarchy:** the root links to domains and projects, and a domain file links to its subdomains' files, like the index.
+- **Links follow the hierarchy:** the root links to domains and projects, and a domain file links to its subdomains' files, like the domain pages.
 - **"I don't know" closes a question:** it counts as an answer. The related page records the information as unknown, with the date (e.g. "Current medication: unknown (2026-11-08)"), and the question is removed from the open questions files. The agent does not ask it again, unless a new source brings the information: then it updates the page and replaces "unknown". Skipping ("not now") is different: the question stays open and is asked again later.
 - **Created only when needed, deleted when empty:** a `<name>-open-questions.md` file is created with its first question. When all its questions are answered, the file is deleted and the link to it disappears from the parent level.
 

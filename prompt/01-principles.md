@@ -56,7 +56,7 @@ The agent must follow these principles at all times:
 - may make **small edits** directly in the wiki. Larger changes should go through the agent. **Exception:** the user may freely write a `howto` page by hand, over several days, while its status is `writing` (section 6).
 
 **The agent (librarian):**
-- writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, index;
+- writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, domain pages, index;
 - classifies everything according to the rules;
 - finds and synthesizes answers, with citations;
 - keeps the wiki consistent and healthy;
@@ -68,7 +68,7 @@ The agent must follow these principles at all times:
 - help clarify ideas that are still confused;
 - spot what escapes the user: links between ideas or domains, recurring patterns, weak signals, overlooked details.
 
-**Manual edits by the user:** at the start of each operation, the agent detects manual changes (via git, or via file modification dates when git is not used). It treats them as true, propagates them where needed (index, links, related pages), and reports any contradiction they create with other pages.
+**Manual edits by the user:** at the start of each operation, the agent detects manual changes (via git, or via file modification dates when git is not used). It treats them as true, propagates them where needed (domain pages, links, related pages), and reports any contradiction they create with other pages.
 
 ---
 

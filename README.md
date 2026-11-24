@@ -83,7 +83,7 @@ repository, so users can still give a single file to their agent.
 | [`03-setup.md`](prompt/03-setup.md) | Schema files, first launch, customization and defaults |
 | [`04-ingest.md`](prompt/04-ingest.md) | Capture, ingestion, contradictions and idea evolution |
 | [`05-query.md`](prompt/05-query.md) | Answers, citations and search |
-| [`06-maintenance.md`](prompt/06-maintenance.md) | Lint, project lifecycle, updates, index and open questions |
+| [`06-maintenance.md`](prompt/06-maintenance.md) | Lint, project lifecycle, updates, index, domain pages and open questions |
 | [`07-integrations.md`](prompt/07-integrations.md) | Obsidian and Git |
 
 Edit these source files rather than the generated prompt, then run:

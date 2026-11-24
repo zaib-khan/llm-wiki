@@ -16,13 +16,13 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 
 **Rhythm:** the agent processes all sources in `raw/` **autonomously**. It only needs the user for things that require their judgment (contradictions, new domains or subdomains, new contact pages, classification doubts). It **does not stop**: it sets these points aside and asks **all its questions at the end**, according to the question style (section 15).
 
-**Safe progress:** before writing, list the files waiting directly in `raw/` and check whether any already has a source page or a copy in `raw/processed/` (including after an interrupted ingest). Process one source at a time. A source is complete only when its raw file, source page, related pages, links, domain page, and index agree. Only then move the raw file. If processing stops midway, the next ingest reconciles those existing files and finishes the source instead of creating a second source page or duplicating facts. Report any incomplete source that cannot be reconciled; never silently discard it.
+**Safe progress:** before writing, list the files waiting directly in `raw/` and check whether any already has a source page or a copy in `raw/processed/` (including after an interrupted ingest). Process one source at a time. A source is complete only when its raw file, source page, related pages, links, and domain page agree. Only then move the raw file. If processing stops midway, the next ingest reconciles those existing files and finishes the source instead of creating a second source page or duplicating facts. Report any incomplete source that cannot be reconciled; never silently discard it.
 
 When a decision is needed before a source can be filed or a page can be created, leave that source pending in `raw/` and ask at the end. Continue with independent sources. A text extraction beside a PDF, image, audio, or video is part of the same source, not a second item to ingest.
 
 **Sub-agents (optional):** for a large ingest, if the agent can launch sub-agents, it may hand each independent source to its own sub-agent, working in parallel.
 - Each sub-agent handles one source and writes only that source's own pages (source page and its entity, knowledge, how-to pages). It reports back the pages it created or changed, what the shared files need, and its pending questions.
-- Only the main agent writes the shared files (`index.md`, domain pages, list pages, `user.md`, open questions) and makes the commit, so two agents never write the same file.
+- Only the main agent writes the shared files (domain pages, list pages, `index.md` when a domain changes, `user.md`, open questions) and makes the commit, so two agents never write the same file.
 - Sub-agents never create domains, subdomains, or contact pages; questions needing the user's judgment go back to the main agent, who asks them all at the end.
 - Two sub-agents never update the same existing page: sources touching the same page are handled one after the other by the main agent.
 - Each source is still completed as a unit (safe progress above): once its sub-agent reports, the main agent finalizes the shared files, then moves the raw file.
@@ -40,7 +40,7 @@ When a decision is needed before a source can be filed or a page can be created,
 7. Updates `user.md` freely when it learns something about the user — and **reports to the user exactly what was added, changed, or removed**.
 8. Flags contradictions (section 10) and records the evolution of the user's ideas.
 9. Adds all links (wikilinks) both ways where relevant.
-10. Updates the domain pages and `index.md`.
+10. Updates the domain page of each page created, renamed, moved, or deleted (or whose summary changed), and only that one; a new subdomain or project is added to its parent's page. `index.md` changes only when a main domain is created, renamed, or archived, or when its summary changes (section 11.1).
 11. Moves the source (and its assets) to `raw/processed/<main domain>/`.
 
 **After all sources, the agent re-indexes search and presents a report:**

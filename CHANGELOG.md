@@ -11,6 +11,19 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+### Changed
+- Navigation by domain pages (sections 4, 5.1, 5.4, 6, 7, 8, 9.2, 9.3, 9.4, 11.1, 12, 16): there is no full catalog and no per-domain index any more. `wiki/index.md` lists only the main domains (link + summary of 1 to 3 lines), the general pages (`user.md`, `open-questions.md`, the dashboard written as code) and the cross-domain projects; it changes only when a main domain is created, renamed, or archived, or when its summary changes. Each domain, subdomain, or project page becomes the navigation page of its level, with these sections in order, always present: Overview (at most 15 non-empty lines, no minimum) · Subdomains and projects (link + one-line summary) · Pages (by type, link + one-line summary) · Contacts and companies (links to the lists only) · Key facts (at most 20 points, no minimum; a finished project gets one "Outcome" line) · Open points (link to the open-questions file only). A domain page lists only its direct pages and direct subdomains or projects, never the pages of its subdomains; every page is listed exactly once, by the page of its own domain, except contact and company pages (listed by their lists), open-questions files (linked from Open points) and the domain page itself (listed by its parent or by `index.md`). A subdomain or project without its own contacts or companies links to its parent's lists. When a page is created, renamed, moved, or deleted, or its summary changes, only the page of its domain is updated; an overflowing overview or key facts list goes to a `synthesis` page of the domain. Search order: qmd first, otherwise the tree `index.md` → domain → subdomain → page, then grep. The lint checks these rules instead of the index size. Reason: the index (and the per-domain indexes) duplicated the domain pages, which doubled the token cost of navigation. The "Index size" setting and the index split rule are removed.
+
+### Migration from 0.14.0
+- Commit the pending changes first (the update's safety commit, step 4 of section 9.6).
+- Rewrite every domain, subdomain, and project page with the new templates (section mapping validated once per template, section 9.6), reusing the one-line summaries of the old index (`wiki/index.md` or `<domain>-index.md`).
+- Content that fits no new section, or that exceeds the overview or key facts limits, goes to a `synthesis` page of the domain, linked from the domain page.
+- Questions written inline in domain or project pages move to that level's open-questions file; when their date is unknown, the agent writes "original date unknown" (in the wiki's language), never an invented date.
+- Every page that was listed only in an index is added to the page of its own domain.
+- Rewrite `wiki/index.md` with the main domains, general pages, and cross-domain projects only.
+- Delete the `<domain>-index.md` files and the links to them; remove the "Index size" row from `settings.md`.
+- No link and no information may be lost: before committing, check that every page is still reachable from `wiki/index.md` through the domain pages (lint navigation check).
+
 ## [0.14.0] - 2026-11-24
 
 ### Changed

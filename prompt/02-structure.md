@@ -21,7 +21,7 @@ my-wiki/
 ├── templates/             ← one template per page type
 │
 └── wiki/
-    ├── index.md           ← full catalog of all pages
+    ├── index.md           ← main domains, general pages, cross-domain projects
     ├── open-questions.md  ← general questions + links to domain question files
     ├── dashboard.base     ← Obsidian Bases dashboard (see section 13)
     ├── user.md            ← the center of the wiki
@@ -49,7 +49,7 @@ my-wiki/
 
 ### 5.4 `wiki/` — domains
 
-- **A domain is a folder.** Each domain folder contains a domain page with the same name: `wiki/family/family.md`. The domain page gives an overview and lists all pages of the domain.
+- **A domain is a folder.** Each domain folder contains a domain page with the same name: `wiki/family/family.md`. The domain page is the navigation page of its level: it gives an overview and lists the domain's direct pages and direct subdomains and projects (section 6, "Domain and project pages"). There is no separate index per domain.
 - Domains are **chosen by the user** (family, work, health, a hobby — anything). Domain folders are named **exactly with the word the user gives**, whatever its language (e.g. "work" stays `work/` in a French wiki): no translation, no confirmation needed. The agent only checks the spelling: if it spots a typo, it proposes the corrected name before creating the folder.
 - **Subdomains** follow exactly the same rule, recursively: `wiki/work/company/company.md`.
 - **No depth limit**, with two safeguards:
@@ -165,8 +165,8 @@ The `templates/` folder holds one template per page type, named `template-<type>
 | Type | Purpose |
 |---|---|
 | `user` | The user: identity, situation, goals, values, preferences, health, psychology, relationships — the center of the wiki |
-| `domain` | Overview of a domain or subdomain, with the list of its pages |
-| `project` | A time-bound project: goal, status, dates, related pages |
+| `domain` | Navigation page of a domain or subdomain: overview, direct subdomains and projects, direct pages, key facts |
+| `project` | A time-bound project, with the same navigation structure as a domain page |
 | `contact` | A person: identity, relationship to the user, contact details, work, personality, history |
 | `contact-list` | The list page of a `contacts/` folder, linking all its contact pages |
 | `company` | A company: identity, activity, location, relationship to the user, organization, people known there |
@@ -210,8 +210,8 @@ address:
 Each template then defines its sections (headings written in the user's language). Suggested defaults:
 
 - **user**: Identity · Current situation · Goals · Values & preferences · Health & wellbeing · Personality · Key people · Domains · History
-- **domain**: Overview · Pages (by type) · Contacts (link to `<domain>-contacts.md`) · Companies (link to `<domain>-companies.md`) · Subdomains · Projects (links to the domain's projects) · Key facts · Open points
-- **project**: Goal · Status · Timeline · Key information · Related pages · Outcome (when finished)
+- **domain**: Overview · Subdomains and projects · Pages (subsections by type: Entities · Knowledge · How-tos · Sources · Syntheses) · Contacts and companies · Key facts · Open points (see "Domain and project pages" below)
+- **project**: the same sections as a domain page
 - **contact**: Identity · Relationship to the user · Contact details · Work · Personality · Interests · Important dates · Close circle · Facts & information · Interaction history · Ideas & gifts · Links
 - **contact-list**: Overview · Contacts (table: name linked to the contact page, relationship, role, organization) · Links
 - **company-list**: Overview · Companies (table: name linked to the company page, industry, relationship to the user) · Links
@@ -228,6 +228,17 @@ Each template then defines its sections (headings written in the user's language
 - For **`contact` and `company` pages, every section is optional**: the page keeps the order and the names of its template's sections, but only shows the sections that have content. A new section is added when there is something to put in it. (What a contact needs to exist is defined in section 5.5.)
 - For **`howto` pages, only "Goal" is required**; the other sections are optional.
 
+**Domain and project pages:** the page of a domain, subdomain, or project is the navigation page of its level. A project's goal, status, and timeline go in the overview and key facts; when it is finished, its outcome is one "Outcome" line in the key facts. Its sections, in this order, are always present, even empty (headings in the wiki's language):
+
+1. **Overview:** at most 15 non-empty lines (title excluded), what the domain is about and where it stands. No minimum: a short page is not padded.
+2. **Subdomains and projects:** the direct subdomains and projects only, each as `[[link]] — one-line summary`.
+3. **Pages:** the direct pages only (those in the domain's own type subfolders), grouped in one subsection per type (entities, knowledge, how-tos, sources, syntheses), each as `[[link]] — one-line summary`.
+4. **Contacts and companies:** only the links to `<domain>-contacts.md` and `<domain>-companies.md`, when they exist. A subdomain or project without its own contacts or companies links to its parent's lists.
+5. **Key facts:** at most 20 points, the most important ones. No minimum.
+6. **Open points:** only the link to `<domain>-open-questions.md`, when it exists.
+
+A domain page never lists the pages of its subdomains or projects: each level lists only its own. **Every page of the wiki is listed exactly once, by the page of its own domain**, except contact and company pages (listed by their list pages), open-questions files (linked from Open points), and the domain page itself (listed by its parent's page, or by `index.md` for a main domain or a cross-domain project). When the overview or the key facts overflow, the surplus goes to a `synthesis` page of the domain, linked from the domain page.
+
 **How-to status:**
 
 | `status` | Meaning |
@@ -240,7 +251,7 @@ Each template then defines its sections (headings written in the user's language
 - A `writing` how-to may be used to answer a question, but the agent says so: "⚠️ this how-to is still being written". The agent never completes it on its own.
 - When the user says a how-to is finished, the agent sets its status to `draft` (or `tested` if the user has already followed it).
 
-**Archived pages:** a page that is no longer useful but worth keeping is not deleted: after the user's validation, it gets the tag `archived` (the agent may propose it, e.g. when a decision makes a procedure obsolete). Deleting a page remains the user's decision. An `archived` page stays in place and keeps its links and its index entry (marked as archived). The agent no longer uses it to answer, except for history ("what did we plan before?"), and then says so. This differs from `wiki/archive/`, which holds finished projects.
+**Archived pages:** a page that is no longer useful but worth keeping is not deleted: after the user's validation, it gets the tag `archived` (the agent may propose it, e.g. when a decision makes a procedure obsolete). Deleting a page remains the user's decision. An `archived` page stays in place and keeps its links and its entry in its domain page (marked as archived). The agent no longer uses it to answer, except for history ("what did we plan before?"), and then says so. This differs from `wiki/archive/`, which holds finished projects.
 
 ---
 

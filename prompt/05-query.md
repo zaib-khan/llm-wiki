@@ -1,6 +1,6 @@
 ### 9.3 Query — answering questions
 
-1. The agent reads `index.md` and the relevant domain pages, searches (qmd) across `wiki/` and `raw/processed/`, and reads the relevant pages.
+1. The agent searches first with the search engine (qmd, section 12) across `wiki/` and `raw/processed/`. Without it, it walks the tree `index.md` → domain page → subdomain page → page, and uses grep only as a last resort. Then it reads the relevant pages.
 2. It answers in **the format best suited to the question** (text, markdown page, table, Mermaid diagram, chart, Marp slides, Obsidian canvas…).
 3. **Citations:** it cites both the wiki pages (`[[page]]`) and, when useful, the original raw sources.
 4. **Proactive section:** when — and only when — something relevant exists, the answer ends with a dedicated section where each item starts with 💡: forgotten ideas related to the question, details from the user's life that shed light on it, links the user may have missed.
@@ -18,7 +18,7 @@
 - **Scope:** `wiki/` **and** `raw/processed/`, so a precise detail can be found even if it was not carried into the wiki.
 - **Collection names:** qmd collections are global to the machine, so generic names like `wiki` or `raw` would clash with another wiki. Prefix them with the wiki's folder name: `<wiki>-wiki` (on `wiki/`) and `<wiki>-raw` (on `raw/processed/`).
 - **Re-indexing:** after every ingest and after any change to the wiki or the sources, run `qmd update && qmd embed`. Run `qmd cleanup` if qmd reports orphaned chunks.
-- **Fallback:** if qmd cannot be installed or fails, the agent uses `index.md`, the domain pages, and grep.
+- **Search order:** qmd first. If qmd is not installed or fails, the agent walks the tree `index.md` → domain page → subdomain page → page (section 11.1); grep comes last.
 - **Other scripts:** when a mechanical task becomes repetitive (checking that `CLAUDE.md` = `AGENTS.md`, unique names, broken links…), the agent may **propose** to write a small script in `scripts/`. Nothing is created without validation.
 
 ---
