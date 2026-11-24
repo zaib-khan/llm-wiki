@@ -11,6 +11,8 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-11-24
+
 ### Changed
 - Search order (sections 9.3, 12, 15): with qmd, the agent searches with `qmd search` (keywords), or `qmd vsearch` (semantic) when the exact words are not enough, and never with `qmd query`, too slow for everyday use; then it reads the domain page of the topic for context; otherwise it walks the tree `index.md` → domain → subdomain → page, and uses grep last. Reason: in a test, `qmd search` was twice as fast as the tree and used a third fewer tokens, for about 10% less information found, while `qmd query` took more than 2 minutes.
 
