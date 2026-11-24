@@ -10,7 +10,7 @@
    2. it proposes an answer;
    3. if the answer suits the user, it fetches the raw content of the sites or documents used and saves it to `raw/` (web pages with Defuddle first, as in ingest);
    4. it **asks permission** to integrate these sources, then integrates them with all relevant links.
-7. Queries that used the wiki are logged (`query`).
+7. A plain question changes no file and creates no commit. A kept answer (step 5) is committed (`query:`, section 14).
 
 ## 12. Search
 
@@ -19,7 +19,7 @@
 - **Collection names:** qmd collections are global to the machine, so generic names like `wiki` or `raw` would clash with another wiki. Prefix them with the wiki's folder name: `<wiki>-wiki` (on `wiki/`) and `<wiki>-raw` (on `raw/processed/`).
 - **Re-indexing:** after every ingest and after any change to the wiki or the sources, run `qmd update && qmd embed`. Run `qmd cleanup` if qmd reports orphaned chunks.
 - **Fallback:** if qmd cannot be installed or fails, the agent uses `index.md`, the domain pages, and grep.
-- **Other scripts:** when a mechanical task becomes repetitive (checking that `CLAUDE.md` = `AGENTS.md`, unique names, broken links, log rotation…), the agent may **propose** to write a small script in `scripts/`. Nothing is created without validation.
+- **Other scripts:** when a mechanical task becomes repetitive (checking that `CLAUDE.md` = `AGENTS.md`, unique names, broken links…), the agent may **propose** to write a small script in `scripts/`. Nothing is created without validation.
 
 ---
 

@@ -6,7 +6,7 @@ When the user tells the agent an idea, a thought, or any information in conversa
 
 1. The agent **saves a raw source first**: a dated file in `raw/` (`YYYY-MM-DD-short-title.md`) containing what the user said, **faithfully**. Transcription and typing errors are corrected; the meaning and the wording are not changed.
 2. The agent **asks**: "Shall I integrate it now, or keep it for the next ingest?"
-3. The capture is logged (`capture`).
+3. The capture is committed (`capture:`, section 14).
 
 Capturing an idea must cost the user almost nothing: no forms, no required structure.
 
@@ -16,16 +16,16 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 
 **Rhythm:** the agent processes all sources in `raw/` **autonomously**. It only needs the user for things that require their judgment (contradictions, new domains or subdomains, new contact pages, classification doubts). It **does not stop**: it sets these points aside and asks **all its questions at the end**, according to the question style (section 15).
 
-**Safe progress:** before writing, list the files waiting directly in `raw/` and check whether any already has a source page or a copy in `raw/processed/` (including after an interrupted ingest). Process one source at a time. A source is complete only when its raw file, source page, related pages, links, domain page, and index agree. Only then move the raw file and record that completed source in the log. If processing stops midway, the next ingest reconciles those existing files and finishes the source instead of creating a second source page or duplicating facts. Report any incomplete source that cannot be reconciled; never silently discard it.
+**Safe progress:** before writing, list the files waiting directly in `raw/` and check whether any already has a source page or a copy in `raw/processed/` (including after an interrupted ingest). Process one source at a time. A source is complete only when its raw file, source page, related pages, links, domain page, and index agree. Only then move the raw file. If processing stops midway, the next ingest reconciles those existing files and finishes the source instead of creating a second source page or duplicating facts. Report any incomplete source that cannot be reconciled; never silently discard it.
 
 When a decision is needed before a source can be filed or a page can be created, leave that source pending in `raw/` and ask at the end. Continue with independent sources. A text extraction beside a PDF, image, audio, or video is part of the same source, not a second item to ingest.
 
 **Sub-agents (optional):** for a large ingest, if the agent can launch sub-agents, it may hand each independent source to its own sub-agent, working in parallel.
 - Each sub-agent handles one source and writes only that source's own pages (source page and its entity, knowledge, how-to pages). It reports back the pages it created or changed, what the shared files need, and its pending questions.
-- Only the main agent writes the shared files (`index.md`, the log, domain pages, list pages, `user.md`, open questions) and makes the commit, so two agents never write the same file.
+- Only the main agent writes the shared files (`index.md`, domain pages, list pages, `user.md`, open questions) and makes the commit, so two agents never write the same file.
 - Sub-agents never create domains, subdomains, or contact pages; questions needing the user's judgment go back to the main agent, who asks them all at the end.
 - Two sub-agents never update the same existing page: sources touching the same page are handled one after the other by the main agent.
-- Each source is still completed as a unit (safe progress above): once its sub-agent reports, the main agent finalizes the shared files, then moves the raw file and logs that source.
+- Each source is still completed as a unit (safe progress above): once its sub-agent reports, the main agent finalizes the shared files, then moves the raw file.
 
 **For each source, the agent:**
 
@@ -42,7 +42,6 @@ When a decision is needed before a source can be filed or a page can be created,
 9. Adds all links (wikilinks) both ways where relevant.
 10. Updates the domain pages and `index.md`.
 11. Moves the source (and its assets) to `raw/processed/<main domain>/`.
-12. Logs the ingest (`ingest`).
 
 **After all sources, the agent re-indexes search and presents a report:**
 - sources processed;
@@ -53,7 +52,7 @@ When a decision is needed before a source can be filed or a page can be created,
 - changes made to `user.md`;
 - pending questions (asked now, according to the question style, section 15).
 
-Then it commits according to the commit mode (section 14).
+Then it commits (`ingest:`) according to the commit mode (section 14).
 
 ## 10. Contradictions and Evolution
 

@@ -22,8 +22,6 @@ my-wiki/
 │
 └── wiki/
     ├── index.md           ← full catalog of all pages
-    ├── log.md             ← log of the current month
-    ├── log/               ← archived monthly logs (YYYY-MM.md)
     ├── open-questions.md  ← general questions + links to domain question files
     ├── dashboard.base     ← Obsidian Bases dashboard (see section 13)
     ├── user.md            ← the center of the wiki
@@ -46,7 +44,7 @@ my-wiki/
 - `raw/assets/` is a temporary area for images downloaded by the agent from the web. When the related article is processed, its images follow it into `raw/processed/<domain>/`.
 - **The original file name is a hint.** A file dropped as `dad.jpg` tells the agent it relates to the user's father. The agent reads the original name to understand the file, then renames it during ingest.
 - **Naming:** during ingest, every raw file is renamed to `YYYY-MM-DD-short-title.ext` (the date the source was added). The content is never changed.
-- **Permanent system folders:** `raw/processed/`, `raw/assets/`, and `wiki/log/` are part of the structure even when empty. Git does not track empty folders, so if one is missing (e.g. after a clone), the agent simply recreates it.
+- **Permanent system folders:** `raw/processed/` and `raw/assets/` are part of the structure even when empty. Git does not track empty folders, so if one is missing (e.g. after a clone), the agent simply recreates it.
 - **Non-text sources** (PDF, images, audio, video): the original is kept, and the agent creates a markdown text version next to it (extraction, transcription, or description), with the same base name. The text version is used for integration.
 
 ### 5.4 `wiki/` — domains
@@ -58,7 +56,7 @@ my-wiki/
   - **file names are unique across the whole wiki** (wikilinks resolve by file name — two `marc.md` files would make `[[marc]]` ambiguous; use `marc-dupont.md` and `marc-cousin.md`);
   - **a subdomain is created only when it is justified** (enough pages on the subject, or at the user's request).
 - **Creating a domain or subdomain:** the agent may propose one (e.g. "I have 8 pages about your team — shall I create `work/team/`?"). Nothing is created without the user's validation.
-- **Filing rules:** when a domain has subdomains (or projects) and it is unclear where a kind of content belongs, the agent proposes a short filing rule for that domain (e.g. "anything about the company as a whole → `work/company/`; anything about client X → `work/client-x/`; work outside the company → directly in `work/`"). Once validated, it is recorded in `settings.md` (one "Filing rule (<domain>)" row per domain) and applied at every ingest and capture without asking again. Changing it follows section 15 (logged `schema`).
+- **Filing rules:** when a domain has subdomains (or projects) and it is unclear where a kind of content belongs, the agent proposes a short filing rule for that domain (e.g. "anything about the company as a whole → `work/company/`; anything about client X → `work/client-x/`; work outside the company → directly in `work/`"). Once validated, it is recorded in `settings.md` (one "Filing rule (<domain>)" row per domain) and applied at every ingest and capture without asking again. Changing it follows section 15 (committed as `schema:`, section 14).
 - **Optional pattern — "to try" and "tried" domains** (a suggestion, not a rule): when the user collects many things to try (tools, recipes, places, books…), the agent may suggest two domains: one where items arrive with the status "to try", and one for items tried and kept. After trying, an item is either **kept** (moved to the "tried" domain) or **dropped** (it stays in the "to try" domain with the reason). Example: `ai-tools/` (to try) → `tools/` (tried and useful). Like any domain, both are created only after the user's validation.
 
 ### 5.5 Type subfolders
@@ -128,7 +126,7 @@ wiki/football/
 
 | Item | Rule |
 |---|---|
-| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `<name>-open-questions.md`, `settings.md`, `command.md`, `.llm-wiki/`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/` |
+| System files and folders | English: `user.md`, `index.md`, `open-questions.md`, `<name>-open-questions.md`, `settings.md`, `command.md`, `.llm-wiki/`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/` |
 | Type subfolders | Wiki's language, fixed once in `settings.md` (section 5.5) |
 | Domains and subdomains | The word given by the user, as is (spelling checked) |
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
@@ -154,7 +152,7 @@ When the user wants the agent to use a personal tool on its own (a task manager,
 1. creates a skill describing how to use the tool, as two identical copies in `.claude/skills/<name>/` and `.agents/skills/<name>/` (section 7);
 2. adds a trigger rule saying when to use it (the user's phrasings, even when the skill is not named), referenced from both `CLAUDE.md` and `AGENTS.md` (it may live in `.claude/rules/<name>.md`, section 5.8);
 3. adds a row to `settings.md` and the command to `command.md`, so the user knows they can ask for it;
-4. logs it as `schema`.
+4. commits it as `schema:` (section 14).
 
 The tool's credentials or tokens never go into the wiki: they stay in the tool's own configuration, outside the wiki. Only the user's personal requests trigger an integration: the word used to ask the agent for work (e.g. "task") is not enough on its own.
 

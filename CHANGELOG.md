@@ -11,6 +11,19 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-11-24
+
+### Changed
+- Always commit (section 14): every task that changes files ends with a commit (proposed or made, according to the commit mode) before the final report, including small edits, sub-agents' work, and any conversation, whatever the agent. Uncommitted changes make the `git diff` read at the start of every operation grow, which slows every agent down. A plain question creates no commit.
+- No more log (sections 4, 5, 7, 8, 9, 11, 12, 14, 15, 16): `wiki/log.md` and `wiki/log/` are removed; commit messages are now the only history of the wiki. It cost many tokens, was rarely read, and git already keeps everything. Each operation that used to be logged as `x` is now committed as `x:`. Commit message format: first line `<type>: <short title>` (same types as the former log); a body proportional to the work (1–3 lines for a small commit, up to 5–7 for an ingest, lint, schema change, or update) with what was done and why, the sources (`raw/processed/...`), decisions, open questions, and what is not done or not verified, without listing the modified pages; a last line of at most 10 keywords after a label in the wiki's language (`Keywords:` by default), each keyword being exactly the file name of a wiki page (domain, subdomain or project, people and companies with a page), so `git log --grep` finds everything. History is read with `git log`; undoing uses `git revert` or restoring files. The lint threshold (10 ingests or 30 days) is found with `git log --grep '^lint:'` and `'^ingest:'`. The lint no longer checks links in the log. Section 11.3 (open questions) becomes 11.2.
+- Without git: no history of operations. The date of the last operation (`settings.md`, "Last operation") is used to detect manual edits, and the date of the last lint (`settings.md`, "Last lint") to suggest a lint after 30 days.
+
+### Migration from 0.13.0
+- Commit the pending changes first (the update's safety commit, step 4 of section 9.6).
+- Delete `wiki/log.md` and `wiki/log/`: with git, their content stays in the history. Without git, the agent asks the user before deleting them (their only copy is then the update backup).
+- Remove the links to these pages (in pages, the schema files, `command.md`) and their `.gitkeep`; remove the "Log format" and "Log rotation" rows from `settings.md`.
+- Without git: add "Last operation" and "Last lint" to `settings.md` (date of the last lint taken from the old log before deleting it, if any).
+
 ## [0.13.0] - 2026-11-10
 
 ### Added

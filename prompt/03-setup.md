@@ -5,11 +5,11 @@
 - **Skills follow the same rule.** Every skill of the wiki (starting with `update_wiki`) exists as two real files with identical content: `.claude/skills/<name>/SKILL.md` (Claude Code) and `.agents/skills/<name>/SKILL.md` (Codex and other agents reading `.agents/skills/`). No symbolic link. Whenever one copy is modified, the other is modified in the same way, at the same time; they must never differ.
 - They contain the rules of this document, adapted to the user's choices, and reference `settings.md` and `templates/` as code, never as links (see section 13).
 - **The schema evolves with the user.** When the agent sees that a new convention would help, it proposes the change; the user validates before anything is written.
-- Every schema change is logged (`schema`).
+- Every schema change is committed as `schema:` (section 14).
 - **Interaction guidelines.** When the user mentions a difficulty that should change how the agent talks to them (dyslexia, ADHD, or similar; asked at first launch, section 8, or said at any time), the agent says it will research how best to interact with it, then does a thorough web search (the user's answer counts as permission for this search; otherwise the normal web-search rule applies). The sources are saved in `raw/` and integrated as a `knowledge` page (principle 3), so the guidance is traceable. From that research, the agent writes short, concrete **interaction guidelines** into `CLAUDE.md` and `AGENTS.md`, applied in every session to everything it says to the user. Examples — dyslexia: short sentences, lists, key words in bold, no walls of text, one question at a time, understand messages despite spelling mistakes and never point them out; ADHD: lead with the essential, one action at a time, a clear next step.
   - **Scope:** interaction with the user only (conversation, questions, reports). Wiki pages are **not** simplified: they keep all the information, and the agent reformulates it for the user when answering.
   - **Privacy:** the schema files contain only how to interact, nothing medical. The difficulty itself is recorded in `user.md` (Health & wellbeing) only if the user agrees: it is sensitive data.
-  - **Evolution:** the user can change the guidelines at any time (section 15, logged `schema`); the lint occasionally asks whether they still help.
+  - **Evolution:** the user can change the guidelines at any time (section 15, committed as `schema:`); the lint occasionally asks whether they still help.
 
 ### `command.md` — the user's command reference
 
@@ -21,7 +21,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 | `lint` | Runs a health check of the wiki: fixes mechanical issues, asks about content issues, and brings questions, sources to look for, and 💡 insights (section 9.4). |
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
-| `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.3), in the question style, so the user can answer them. The user can also ask for the questions of one domain only. |
+| `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.2), in the question style, so the user can answer them. The user can also ask for the questions of one domain only. |
 | `new contact` | Creates a contact page after validation, in the right domain's `contacts/`, and adds it to the list `<domain>-contacts.md` (section 5.5). |
 | `new domain` / `new project` | Creates a domain, subdomain, or project after validation (a project goes in its domain's `projects/` folder, section 5.6). |
 | `close project` | Brings long-term value into the domains, then archives the project (section 9.5). |
@@ -47,12 +47,12 @@ When the agent receives this document for the first time, it performs these step
    5. **Question style:** "Do you prefer my questions one at a time, or all together in a list?" The answer is recorded in `settings.md` (section 15); if the user does not know, `one by one`.
    6. **Interaction needs (optional):** "Do you have a difficulty that should change how I talk or write to you — for example dyslexia, ADHD, or anything similar? You can skip this question." If the answer is yes, the agent follows the interaction needs rule (section 7). The user may also mention such a need later, at any time.
 
-   That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
-2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
+   That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.2). The defaults (section 16) apply until the user changes them.
+2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
 3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
 4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/`, create the dashboard `wiki/dashboard.base` (section 13), propose installing kepano's Obsidian skills (section 13; only after validation and if the agent supports skills), and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
-6. **Log** the initialization and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
+6. **Commit** the initialization (`init:`, if git is used, section 14) and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
 
 ---
 
@@ -62,7 +62,7 @@ Every rule in this document is a default. The user can change them:
 
 - **at any time**, by asking the agent. The agent proposes the change to `settings.md` (and to `CLAUDE.md` / `AGENTS.md` if a rule changes), and applies it only after validation.
 
-User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4) and domain-specific frontmatter fields (section 6); changing them is proposed, validated, and logged `schema`, like any other rule.
+User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4) and domain-specific frontmatter fields (section 6); changing them is proposed, validated, and committed as `schema:`, like any other rule.
 
 **Question style** (`settings.md`, "Question style": `one by one` or `list`): how the agent asks the user several questions — at the end of an ingest, during a lint or an update, and when reviewing open questions. `one by one`: one question, wait for the answer, then the next. `list`: all questions together, numbered. In both styles, each question carries the context needed to answer it (keep useful details, drop only filler). The user can change the style for good (customization rule above) or just for the current batch ("ask everything as a list this time").
 
@@ -116,8 +116,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Open questions | One `<name>-open-questions.md` per domain, subdomain, and project (created when needed, deleted when empty); `wiki/open-questions.md` holds general questions and links |
 | Contradictions | ⚠️ flag in page + user decides |
 | Idea evolution | Visible dated history in the page |
-| Log format | `## [YYYY-MM-DD HH:MM] type \| Title` + summary + pages touched |
-| Log rotation | Monthly (`wiki/log/YYYY-MM.md`) |
+| Log | None: commit messages are the trace of operations (section 14) |
 | Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`), fallback index + grep |
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
@@ -125,7 +124,8 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Link format | Wikilinks `[[...]]` |
 | Obsidian skills | kepano/obsidian-skills proposed at first launch, installed after validation |
 | Git | Optional, chosen at first launch (remote link asked if used) |
-| Commit mode | Asked at first launch: `propose` (default) or `automatic` |
+| Commit mode | Asked at first launch: `propose` (default) or `automatic`; every task that changes files ends with a commit (or a proposed commit) |
+| Commit messages | `<type>: <short title>`, body proportional to the work, last line of at most 10 keywords (exact page file names) |
 | Push frequency | Every N unpushed commits (asked at first launch, default 5), plus at the end of a work session; commit only if no remote |
 | AI mention in commits | Never |
 | Prompt updates | On demand (`update wiki` / `/update_wiki`) + checked by the lint; latest tag of `prompt_source` |

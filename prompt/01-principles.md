@@ -2,7 +2,7 @@
 
 A pattern for building a personal knowledge base — a second brain — with an LLM agent.
 
-Version: 0.13.0 · Source: https://github.com/zaib-khan/llm-wiki
+Version: 0.14.0 · Source: https://github.com/zaib-khan/llm-wiki
 
 This is a source file. Give it to your LLM agent (Claude Code, Codex, OpenCode, Cursor, or any other). The agent will read it, ask you a few short questions, and build your wiki with you: the folder structure, the templates, and the schema files (`CLAUDE.md` and `AGENTS.md`) that will guide every future session. The rules below are defaults: precise enough to be applied as-is, and every one of them can be changed to fit you.
 
@@ -56,7 +56,7 @@ The agent must follow these principles at all times:
 - may make **small edits** directly in the wiki. Larger changes should go through the agent. **Exception:** the user may freely write a `howto` page by hand, over several days, while its status is `writing` (section 6).
 
 **The agent (librarian):**
-- writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, index, log;
+- writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, index;
 - classifies everything according to the rules;
 - finds and synthesizes answers, with citations;
 - keeps the wiki consistent and healthy;

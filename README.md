@@ -2,7 +2,7 @@
 
 A prompt that turns your LLM agent (Claude Code, Codex, OpenCode, Cursor…) into the librarian of your personal second brain.
 
-**Current version: 0.13.0** — still in testing; `1.0.0` will mark the first stable release. See [`CHANGELOG.md`](CHANGELOG.md).
+**Current version: 0.14.0** — still in testing; `1.0.0` will mark the first stable release. See [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Why I built this
 
@@ -60,7 +60,7 @@ The agent does not only file and answer. It reminds you of forgotten ideas that 
 3. Answer a few short questions: your language, your name, your first domain, and whether you want to use git (and your remote repository link). Everything else comes with time.
 4. Open `command.md` to see what you can ask. Drop sources into `raw/` and say `ingest`. Tell the agent your ideas. Ask it questions. Run `lint` from time to time.
 
-Open the wiki in [Obsidian](https://obsidian.md) to browse it, follow links, and watch the graph grow. The agent configures Obsidian for you at first launch and installs [qmd](https://github.com/tobi/qmd) for local search. If you choose to use git, the agent proposes a commit (and a push, if you have a remote) after each operation.
+Open the wiki in [Obsidian](https://obsidian.md) to browse it, follow links, and watch the graph grow. The agent configures Obsidian for you at first launch and installs [qmd](https://github.com/tobi/qmd) for local search. If you choose to use git, the agent proposes a commit (and a push, if you have a remote) after each task that changes the wiki; the commit messages are the wiki's history.
 
 Every rule in the prompt is a default: change anything by asking your agent.
 
@@ -83,7 +83,7 @@ repository, so users can still give a single file to their agent.
 | [`03-setup.md`](prompt/03-setup.md) | Schema files, first launch, customization and defaults |
 | [`04-ingest.md`](prompt/04-ingest.md) | Capture, ingestion, contradictions and idea evolution |
 | [`05-query.md`](prompt/05-query.md) | Answers, citations and search |
-| [`06-maintenance.md`](prompt/06-maintenance.md) | Lint, project lifecycle, updates, index, log and open questions |
+| [`06-maintenance.md`](prompt/06-maintenance.md) | Lint, project lifecycle, updates, index and open questions |
 | [`07-integrations.md`](prompt/07-integrations.md) | Obsidian and Git |
 
 Edit these source files rather than the generated prompt, then run:

@@ -2,7 +2,7 @@
 
 A pattern for building a personal knowledge base — a second brain — with an LLM agent.
 
-Version: 0.13.0 · Source: https://github.com/zaib-khan/llm-wiki
+Version: 0.14.0 · Source: https://github.com/zaib-khan/llm-wiki
 
 This is a source file. Give it to your LLM agent (Claude Code, Codex, OpenCode, Cursor, or any other). The agent will read it, ask you a few short questions, and build your wiki with you: the folder structure, the templates, and the schema files (`CLAUDE.md` and `AGENTS.md`) that will guide every future session. The rules below are defaults: precise enough to be applied as-is, and every one of them can be changed to fit you.
 
@@ -56,7 +56,7 @@ The agent must follow these principles at all times:
 - may make **small edits** directly in the wiki. Larger changes should go through the agent. **Exception:** the user may freely write a `howto` page by hand, over several days, while its status is `writing` (section 6).
 
 **The agent (librarian):**
-- writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, index, log;
+- writes and maintains the whole wiki: summaries, entity and knowledge pages, syntheses, cross-references, index;
 - classifies everything according to the rules;
 - finds and synthesizes answers, with citations;
 - keeps the wiki consistent and healthy;
@@ -96,8 +96,6 @@ my-wiki/
 │
 └── wiki/
     ├── index.md           ← full catalog of all pages
-    ├── log.md             ← log of the current month
-    ├── log/               ← archived monthly logs (YYYY-MM.md)
     ├── open-questions.md  ← general questions + links to domain question files
     ├── dashboard.base     ← Obsidian Bases dashboard (see section 13)
     ├── user.md            ← the center of the wiki
@@ -120,7 +118,7 @@ my-wiki/
 - `raw/assets/` is a temporary area for images downloaded by the agent from the web. When the related article is processed, its images follow it into `raw/processed/<domain>/`.
 - **The original file name is a hint.** A file dropped as `dad.jpg` tells the agent it relates to the user's father. The agent reads the original name to understand the file, then renames it during ingest.
 - **Naming:** during ingest, every raw file is renamed to `YYYY-MM-DD-short-title.ext` (the date the source was added). The content is never changed.
-- **Permanent system folders:** `raw/processed/`, `raw/assets/`, and `wiki/log/` are part of the structure even when empty. Git does not track empty folders, so if one is missing (e.g. after a clone), the agent simply recreates it.
+- **Permanent system folders:** `raw/processed/` and `raw/assets/` are part of the structure even when empty. Git does not track empty folders, so if one is missing (e.g. after a clone), the agent simply recreates it.
 - **Non-text sources** (PDF, images, audio, video): the original is kept, and the agent creates a markdown text version next to it (extraction, transcription, or description), with the same base name. The text version is used for integration.
 
 ### 5.4 `wiki/` — domains
@@ -132,7 +130,7 @@ my-wiki/
   - **file names are unique across the whole wiki** (wikilinks resolve by file name — two `marc.md` files would make `[[marc]]` ambiguous; use `marc-dupont.md` and `marc-cousin.md`);
   - **a subdomain is created only when it is justified** (enough pages on the subject, or at the user's request).
 - **Creating a domain or subdomain:** the agent may propose one (e.g. "I have 8 pages about your team — shall I create `work/team/`?"). Nothing is created without the user's validation.
-- **Filing rules:** when a domain has subdomains (or projects) and it is unclear where a kind of content belongs, the agent proposes a short filing rule for that domain (e.g. "anything about the company as a whole → `work/company/`; anything about client X → `work/client-x/`; work outside the company → directly in `work/`"). Once validated, it is recorded in `settings.md` (one "Filing rule (<domain>)" row per domain) and applied at every ingest and capture without asking again. Changing it follows section 15 (logged `schema`).
+- **Filing rules:** when a domain has subdomains (or projects) and it is unclear where a kind of content belongs, the agent proposes a short filing rule for that domain (e.g. "anything about the company as a whole → `work/company/`; anything about client X → `work/client-x/`; work outside the company → directly in `work/`"). Once validated, it is recorded in `settings.md` (one "Filing rule (<domain>)" row per domain) and applied at every ingest and capture without asking again. Changing it follows section 15 (committed as `schema:`, section 14).
 - **Optional pattern — "to try" and "tried" domains** (a suggestion, not a rule): when the user collects many things to try (tools, recipes, places, books…), the agent may suggest two domains: one where items arrive with the status "to try", and one for items tried and kept. After trying, an item is either **kept** (moved to the "tried" domain) or **dropped** (it stays in the "to try" domain with the reason). Example: `ai-tools/` (to try) → `tools/` (tried and useful). Like any domain, both are created only after the user's validation.
 
 ### 5.5 Type subfolders
@@ -202,7 +200,7 @@ wiki/football/
 
 | Item | Rule |
 |---|---|
-| System files and folders | English: `user.md`, `index.md`, `log.md`, `open-questions.md`, `<name>-open-questions.md`, `settings.md`, `command.md`, `.llm-wiki/`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/` |
+| System files and folders | English: `user.md`, `index.md`, `open-questions.md`, `<name>-open-questions.md`, `settings.md`, `command.md`, `.llm-wiki/`, `raw/`, `processed/`, `assets/`, `templates/`, `wiki/`, `projects/`, `archive/` |
 | Type subfolders | Wiki's language, fixed once in `settings.md` (section 5.5) |
 | Domains and subdomains | The word given by the user, as is (spelling checked) |
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
@@ -228,7 +226,7 @@ When the user wants the agent to use a personal tool on its own (a task manager,
 1. creates a skill describing how to use the tool, as two identical copies in `.claude/skills/<name>/` and `.agents/skills/<name>/` (section 7);
 2. adds a trigger rule saying when to use it (the user's phrasings, even when the skill is not named), referenced from both `CLAUDE.md` and `AGENTS.md` (it may live in `.claude/rules/<name>.md`, section 5.8);
 3. adds a row to `settings.md` and the command to `command.md`, so the user knows they can ask for it;
-4. logs it as `schema`.
+4. commits it as `schema:` (section 14).
 
 The tool's credentials or tokens never go into the wiki: they stay in the tool's own configuration, outside the wiki. Only the user's personal requests trigger an integration: the word used to ask the agent for work (e.g. "task") is not enough on its own.
 
@@ -327,11 +325,11 @@ Each template then defines its sections (headings written in the user's language
 - **Skills follow the same rule.** Every skill of the wiki (starting with `update_wiki`) exists as two real files with identical content: `.claude/skills/<name>/SKILL.md` (Claude Code) and `.agents/skills/<name>/SKILL.md` (Codex and other agents reading `.agents/skills/`). No symbolic link. Whenever one copy is modified, the other is modified in the same way, at the same time; they must never differ.
 - They contain the rules of this document, adapted to the user's choices, and reference `settings.md` and `templates/` as code, never as links (see section 13).
 - **The schema evolves with the user.** When the agent sees that a new convention would help, it proposes the change; the user validates before anything is written.
-- Every schema change is logged (`schema`).
+- Every schema change is committed as `schema:` (section 14).
 - **Interaction guidelines.** When the user mentions a difficulty that should change how the agent talks to them (dyslexia, ADHD, or similar; asked at first launch, section 8, or said at any time), the agent says it will research how best to interact with it, then does a thorough web search (the user's answer counts as permission for this search; otherwise the normal web-search rule applies). The sources are saved in `raw/` and integrated as a `knowledge` page (principle 3), so the guidance is traceable. From that research, the agent writes short, concrete **interaction guidelines** into `CLAUDE.md` and `AGENTS.md`, applied in every session to everything it says to the user. Examples — dyslexia: short sentences, lists, key words in bold, no walls of text, one question at a time, understand messages despite spelling mistakes and never point them out; ADHD: lead with the essential, one action at a time, a clear next step.
   - **Scope:** interaction with the user only (conversation, questions, reports). Wiki pages are **not** simplified: they keep all the information, and the agent reformulates it for the user when answering.
   - **Privacy:** the schema files contain only how to interact, nothing medical. The difficulty itself is recorded in `user.md` (Health & wellbeing) only if the user agrees: it is sensitive data.
-  - **Evolution:** the user can change the guidelines at any time (section 15, logged `schema`); the lint occasionally asks whether they still help.
+  - **Evolution:** the user can change the guidelines at any time (section 15, committed as `schema:`); the lint occasionally asks whether they still help.
 
 ### `command.md` — the user's command reference
 
@@ -343,7 +341,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 | `lint` | Runs a health check of the wiki: fixes mechanical issues, asks about content issues, and brings questions, sources to look for, and 💡 insights (section 9.4). |
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
-| `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.3), in the question style, so the user can answer them. The user can also ask for the questions of one domain only. |
+| `open questions` | Shows the open questions (general ones and those of each domain or project, section 11.2), in the question style, so the user can answer them. The user can also ask for the questions of one domain only. |
 | `new contact` | Creates a contact page after validation, in the right domain's `contacts/`, and adds it to the list `<domain>-contacts.md` (section 5.5). |
 | `new domain` / `new project` | Creates a domain, subdomain, or project after validation (a project goes in its domain's `projects/` folder, section 5.6). |
 | `close project` | Brings long-term value into the domains, then archives the project (section 9.5). |
@@ -369,12 +367,12 @@ When the agent receives this document for the first time, it performs these step
    5. **Question style:** "Do you prefer my questions one at a time, or all together in a list?" The answer is recorded in `settings.md` (section 15); if the user does not know, `one by one`.
    6. **Interaction needs (optional):** "Do you have a difficulty that should change how I talk or write to you — for example dyslexia, ADHD, or anything similar? You can skip this question." If the answer is yes, the agent follows the interaction needs rule (section 7). The user may also mention such a need later, at any time.
 
-   That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.3). The defaults (section 16) apply until the user changes them.
-2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `log.md`, `log/`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
+   That is all. Everything else (who the user is, other domains, settings) will come with time, through captures, ingests, and the agent's questions. Open questions that arise from the interview (e.g. the user's job, a short self-presentation) are added to the open questions (section 11.2). The defaults (section 16) apply until the user changes them.
+2. **Create the structure:** `raw/` (with `processed/` and `assets/`), `templates/` (all `template-<type>.md` files), `wiki/` (`index.md`, `open-questions.md`), `CLAUDE.md`, `AGENTS.md`, `settings.md` (including `prompt_version` and `prompt_source`, see section 9.6, and the type subfolder names in the wiki's language, see section 5.5), `command.md`. Save a copy of this document in `.llm-wiki/prompt-<version>.md`. Create the short skill `update_wiki` in both copies, `.claude/skills/update_wiki/SKILL.md` and `.agents/skills/update_wiki/SKILL.md`, whatever the agent used (sections 7 and 9.6).
 3. **Install search:** check whether qmd is already installed; install it only if needed. Create the wiki's collections with prefixed names and index them (section 12). If installation fails, explain why and fall back to the index plus grep.
 4. **Configure Obsidian:** write the settings listed in section 13 to `.obsidian/`, create the dashboard `wiki/dashboard.base` (section 13), propose installing kepano's Obsidian skills (section 13; only after validation and if the agent supports skills), and give the user a step-by-step guide for the rest.
 5. **Initialize git** (only if the user chose to use git): run `git init` only if the folder is not already a repository, and add the remote repository given by the user, if any (section 14).
-6. **Log** the initialization and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
+6. **Commit** the initialization (`init:`, if git is used, section 14) and give the user a short summary of what was created, pointing to `command.md` to see what they can ask.
 
 ---
 
@@ -386,7 +384,7 @@ When the user tells the agent an idea, a thought, or any information in conversa
 
 1. The agent **saves a raw source first**: a dated file in `raw/` (`YYYY-MM-DD-short-title.md`) containing what the user said, **faithfully**. Transcription and typing errors are corrected; the meaning and the wording are not changed.
 2. The agent **asks**: "Shall I integrate it now, or keep it for the next ingest?"
-3. The capture is logged (`capture`).
+3. The capture is committed (`capture:`, section 14).
 
 Capturing an idea must cost the user almost nothing: no forms, no required structure.
 
@@ -396,16 +394,16 @@ Capturing an idea must cost the user almost nothing: no forms, no required struc
 
 **Rhythm:** the agent processes all sources in `raw/` **autonomously**. It only needs the user for things that require their judgment (contradictions, new domains or subdomains, new contact pages, classification doubts). It **does not stop**: it sets these points aside and asks **all its questions at the end**, according to the question style (section 15).
 
-**Safe progress:** before writing, list the files waiting directly in `raw/` and check whether any already has a source page or a copy in `raw/processed/` (including after an interrupted ingest). Process one source at a time. A source is complete only when its raw file, source page, related pages, links, domain page, and index agree. Only then move the raw file and record that completed source in the log. If processing stops midway, the next ingest reconciles those existing files and finishes the source instead of creating a second source page or duplicating facts. Report any incomplete source that cannot be reconciled; never silently discard it.
+**Safe progress:** before writing, list the files waiting directly in `raw/` and check whether any already has a source page or a copy in `raw/processed/` (including after an interrupted ingest). Process one source at a time. A source is complete only when its raw file, source page, related pages, links, domain page, and index agree. Only then move the raw file. If processing stops midway, the next ingest reconciles those existing files and finishes the source instead of creating a second source page or duplicating facts. Report any incomplete source that cannot be reconciled; never silently discard it.
 
 When a decision is needed before a source can be filed or a page can be created, leave that source pending in `raw/` and ask at the end. Continue with independent sources. A text extraction beside a PDF, image, audio, or video is part of the same source, not a second item to ingest.
 
 **Sub-agents (optional):** for a large ingest, if the agent can launch sub-agents, it may hand each independent source to its own sub-agent, working in parallel.
 - Each sub-agent handles one source and writes only that source's own pages (source page and its entity, knowledge, how-to pages). It reports back the pages it created or changed, what the shared files need, and its pending questions.
-- Only the main agent writes the shared files (`index.md`, the log, domain pages, list pages, `user.md`, open questions) and makes the commit, so two agents never write the same file.
+- Only the main agent writes the shared files (`index.md`, domain pages, list pages, `user.md`, open questions) and makes the commit, so two agents never write the same file.
 - Sub-agents never create domains, subdomains, or contact pages; questions needing the user's judgment go back to the main agent, who asks them all at the end.
 - Two sub-agents never update the same existing page: sources touching the same page are handled one after the other by the main agent.
-- Each source is still completed as a unit (safe progress above): once its sub-agent reports, the main agent finalizes the shared files, then moves the raw file and logs that source.
+- Each source is still completed as a unit (safe progress above): once its sub-agent reports, the main agent finalizes the shared files, then moves the raw file.
 
 **For each source, the agent:**
 
@@ -422,7 +420,6 @@ When a decision is needed before a source can be filed or a page can be created,
 9. Adds all links (wikilinks) both ways where relevant.
 10. Updates the domain pages and `index.md`.
 11. Moves the source (and its assets) to `raw/processed/<main domain>/`.
-12. Logs the ingest (`ingest`).
 
 **After all sources, the agent re-indexes search and presents a report:**
 - sources processed;
@@ -433,7 +430,7 @@ When a decision is needed before a source can be filed or a page can be created,
 - changes made to `user.md`;
 - pending questions (asked now, according to the question style, section 15).
 
-Then it commits according to the commit mode (section 14).
+Then it commits (`ingest:`) according to the commit mode (section 14).
 
 ### 9.3 Query — answering questions
 
@@ -447,11 +444,11 @@ Then it commits according to the commit mode (section 14).
    2. it proposes an answer;
    3. if the answer suits the user, it fetches the raw content of the sites or documents used and saves it to `raw/` (web pages with Defuddle first, as in ingest);
    4. it **asks permission** to integrate these sources, then integrates them with all relevant links.
-7. Queries that used the wiki are logged (`query`).
+7. A plain question changes no file and creates no commit. A kept answer (step 5) is committed (`query:`, section 14).
 
 ### 9.4 Lint — health check
 
-**Trigger:** on demand (`lint`), and the agent **suggests** a lint when the threshold is reached: **10 ingests or 30 days since the last lint, whichever comes first** (configurable).
+**Trigger:** on demand (`lint`), and the agent **suggests** a lint when the threshold is reached: **10 ingests or 30 days since the last lint, whichever comes first** (configurable). With git, the agent finds them in the history: `git log --grep '^lint:'` and `git log --grep '^ingest:'` (section 14). Without git, it records the date of the last lint in `settings.md` ("Last lint") and suggests a lint after 30 days.
 
 **Checks:**
 - contradictions between pages;
@@ -467,7 +464,7 @@ Then it commits according to the commit mode (section 14).
 - pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
 - no link points to a folder or to a non-note file (including `wiki/dashboard.base`), and no empty note was created by mistake;
 - no untitled file created by mistake: a file with a default name ("Untitled", "Untitled 1", or the localized equivalent such as "Sans titre"), whatever its extension (`.md`, `.base`, `.canvas`…), anywhere in the wiki. The agent shows its content (often empty) and asks the user before deleting it;
-- no empty or useless subfolders, including empty agent folders in `.claude/` and `.agents/` (section 5.8) (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
+- no empty or useless subfolders, including empty agent folders in `.claude/` and `.agents/` (section 5.8) (except the permanent system folders `raw/processed/` and `raw/assets/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
 - pages not updated for a long time (`user.md`, contact pages…), ignoring `archived` pages;
@@ -481,7 +478,7 @@ Then it commits according to the commit mode (section 14).
 - no forgotten temporary file the agent created and should have deleted: an update review file (`changes-<version>.md` or its translation) at the wiki root, or any other temporary note. The agent flags it and asks the user before deleting it; for a review file, it first offers to finish the review;
 - `wiki/index.md` is not too large to read efficiently (default threshold about 50 KB, configurable in `settings.md`, "Index size"): if it is, the lint proposes to split it by domain (section 11.1), applied only after validation;
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
-- no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
+- no wikilink points to a deleted page: it is turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates an empty note at the root.
 
 **Fixes:**
 - **Mechanical, safe fixes** are done automatically: links, index, orphans, template formatting, frontmatter syntax (fixed without changing any value), empty folders.
@@ -494,14 +491,14 @@ Then it commits according to the commit mode (section 14).
 - 💡 insights: recurring patterns, links between domains, forgotten ideas worth revisiting;
 - confused ideas to clarify together.
 
-**Asking and skipping questions:** questions are asked according to the question style (section 15). The user may skip any question ("not now"). Skipped questions are stored in the open questions files (section 11.3) and asked again at the next lint or at any other time. Once answered, they are removed. "I don't know" is an answer, not a skip: the information is recorded as unknown and the question is closed (section 11.3).
+**Asking and skipping questions:** questions are asked according to the question style (section 15). The user may skip any question ("not now"). Skipped questions are stored in the open questions files (section 11.2) and asked again at the next lint or at any other time. Once answered, they are removed. "I don't know" is an answer, not a skip: the information is recorded as unknown and the question is closed (section 11.2).
 
-The lint ends with a report, is logged (`lint`), and is followed by a commit according to the commit mode (section 14).
+The lint ends with a report, followed by a commit (`lint:`) according to the commit mode (section 14).
 
 ### 9.5 Project lifecycle
 
 - **Start:** a project is created in its domain, `wiki/<domain>/projects/<project>/`, or in `wiki/projects/<project>/` when it is cross-domain with no main domain (proposed by the agent or asked by the user; section 5.6).
-- **End:** when the user says a project is finished, or after the user accepts a lint proposal: bring long-term value up into the domains, then move the project to `wiki/archive/` (and its raw sources accordingly). Logged as `archive`.
+- **End:** when the user says a project is finished, or after the user accepts a lint proposal: bring long-term value up into the domains, then move the project to `wiki/archive/` (and its raw sources accordingly). Committed as `archive:`.
 
 ### 9.6 Update — keeping the wiki in line with new versions of this prompt
 
@@ -537,7 +534,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
      - **Keep all content and all links**: migrating a page never deletes information.
    - **Conflicts with a customization:** show the user's version and the new version side by side; the user chooses.
 6. **Apply** the validated changes: `CLAUDE.md` and `AGENTS.md` (always identical), templates, `command.md`, `settings.md`, structure, and pages. Re-index search.
-7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, log the operation (`update`), and commit according to the commit mode (if git is used, section 14).
+7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, and commit (`update:`) according to the commit mode (if git is used, section 14).
 8. **Report.** Summarize what changed. Then:
    - **Review checklist:** create a temporary file at the wiki root, named in the wiki's language (`changes-<version>.md` by default; e.g. `changements-<version>.md` in a French wiki). It lists every change applied, grouped (rules and system files, templates, structure, pages), each with a checkbox `- [ ]`, plus the safety commit hash and tag (with git). The user ticks what suits them, notes what does not, and tells the agent. The agent undoes or adjusts the refused points, then **deletes the file**: it is never left in the wiki.
    - **Without git:** explain that a backup was created in `../<wiki-name>_backup/`, and that the user can ask the agent to restore the previous state if the update does not suit them or broke something.
@@ -563,7 +560,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
 
 ---
 
-## 11. Index, Log, and Open Questions
+## 11. Index and Open Questions
 
 ### 11.1 `wiki/index.md`
 
@@ -581,23 +578,7 @@ In addition, **each domain page lists its own pages**, so the agent can navigate
 
 **Large index:** when the lint finds `wiki/index.md` too large (section 9.4) and the user validates the split, each domain gets `<domain>-index.md` in its folder, with the same entry format, and `wiki/index.md` keeps only an overview: links to the domain indexes, plus the cross-domain projects and general pages. The rules of this section then apply to each domain index, and when answering, the agent reads the root index, then the relevant domain index.
 
-### 11.2 `wiki/log.md`
-
-An append-only chronological record. Each entry starts with a consistent header, so the log stays parseable with simple tools (`grep "^## \[" wiki/log.md | tail -5`):
-
-```
-## [YYYY-MM-DD HH:MM] type | Title
-Short summary (1–3 lines).
-- Pages created: [[...]], [[...]]
-- Pages modified: [[...]]
-- Sources: raw/processed/...
-```
-
-**Event types:** `ingest`, `query` (only queries that used the wiki), `lint`, `capture`, `schema`, `domain`, `archive`, `user`, `manual`, `init`, `update`.
-
-**Monthly rotation:** `log.md` holds the current month. When a new month starts, its content is moved to `wiki/log/YYYY-MM.md` and `log.md` starts empty.
-
-### 11.3 Open questions
+### 11.2 Open questions
 
 Questions waiting for the user's answer (skipped during a lint or an ingest, or born from the welcome interview) are split by domain, so no single file holds questions about everything.
 
@@ -618,7 +599,7 @@ Questions waiting for the user's answer (skipped during a lint or an ingest, or 
 - **Collection names:** qmd collections are global to the machine, so generic names like `wiki` or `raw` would clash with another wiki. Prefix them with the wiki's folder name: `<wiki>-wiki` (on `wiki/`) and `<wiki>-raw` (on `raw/processed/`).
 - **Re-indexing:** after every ingest and after any change to the wiki or the sources, run `qmd update && qmd embed`. Run `qmd cleanup` if qmd reports orphaned chunks.
 - **Fallback:** if qmd cannot be installed or fails, the agent uses `index.md`, the domain pages, and grep.
-- **Other scripts:** when a mechanical task becomes repetitive (checking that `CLAUDE.md` = `AGENTS.md`, unique names, broken links, log rotation…), the agent may **propose** to write a small script in `scripts/`. Nothing is created without validation.
+- **Other scripts:** when a mechanical task becomes repetitive (checking that `CLAUDE.md` = `AGENTS.md`, unique names, broken links…), the agent may **propose** to write a small script in `scripts/`. Nothing is created without validation.
 
 ---
 
@@ -751,11 +732,17 @@ The wiki is designed to be read in **Obsidian**.
 - **Commit mode** (`settings.md`, asked at first launch, section 8): at the end of each operation (ingest, lint, capture, query with a kept answer, schema change…), the agent commits according to this setting:
   - `propose` (default): the agent proposes the commit; the user validates.
   - `automatic`: the agent commits without asking and reports the commit hash.
+- **Never leave uncommitted changes:** every task that changes files ends with a commit (proposed or made, according to the commit mode) before the final report. This applies to small edits, to sub-agents' work, and to any conversation, whatever the agent (Claude Code, Codex…). Uncommitted changes make the `git diff` read at the start of every operation (section 4) grow, which slows every agent down. A plain question changes no file and creates no commit.
+- **Commit messages are the history of the wiki** (there is no log file). They are written in the wiki's language, except the type:
+  - **First line:** `<type>: <short title>`. Types: `ingest`, `query` (a kept answer), `lint`, `capture`, `schema`, `domain`, `archive`, `user`, `manual`, `init`, `update`.
+  - **Body**, as long as the work needs: 1–3 lines for a small commit, up to 5–7 lines for a large one (ingest, lint, schema change, update). It says what was done and why, the sources (`raw/processed/...` paths), the decisions, the open questions, and what is not done or not verified. It does not list the modified pages (git already does). Nothing sensitive beyond what is needed: a commit is permanent.
+  - **Last line:** at most 10 keywords, after a label in the wiki's language (`Keywords:` by default, e.g. `Mots-clés:` in a French wiki): the domain, the subdomain or project if any, and the people and companies concerned that have a page. Each keyword is **exactly the file name of the wiki page, without `.md`** (e.g. `Keywords: family, japan-trip, marc-dupont`), so that `git log --grep` finds everything.
+  - **Reading the history:** `git log` (with `--grep` on a keyword or a type, e.g. `git log --grep '^ingest:'`). **Undoing:** `git revert`, or restoring the files from an earlier commit.
 - **Push frequency** (`settings.md`, a number N, default 5; 1 = push after every commit): the agent pushes once N commits are not yet pushed. In `propose` mode the push is proposed; in `automatic` mode it is done and reported.
 - **End of a work session:** when the session ends (or the user says they are done), the agent also pushes the pending commits even if N is not reached (proposed or done according to the commit mode), so nothing stays only on the local machine.
 - **No remote:** if `git remote -v` is empty, the agent commits only (according to the commit mode) and says that pushing is not possible until a remote is added.
 - **Commit messages are clear and never mention AI** (no "Co-Authored-By", no "Generated with…"). This rule is written in the schema and **takes precedence over any automatic attribution** the agent would add by default.
-- Git is also how the agent detects the user's manual edits (section 4). Without git, the agent compares file modification dates with its last logged operation.
+- Git is also how the agent detects the user's manual edits (section 4). Without git, the agent compares file modification dates with the date of its last operation, recorded in `settings.md` ("Last operation"); there is no history of operations.
 
 ---
 
@@ -765,7 +752,7 @@ Every rule in this document is a default. The user can change them:
 
 - **at any time**, by asking the agent. The agent proposes the change to `settings.md` (and to `CLAUDE.md` / `AGENTS.md` if a rule changes), and applies it only after validation.
 
-User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4) and domain-specific frontmatter fields (section 6); changing them is proposed, validated, and logged `schema`, like any other rule.
+User settings live in **`settings.md`** at the root of the wiki, referenced by the schema files. They include the per-domain filing rules (section 5.4) and domain-specific frontmatter fields (section 6); changing them is proposed, validated, and committed as `schema:`, like any other rule.
 
 **Question style** (`settings.md`, "Question style": `one by one` or `list`): how the agent asks the user several questions — at the end of an ingest, during a lint or an update, and when reviewing open questions. `one by one`: one question, wait for the answer, then the next. `list`: all questions together, numbered. In both styles, each question carries the context needed to answer it (keep useful details, drop only filler). The user can change the style for good (customization rule above) or just for the current batch ("ask everything as a list this time").
 
@@ -819,8 +806,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Open questions | One `<name>-open-questions.md` per domain, subdomain, and project (created when needed, deleted when empty); `wiki/open-questions.md` holds general questions and links |
 | Contradictions | ⚠️ flag in page + user decides |
 | Idea evolution | Visible dated history in the page |
-| Log format | `## [YYYY-MM-DD HH:MM] type \| Title` + summary + pages touched |
-| Log rotation | Monthly (`wiki/log/YYYY-MM.md`) |
+| Log | None: commit messages are the trace of operations (section 14) |
 | Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`), fallback index + grep |
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
@@ -828,7 +814,8 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Link format | Wikilinks `[[...]]` |
 | Obsidian skills | kepano/obsidian-skills proposed at first launch, installed after validation |
 | Git | Optional, chosen at first launch (remote link asked if used) |
-| Commit mode | Asked at first launch: `propose` (default) or `automatic` |
+| Commit mode | Asked at first launch: `propose` (default) or `automatic`; every task that changes files ends with a commit (or a proposed commit) |
+| Commit messages | `<type>: <short title>`, body proportional to the work, last line of at most 10 keywords (exact page file names) |
 | Push frequency | Every N unpushed commits (asked at first launch, default 5), plus at the end of a work session; commit only if no remote |
 | AI mention in commits | Never |
 | Prompt updates | On demand (`update wiki` / `/update_wiki`) + checked by the lint; latest tag of `prompt_source` |

@@ -127,11 +127,17 @@ The wiki is designed to be read in **Obsidian**.
 - **Commit mode** (`settings.md`, asked at first launch, section 8): at the end of each operation (ingest, lint, capture, query with a kept answer, schema change…), the agent commits according to this setting:
   - `propose` (default): the agent proposes the commit; the user validates.
   - `automatic`: the agent commits without asking and reports the commit hash.
+- **Never leave uncommitted changes:** every task that changes files ends with a commit (proposed or made, according to the commit mode) before the final report. This applies to small edits, to sub-agents' work, and to any conversation, whatever the agent (Claude Code, Codex…). Uncommitted changes make the `git diff` read at the start of every operation (section 4) grow, which slows every agent down. A plain question changes no file and creates no commit.
+- **Commit messages are the history of the wiki** (there is no log file). They are written in the wiki's language, except the type:
+  - **First line:** `<type>: <short title>`. Types: `ingest`, `query` (a kept answer), `lint`, `capture`, `schema`, `domain`, `archive`, `user`, `manual`, `init`, `update`.
+  - **Body**, as long as the work needs: 1–3 lines for a small commit, up to 5–7 lines for a large one (ingest, lint, schema change, update). It says what was done and why, the sources (`raw/processed/...` paths), the decisions, the open questions, and what is not done or not verified. It does not list the modified pages (git already does). Nothing sensitive beyond what is needed: a commit is permanent.
+  - **Last line:** at most 10 keywords, after a label in the wiki's language (`Keywords:` by default, e.g. `Mots-clés:` in a French wiki): the domain, the subdomain or project if any, and the people and companies concerned that have a page. Each keyword is **exactly the file name of the wiki page, without `.md`** (e.g. `Keywords: family, japan-trip, marc-dupont`), so that `git log --grep` finds everything.
+  - **Reading the history:** `git log` (with `--grep` on a keyword or a type, e.g. `git log --grep '^ingest:'`). **Undoing:** `git revert`, or restoring the files from an earlier commit.
 - **Push frequency** (`settings.md`, a number N, default 5; 1 = push after every commit): the agent pushes once N commits are not yet pushed. In `propose` mode the push is proposed; in `automatic` mode it is done and reported.
 - **End of a work session:** when the session ends (or the user says they are done), the agent also pushes the pending commits even if N is not reached (proposed or done according to the commit mode), so nothing stays only on the local machine.
 - **No remote:** if `git remote -v` is empty, the agent commits only (according to the commit mode) and says that pushing is not possible until a remote is added.
 - **Commit messages are clear and never mention AI** (no "Co-Authored-By", no "Generated with…"). This rule is written in the schema and **takes precedence over any automatic attribution** the agent would add by default.
-- Git is also how the agent detects the user's manual edits (section 4). Without git, the agent compares file modification dates with its last logged operation.
+- Git is also how the agent detects the user's manual edits (section 4). Without git, the agent compares file modification dates with the date of its last operation, recorded in `settings.md` ("Last operation"); there is no history of operations.
 
 ---
 

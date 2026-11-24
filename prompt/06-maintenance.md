@@ -1,6 +1,6 @@
 ### 9.4 Lint — health check
 
-**Trigger:** on demand (`lint`), and the agent **suggests** a lint when the threshold is reached: **10 ingests or 30 days since the last lint, whichever comes first** (configurable).
+**Trigger:** on demand (`lint`), and the agent **suggests** a lint when the threshold is reached: **10 ingests or 30 days since the last lint, whichever comes first** (configurable). With git, the agent finds them in the history: `git log --grep '^lint:'` and `git log --grep '^ingest:'` (section 14). Without git, it records the date of the last lint in `settings.md` ("Last lint") and suggests a lint after 30 days.
 
 **Checks:**
 - contradictions between pages;
@@ -16,7 +16,7 @@
 - pages follow their template (frontmatter, sections): all sections for most types; for `contact` and `company` pages, only the order and names of the sections present are checked, missing sections are not flagged;
 - no link points to a folder or to a non-note file (including `wiki/dashboard.base`), and no empty note was created by mistake;
 - no untitled file created by mistake: a file with a default name ("Untitled", "Untitled 1", or the localized equivalent such as "Sans titre"), whatever its extension (`.md`, `.base`, `.canvas`…), anywhere in the wiki. The agent shows its content (often empty) and asks the user before deleting it;
-- no empty or useless subfolders, including empty agent folders in `.claude/` and `.agents/` (section 5.8) (except the permanent system folders `raw/processed/`, `raw/assets/`, and `wiki/log/`, which are ignored by this check);
+- no empty or useless subfolders, including empty agent folders in `.claude/` and `.agents/` (section 5.8) (except the permanent system folders `raw/processed/` and `raw/assets/`, which are ignored by this check);
 - files waiting in `raw/` for a long time;
 - projects that seem inactive (propose to close and archive them);
 - pages not updated for a long time (`user.md`, contact pages…), ignoring `archived` pages;
@@ -30,7 +30,7 @@
 - no forgotten temporary file the agent created and should have deleted: an update review file (`changes-<version>.md` or its translation) at the wiki root, or any other temporary note. The agent flags it and asks the user before deleting it; for a review file, it first offers to finish the review;
 - `wiki/index.md` is not too large to read efficiently (default threshold about 50 KB, configurable in `settings.md`, "Index size"): if it is, the lint proposes to split it by domain (section 11.1), applied only after validation;
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
-- no wikilink points to a deleted page, including in `wiki/log.md` and the archived logs in `wiki/log/`. When pages are deleted, their wikilinks in the log are turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates empty notes at the root. This is the only edit allowed in the append-only log.
+- no wikilink points to a deleted page: it is turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates an empty note at the root.
 
 **Fixes:**
 - **Mechanical, safe fixes** are done automatically: links, index, orphans, template formatting, frontmatter syntax (fixed without changing any value), empty folders.
@@ -43,14 +43,14 @@
 - 💡 insights: recurring patterns, links between domains, forgotten ideas worth revisiting;
 - confused ideas to clarify together.
 
-**Asking and skipping questions:** questions are asked according to the question style (section 15). The user may skip any question ("not now"). Skipped questions are stored in the open questions files (section 11.3) and asked again at the next lint or at any other time. Once answered, they are removed. "I don't know" is an answer, not a skip: the information is recorded as unknown and the question is closed (section 11.3).
+**Asking and skipping questions:** questions are asked according to the question style (section 15). The user may skip any question ("not now"). Skipped questions are stored in the open questions files (section 11.2) and asked again at the next lint or at any other time. Once answered, they are removed. "I don't know" is an answer, not a skip: the information is recorded as unknown and the question is closed (section 11.2).
 
-The lint ends with a report, is logged (`lint`), and is followed by a commit according to the commit mode (section 14).
+The lint ends with a report, followed by a commit (`lint:`) according to the commit mode (section 14).
 
 ### 9.5 Project lifecycle
 
 - **Start:** a project is created in its domain, `wiki/<domain>/projects/<project>/`, or in `wiki/projects/<project>/` when it is cross-domain with no main domain (proposed by the agent or asked by the user; section 5.6).
-- **End:** when the user says a project is finished, or after the user accepts a lint proposal: bring long-term value up into the domains, then move the project to `wiki/archive/` (and its raw sources accordingly). Logged as `archive`.
+- **End:** when the user says a project is finished, or after the user accepts a lint proposal: bring long-term value up into the domains, then move the project to `wiki/archive/` (and its raw sources accordingly). Committed as `archive:`.
 
 ### 9.6 Update — keeping the wiki in line with new versions of this prompt
 
@@ -86,7 +86,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
      - **Keep all content and all links**: migrating a page never deletes information.
    - **Conflicts with a customization:** show the user's version and the new version side by side; the user chooses.
 6. **Apply** the validated changes: `CLAUDE.md` and `AGENTS.md` (always identical), templates, `command.md`, `settings.md`, structure, and pages. Re-index search.
-7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, log the operation (`update`), and commit according to the commit mode (if git is used, section 14).
+7. **Finish.** Update `prompt_version` in `settings.md`, replace the copy in `.llm-wiki/` with the new version, and commit (`update:`) according to the commit mode (if git is used, section 14).
 8. **Report.** Summarize what changed. Then:
    - **Review checklist:** create a temporary file at the wiki root, named in the wiki's language (`changes-<version>.md` by default; e.g. `changements-<version>.md` in a French wiki). It lists every change applied, grouped (rules and system files, templates, structure, pages), each with a checkbox `- [ ]`, plus the safety commit hash and tag (with git). The user ticks what suits them, notes what does not, and tells the agent. The agent undoes or adjusts the refused points, then **deletes the file**: it is never left in the wiki.
    - **Without git:** explain that a backup was created in `../<wiki-name>_backup/`, and that the user can ask the agent to restore the previous state if the update does not suit them or broke something.
@@ -98,7 +98,7 @@ This document evolves. A wiki created with an older version keeps its old rules 
 
 ---
 
-## 11. Index, Log, and Open Questions
+## 11. Index and Open Questions
 
 ### 11.1 `wiki/index.md`
 
@@ -116,23 +116,7 @@ In addition, **each domain page lists its own pages**, so the agent can navigate
 
 **Large index:** when the lint finds `wiki/index.md` too large (section 9.4) and the user validates the split, each domain gets `<domain>-index.md` in its folder, with the same entry format, and `wiki/index.md` keeps only an overview: links to the domain indexes, plus the cross-domain projects and general pages. The rules of this section then apply to each domain index, and when answering, the agent reads the root index, then the relevant domain index.
 
-### 11.2 `wiki/log.md`
-
-An append-only chronological record. Each entry starts with a consistent header, so the log stays parseable with simple tools (`grep "^## \[" wiki/log.md | tail -5`):
-
-```
-## [YYYY-MM-DD HH:MM] type | Title
-Short summary (1–3 lines).
-- Pages created: [[...]], [[...]]
-- Pages modified: [[...]]
-- Sources: raw/processed/...
-```
-
-**Event types:** `ingest`, `query` (only queries that used the wiki), `lint`, `capture`, `schema`, `domain`, `archive`, `user`, `manual`, `init`, `update`.
-
-**Monthly rotation:** `log.md` holds the current month. When a new month starts, its content is moved to `wiki/log/YYYY-MM.md` and `log.md` starts empty.
-
-### 11.3 Open questions
+### 11.2 Open questions
 
 Questions waiting for the user's answer (skipped during a lint or an ingest, or born from the welcome interview) are split by domain, so no single file holds questions about everything.
 
