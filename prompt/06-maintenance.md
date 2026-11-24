@@ -22,13 +22,14 @@
 - pages not updated for a long time (`user.md`, contact pages…), ignoring `archived` pages;
 - every page is connected to `user.md`, directly or indirectly;
 - every contact and company page links to its list (`<domain>-contacts.md`, `<domain>-companies.md`), and every list includes all pages of its folder;
+- every `sources/` folder has its `<domain>-sources.md` list, which contains every source page of the folder and nothing else, and is linked from its domain page;
 - every contact page meets the contact rules (a name and a way to reach them, or marked as family);
 - how-tos: `outdated` ones (may propose archiving them), `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
 - pages of a domain with domain-specific fields (section 6) have those fields, with allowed values, and their mirrored tags match;
 - interaction guidelines (section 7), if any: occasionally, the lint asks the user whether they still help or need adjusting;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - no forgotten temporary file the agent created and should have deleted: an update review file (`changes-<version>.md` or its translation) at the wiki root, or any other temporary note. The agent flags it and asks the user before deleting it; for a review file, it first offers to finish the review;
-- navigation (sections 6 and 11.1): every page is listed exactly once, by the page of its own domain (except contact and company pages, listed by their list pages, open-questions files, linked from Open points, and domain pages, listed by their parent's page or by `index.md`); every subdomain and project is linked from its parent's page; no domain page lists the pages of its subdomains or projects; `wiki/index.md` lists every main domain and nothing more than planned (general pages, cross-domain projects); domain and project pages respect their limits (overview at most 15 non-empty lines, key facts at most 20 points);
+- navigation (sections 6 and 11.1): every page is listed exactly once, by the page of its own domain (except contact and company pages, listed by their list pages, source pages, listed by their `<domain>-sources.md` list, open-questions files, linked from Open points, and domain pages, listed by their parent's page or by `index.md`); every subdomain and project is linked from its parent's page; no domain page lists the pages of its subdomains or projects; `wiki/index.md` lists every main domain and nothing more than planned (general pages, cross-domain projects); domain and project pages respect their limits (overview at most 15 non-empty lines, key facts at most 20 points);
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page: it is turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates an empty note at the root.
 
@@ -111,7 +112,7 @@ Navigation is a tree: `wiki/index.md` → domain page → subdomain or project p
 
   It is changed only when a main domain (or cross-domain project) is created, renamed, or archived, or when its summary changes. There is no `<domain>-index.md` file.
 - **Domain pages** (domains, subdomains, and projects) are the navigation pages of their level; their sections and limits are defined in section 6 ("Domain and project pages").
-- **Upkeep:** when a page is created, renamed, moved, or deleted, or its summary changes, the agent updates the page of its domain, and only that one. A new subdomain or project is added to its parent's page. When the overview or the key facts overflow their limits, the surplus goes to a `synthesis` page of the domain.
+- **Upkeep:** when a page is created, renamed, moved, or deleted, or its summary changes, the agent updates the page of its domain, and only that one (for a source page: the `<domain>-sources.md` list of its folder, and the domain page only when that list is new, section 5.5). A new subdomain or project is added to its parent's page. When the overview or the key facts overflow their limits, the surplus goes to a `synthesis` page of the domain.
 
 ### 11.2 Open questions
 

@@ -11,6 +11,21 @@ Versions follow `MAJOR.MINOR.PATCH`:
 
 ## [Unreleased]
 
+### Changed
+- Search order (sections 9.3, 12, 15): with qmd, the agent searches with `qmd search` (keywords), or `qmd vsearch` (semantic) when the exact words are not enough, and never with `qmd query`, too slow for everyday use; then it reads the domain page of the topic for context; otherwise it walks the tree `index.md` → domain → subdomain → page, and uses grep last. Reason: in a test, `qmd search` was twice as fast as the tree and used a third fewer tokens, for about 10% less information found, while `qmd query` took more than 2 minutes.
+
+### Added
+- Source lists (sections 5.5, 5.7, 6, 7, 9.2, 9.4, 11.1, 15): each `sources/` folder holds a list page `<domain>-sources.md` (new type `source-list`, new template `template-source-list.md`), created with the folder and named like `<domain>-contacts.md`. It lists every source page of the folder as `[[link]] — one-line summary`, most recent first. The Sources subsection of a domain page now holds only the link to this list (optionally with the number of sources). Source pages are listed by their list, not by the domain page (a new exception to "every page is listed exactly once by the page of its own domain"); a source page does not need to link its list, since it already links its domain. When a source page is created, renamed, moved, or deleted, the agent updates the list; it touches the domain page only when the list has just been created. The lint checks that every `sources/` folder has its list, that the list contains every source page of the folder and nothing else, and that the domain page links it. Reason: domain pages listed all their source pages (dozens in an active domain), which made them heavy without helping to answer.
+
+### Migration from 0.15.0
+- Commit the pending changes first (the update's safety commit, step 4 of section 9.6).
+- Add `templates/template-source-list.md`, the `source-list` type, and the new search order to the schema files and `settings.md`.
+- Move into a `sources/` folder any source page placed directly at the root of a domain, subdomain, or project.
+- In every `sources/` folder, create `<domain>-sources.md` from the new template, reusing word for word the one-line summaries of the domain page, sorted from the most recent to the oldest.
+- In every domain, subdomain, and project page, replace the list of source pages with the link to `<domain>-sources.md` (optionally with the number of sources).
+- Check that every source page appears in the list of its folder (lint check).
+- Do not modify the source pages.
+
 ## [0.15.0] - 2026-11-24
 
 ### Changed

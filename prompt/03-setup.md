@@ -17,7 +17,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 
 | Command | What it does |
 |---|---|
-| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the domain pages, moves the file to `raw/processed/`, then reports and asks the pending questions at the end, in the question style (section 9.2). |
+| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the source lists and the domain pages, moves the file to `raw/processed/`, then reports and asks the pending questions at the end, in the question style (section 9.2). |
 | `lint` | Runs a health check of the wiki: fixes mechanical issues, asks about content issues, and brings questions, sources to look for, and 💡 insights (section 9.4). |
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
@@ -97,7 +97,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Unknown answers | Recorded as unknown with the date; question closed, not asked again |
 | Captured idea | Agent asks: integrate now or at next ingest |
 | New contact page | Requires validation; needs a name and a way to reach them (family: a name is enough) |
-| List pages | `<domain>-contacts.md` and `<domain>-companies.md` |
+| List pages | `<domain>-contacts.md`, `<domain>-companies.md` and `<domain>-sources.md` (in `sources/`, most recent first) |
 | New company page | Created freely |
 | How-to pages | Created freely; only "Goal" required; `status` + `howto/<status>` tag |
 | Outdated pages | Tag `archived` after validation, kept in place, ignored by staleness checks |
@@ -117,7 +117,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Contradictions | ⚠️ flag in page + user decides |
 | Idea evolution | Visible dated history in the page |
 | Log | None: commit messages are the trace of operations (section 14) |
-| Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`); without qmd, the tree `index.md` → domain → subdomain → page, then grep |
+| Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`): `qmd search` (`qmd vsearch` if needed, never `qmd query`) + domain page of the topic; without qmd, the tree `index.md` → domain → subdomain → page, then grep |
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
 | Dashboard | `wiki/dashboard.base` (Obsidian Bases), 5 generic views + views proposed for domains with their own fields |

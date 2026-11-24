@@ -40,7 +40,7 @@ When a decision is needed before a source can be filed or a page can be created,
 7. Updates `user.md` freely when it learns something about the user — and **reports to the user exactly what was added, changed, or removed**.
 8. Flags contradictions (section 10) and records the evolution of the user's ideas.
 9. Adds all links (wikilinks) both ways where relevant.
-10. Updates the domain page of each page created, renamed, moved, or deleted (or whose summary changed), and only that one; a new subdomain or project is added to its parent's page. `index.md` changes only when a main domain is created, renamed, or archived, or when its summary changes (section 11.1).
+10. Updates the domain page of each page created, renamed, moved, or deleted (or whose summary changed), and only that one; for a source page, it updates the `<domain>-sources.md` list of its folder instead, and the domain page only when that list is new (section 5.5); a new subdomain or project is added to its parent's page. `index.md` changes only when a main domain is created, renamed, or archived, or when its summary changes (section 11.1).
 11. Moves the source (and its assets) to `raw/processed/<main domain>/`.
 
 **After all sources, the agent re-indexes search and presents a report:**

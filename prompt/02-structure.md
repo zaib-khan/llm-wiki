@@ -83,7 +83,7 @@ Type subfolders are named **in the wiki's language** and are reserved (never use
 | Contacts | `contacts/` | `contacts/` |
 | Companies | `companies/` | `entreprises/` |
 
-Folder names use lowercase letters without accents or spaces. The list pages follow the same names: `<domain>-contacts.md`, `<domain>-entreprises.md` in a French wiki. In this document, the English names are used.
+Folder names use lowercase letters without accents or spaces. The list pages follow the same names: `<domain>-contacts.md`, `<domain>-entreprises.md`, `<domain>-sources.md` in a French wiki. In this document, the English names are used.
 
 Contacts and companies have their own folders **at the domain level**, also created only when needed. Each one holds a list page that links all its pages. `entities/` keeps only the other entities:
 
@@ -96,6 +96,9 @@ wiki/football/
 ├── companies/
 │   ├── football-companies.md   ← company list of the domain (type company-list)
 │   └── acme.md                 ← one company (type company)
+├── sources/
+│   ├── football-sources.md     ← source list of the domain (type source-list)
+│   └── match-report.md         ← one source page (type source)
 └── entities/
     └── stade-de-france.md      ← any other entity
 ```
@@ -113,6 +116,12 @@ wiki/football/
 - Each `contacts/` folder contains `<domain>-contacts.md` (type `contact-list`), and each `companies/` folder contains `<domain>-companies.md` (type `company-list`). They list and link every page of their folder and are created with the folder.
 - Every contact or company page links back to its list, and the domain page links to both lists.
 - **Organization tables:** a company page keeps a table of the people known there. Each name is linked to its contact page when one exists; otherwise it stays plain text.
+
+**Source lists:**
+
+- Each `sources/` folder (of a domain, subdomain, or project) contains `<domain>-sources.md` (type `source-list`), created with the folder; `<domain>` is the name of that domain, subdomain, or project folder, as for `<domain>-contacts.md`. It lists every source page of the folder as `[[link]] — one-line summary`, most recent first (date of the raw file named in the page's `sources:` field, otherwise its `created` date).
+- The domain page links only to this list, never to the source pages themselves (section 6). Unlike contact and company pages, a source page does not need to link back to its list: it already links its domain.
+- **Upkeep:** when a source page is created, renamed, moved, or deleted, the agent updates the list of its folder; it updates the domain page only when the list has just been created.
 
 ### 5.6 Projects and archive
 
@@ -132,6 +141,7 @@ wiki/football/
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
 | Contacts and companies | `<domain>/contacts/` with `<domain>-contacts.md`, `<domain>/companies/` with `<domain>-companies.md` |
+| Source lists | `<domain>/sources/` with `<domain>-sources.md` |
 | Projects | `<domain>/projects/<project>/<project>.md`; `wiki/projects/<project>/` only for cross-domain projects |
 | Templates | `templates/template-<type>.md` (e.g. `template-user.md`), so they never share a name with a wiki page |
 
@@ -160,7 +170,7 @@ The tool's credentials or tokens never go into the wiki: they stay in the tool's
 
 ## 6. Page Types and Templates
 
-The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-contact.md`, `template-contact-list.md`, `template-company.md`, `template-company-list.md`, `template-entity.md`, `template-knowledge.md`, `template-howto.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
+The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-contact.md`, `template-contact-list.md`, `template-company.md`, `template-company-list.md`, `template-entity.md`, `template-knowledge.md`, `template-howto.md`, `template-source.md`, `template-source-list.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
 
 | Type | Purpose |
 |---|---|
@@ -175,13 +185,14 @@ The `templates/` folder holds one template per page type, named `template-<type>
 | `knowledge` | What the user knows or has learned: an idea, topic, method, explanation — including the user's own ideas |
 | `howto` | How to do something, step by step (a procedure, a runbook, a checklist). `knowledge` is for understanding, `howto` is for doing |
 | `source` | Summary of one raw source |
+| `source-list` | The list page of a `sources/` folder, linking all its source pages, most recent first |
 | `synthesis` | Comparison, analysis, overview, or a kept answer to a question |
 
 **Every template starts with a YAML frontmatter**, at least:
 
 ```yaml
 ---
-type: entity            # user | domain | project | contact | contact-list | company | company-list | entity | knowledge | howto | source | synthesis
+type: entity            # user | domain | project | contact | contact-list | company | company-list | entity | knowledge | howto | source | source-list | synthesis
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 sources: []             # links to raw files in raw/processed/
@@ -215,6 +226,7 @@ Each template then defines its sections (headings written in the user's language
 - **contact**: Identity · Relationship to the user · Contact details · Work · Personality · Interests · Important dates · Close circle · Facts & information · Interaction history · Ideas & gifts · Links
 - **contact-list**: Overview · Contacts (table: name linked to the contact page, relationship, role, organization) · Links
 - **company-list**: Overview · Companies (table: name linked to the company page, industry, relationship to the user) · Links
+- **source-list**: Overview · Sources (`[[link]] — one-line summary`, most recent first) · Links
 - **company**: Identity · Activity · Size & figures · Location · Relationship to the user · Organization · People known there (table, names linked to contact pages when they exist) · Culture & values · Tools & methods · Competitors & partners · News & history · Facts & information · Links
 - **entity**: Who / what · Relationship to the user · Facts · History · Links
 - **knowledge**: Summary · Details · The user's view · Evolution · Related knowledge · Sources
@@ -232,12 +244,12 @@ Each template then defines its sections (headings written in the user's language
 
 1. **Overview:** at most 15 non-empty lines (title excluded), what the domain is about and where it stands. No minimum: a short page is not padded.
 2. **Subdomains and projects:** the direct subdomains and projects only, each as `[[link]] — one-line summary`.
-3. **Pages:** the direct pages only (those in the domain's own type subfolders), grouped in one subsection per type (entities, knowledge, how-tos, sources, syntheses), each as `[[link]] — one-line summary`.
+3. **Pages:** the direct pages only (those in the domain's own type subfolders), grouped in one subsection per type (entities, knowledge, how-tos, sources, syntheses), each as `[[link]] — one-line summary`. The sources subsection holds only the link to `<domain>-sources.md` (optionally with the number of sources), never the source pages (section 5.5, "Source lists").
 4. **Contacts and companies:** only the links to `<domain>-contacts.md` and `<domain>-companies.md`, when they exist. A subdomain or project without its own contacts or companies links to its parent's lists.
 5. **Key facts:** at most 20 points, the most important ones. No minimum.
 6. **Open points:** only the link to `<domain>-open-questions.md`, when it exists.
 
-A domain page never lists the pages of its subdomains or projects: each level lists only its own. **Every page of the wiki is listed exactly once, by the page of its own domain**, except contact and company pages (listed by their list pages), open-questions files (linked from Open points), and the domain page itself (listed by its parent's page, or by `index.md` for a main domain or a cross-domain project). When the overview or the key facts overflow, the surplus goes to a `synthesis` page of the domain, linked from the domain page.
+A domain page never lists the pages of its subdomains or projects: each level lists only its own. **Every page of the wiki is listed exactly once, by the page of its own domain**, except contact and company pages (listed by their list pages), source pages (listed by their `<domain>-sources.md` list, which the domain page links), open-questions files (linked from Open points), and the domain page itself (listed by its parent's page, or by `index.md` for a main domain or a cross-domain project). When the overview or the key facts overflow, the surplus goes to a `synthesis` page of the domain, linked from the domain page.
 
 **How-to status:**
 

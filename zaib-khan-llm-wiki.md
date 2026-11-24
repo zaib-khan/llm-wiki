@@ -157,7 +157,7 @@ Type subfolders are named **in the wiki's language** and are reserved (never use
 | Contacts | `contacts/` | `contacts/` |
 | Companies | `companies/` | `entreprises/` |
 
-Folder names use lowercase letters without accents or spaces. The list pages follow the same names: `<domain>-contacts.md`, `<domain>-entreprises.md` in a French wiki. In this document, the English names are used.
+Folder names use lowercase letters without accents or spaces. The list pages follow the same names: `<domain>-contacts.md`, `<domain>-entreprises.md`, `<domain>-sources.md` in a French wiki. In this document, the English names are used.
 
 Contacts and companies have their own folders **at the domain level**, also created only when needed. Each one holds a list page that links all its pages. `entities/` keeps only the other entities:
 
@@ -170,6 +170,9 @@ wiki/football/
 ├── companies/
 │   ├── football-companies.md   ← company list of the domain (type company-list)
 │   └── acme.md                 ← one company (type company)
+├── sources/
+│   ├── football-sources.md     ← source list of the domain (type source-list)
+│   └── match-report.md         ← one source page (type source)
 └── entities/
     └── stade-de-france.md      ← any other entity
 ```
@@ -187,6 +190,12 @@ wiki/football/
 - Each `contacts/` folder contains `<domain>-contacts.md` (type `contact-list`), and each `companies/` folder contains `<domain>-companies.md` (type `company-list`). They list and link every page of their folder and are created with the folder.
 - Every contact or company page links back to its list, and the domain page links to both lists.
 - **Organization tables:** a company page keeps a table of the people known there. Each name is linked to its contact page when one exists; otherwise it stays plain text.
+
+**Source lists:**
+
+- Each `sources/` folder (of a domain, subdomain, or project) contains `<domain>-sources.md` (type `source-list`), created with the folder; `<domain>` is the name of that domain, subdomain, or project folder, as for `<domain>-contacts.md`. It lists every source page of the folder as `[[link]] — one-line summary`, most recent first (date of the raw file named in the page's `sources:` field, otherwise its `created` date).
+- The domain page links only to this list, never to the source pages themselves (section 6). Unlike contact and company pages, a source page does not need to link back to its list: it already links its domain.
+- **Upkeep:** when a source page is created, renamed, moved, or deleted, the agent updates the list of its folder; it updates the domain page only when the list has just been created.
 
 ### 5.6 Projects and archive
 
@@ -206,6 +215,7 @@ wiki/football/
 | Wiki page files | Lowercase, hyphenated, **unique across the wiki** |
 | Raw files | `YYYY-MM-DD-short-title.ext` |
 | Contacts and companies | `<domain>/contacts/` with `<domain>-contacts.md`, `<domain>/companies/` with `<domain>-companies.md` |
+| Source lists | `<domain>/sources/` with `<domain>-sources.md` |
 | Projects | `<domain>/projects/<project>/<project>.md`; `wiki/projects/<project>/` only for cross-domain projects |
 | Templates | `templates/template-<type>.md` (e.g. `template-user.md`), so they never share a name with a wiki page |
 
@@ -234,7 +244,7 @@ The tool's credentials or tokens never go into the wiki: they stay in the tool's
 
 ## 6. Page Types and Templates
 
-The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-contact.md`, `template-contact-list.md`, `template-company.md`, `template-company-list.md`, `template-entity.md`, `template-knowledge.md`, `template-howto.md`, `template-source.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
+The `templates/` folder holds one template per page type, named `template-<type>.md`: `template-user.md`, `template-domain.md`, `template-project.md`, `template-contact.md`, `template-contact-list.md`, `template-company.md`, `template-company-list.md`, `template-entity.md`, `template-knowledge.md`, `template-howto.md`, `template-source.md`, `template-source-list.md`, `template-synthesis.md`. The prefix keeps file names unique across the vault (otherwise `templates/user.md` and `wiki/user.md` would make `[[user]]` ambiguous). The templates' section headings are written in the user's language. Every page the agent creates must follow its template. The user may edit the templates; the agent then follows the new version.
 
 | Type | Purpose |
 |---|---|
@@ -249,13 +259,14 @@ The `templates/` folder holds one template per page type, named `template-<type>
 | `knowledge` | What the user knows or has learned: an idea, topic, method, explanation — including the user's own ideas |
 | `howto` | How to do something, step by step (a procedure, a runbook, a checklist). `knowledge` is for understanding, `howto` is for doing |
 | `source` | Summary of one raw source |
+| `source-list` | The list page of a `sources/` folder, linking all its source pages, most recent first |
 | `synthesis` | Comparison, analysis, overview, or a kept answer to a question |
 
 **Every template starts with a YAML frontmatter**, at least:
 
 ```yaml
 ---
-type: entity            # user | domain | project | contact | contact-list | company | company-list | entity | knowledge | howto | source | synthesis
+type: entity            # user | domain | project | contact | contact-list | company | company-list | entity | knowledge | howto | source | source-list | synthesis
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 sources: []             # links to raw files in raw/processed/
@@ -289,6 +300,7 @@ Each template then defines its sections (headings written in the user's language
 - **contact**: Identity · Relationship to the user · Contact details · Work · Personality · Interests · Important dates · Close circle · Facts & information · Interaction history · Ideas & gifts · Links
 - **contact-list**: Overview · Contacts (table: name linked to the contact page, relationship, role, organization) · Links
 - **company-list**: Overview · Companies (table: name linked to the company page, industry, relationship to the user) · Links
+- **source-list**: Overview · Sources (`[[link]] — one-line summary`, most recent first) · Links
 - **company**: Identity · Activity · Size & figures · Location · Relationship to the user · Organization · People known there (table, names linked to contact pages when they exist) · Culture & values · Tools & methods · Competitors & partners · News & history · Facts & information · Links
 - **entity**: Who / what · Relationship to the user · Facts · History · Links
 - **knowledge**: Summary · Details · The user's view · Evolution · Related knowledge · Sources
@@ -306,12 +318,12 @@ Each template then defines its sections (headings written in the user's language
 
 1. **Overview:** at most 15 non-empty lines (title excluded), what the domain is about and where it stands. No minimum: a short page is not padded.
 2. **Subdomains and projects:** the direct subdomains and projects only, each as `[[link]] — one-line summary`.
-3. **Pages:** the direct pages only (those in the domain's own type subfolders), grouped in one subsection per type (entities, knowledge, how-tos, sources, syntheses), each as `[[link]] — one-line summary`.
+3. **Pages:** the direct pages only (those in the domain's own type subfolders), grouped in one subsection per type (entities, knowledge, how-tos, sources, syntheses), each as `[[link]] — one-line summary`. The sources subsection holds only the link to `<domain>-sources.md` (optionally with the number of sources), never the source pages (section 5.5, "Source lists").
 4. **Contacts and companies:** only the links to `<domain>-contacts.md` and `<domain>-companies.md`, when they exist. A subdomain or project without its own contacts or companies links to its parent's lists.
 5. **Key facts:** at most 20 points, the most important ones. No minimum.
 6. **Open points:** only the link to `<domain>-open-questions.md`, when it exists.
 
-A domain page never lists the pages of its subdomains or projects: each level lists only its own. **Every page of the wiki is listed exactly once, by the page of its own domain**, except contact and company pages (listed by their list pages), open-questions files (linked from Open points), and the domain page itself (listed by its parent's page, or by `index.md` for a main domain or a cross-domain project). When the overview or the key facts overflow, the surplus goes to a `synthesis` page of the domain, linked from the domain page.
+A domain page never lists the pages of its subdomains or projects: each level lists only its own. **Every page of the wiki is listed exactly once, by the page of its own domain**, except contact and company pages (listed by their list pages), source pages (listed by their `<domain>-sources.md` list, which the domain page links), open-questions files (linked from Open points), and the domain page itself (listed by its parent's page, or by `index.md` for a main domain or a cross-domain project). When the overview or the key facts overflow, the surplus goes to a `synthesis` page of the domain, linked from the domain page.
 
 **How-to status:**
 
@@ -348,7 +360,7 @@ At the root of the wiki, `command.md` lists **every command the user can give th
 
 | Command | What it does |
 |---|---|
-| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the domain pages, moves the file to `raw/processed/`, then reports and asks the pending questions at the end, in the question style (section 9.2). |
+| `ingest` / `processRaw` | Processes every file waiting in `raw/`: reads it, renames it, writes a source page, creates or updates related pages, flags contradictions, updates the source lists and the domain pages, moves the file to `raw/processed/`, then reports and asks the pending questions at the end, in the question style (section 9.2). |
 | `lint` | Runs a health check of the wiki: fixes mechanical issues, asks about content issues, and brings questions, sources to look for, and 💡 insights (section 9.4). |
 | Tell an idea | Just tell the agent a thought or an idea: it saves it as a raw source and asks whether to integrate it now or at the next ingest (section 9.1). |
 | Ask a question | Ask anything: the agent answers from the wiki with citations and 💡 reminders, and offers to keep valuable answers or to search the web if the wiki is not enough (section 9.3). |
@@ -429,7 +441,7 @@ When a decision is needed before a source can be filed or a page can be created,
 7. Updates `user.md` freely when it learns something about the user — and **reports to the user exactly what was added, changed, or removed**.
 8. Flags contradictions (section 10) and records the evolution of the user's ideas.
 9. Adds all links (wikilinks) both ways where relevant.
-10. Updates the domain page of each page created, renamed, moved, or deleted (or whose summary changed), and only that one; a new subdomain or project is added to its parent's page. `index.md` changes only when a main domain is created, renamed, or archived, or when its summary changes (section 11.1).
+10. Updates the domain page of each page created, renamed, moved, or deleted (or whose summary changed), and only that one; for a source page, it updates the `<domain>-sources.md` list of its folder instead, and the domain page only when that list is new (section 5.5); a new subdomain or project is added to its parent's page. `index.md` changes only when a main domain is created, renamed, or archived, or when its summary changes (section 11.1).
 11. Moves the source (and its assets) to `raw/processed/<main domain>/`.
 
 **After all sources, the agent re-indexes search and presents a report:**
@@ -445,7 +457,7 @@ Then it commits (`ingest:`) according to the commit mode (section 14).
 
 ### 9.3 Query — answering questions
 
-1. The agent searches first with the search engine (qmd, section 12) across `wiki/` and `raw/processed/`. Without it, it walks the tree `index.md` → domain page → subdomain page → page, and uses grep only as a last resort. Then it reads the relevant pages.
+1. The agent searches first with the search engine (`qmd search`, or `qmd vsearch` when needed, section 12) across `wiki/` and `raw/processed/`, then reads the domain page of the topic for context. Without it, it walks the tree `index.md` → domain page → subdomain page → page, and uses grep only as a last resort. Then it reads the relevant pages.
 2. It answers in **the format best suited to the question** (text, markdown page, table, Mermaid diagram, chart, Marp slides, Obsidian canvas…).
 3. **Citations:** it cites both the wiki pages (`[[page]]`) and, when useful, the original raw sources.
 4. **Proactive section:** when — and only when — something relevant exists, the answer ends with a dedicated section where each item starts with 💡: forgotten ideas related to the question, details from the user's life that shed light on it, links the user may have missed.
@@ -481,13 +493,14 @@ Then it commits (`ingest:`) according to the commit mode (section 14).
 - pages not updated for a long time (`user.md`, contact pages…), ignoring `archived` pages;
 - every page is connected to `user.md`, directly or indirectly;
 - every contact and company page links to its list (`<domain>-contacts.md`, `<domain>-companies.md`), and every list includes all pages of its folder;
+- every `sources/` folder has its `<domain>-sources.md` list, which contains every source page of the folder and nothing else, and is linked from its domain page;
 - every contact page meets the contact rules (a name and a way to reach them, or marked as family);
 - how-tos: `outdated` ones (may propose archiving them), `writing` ones not updated for a long time (suggest resuming them), `draft` ones never tested; `status` and its `howto/<status>` tag always match;
 - pages of a domain with domain-specific fields (section 6) have those fields, with allowed values, and their mirrored tags match;
 - interaction guidelines (section 7), if any: occasionally, the lint asks the user whether they still help or need adjusting;
 - a newer version of this prompt is published (section 9.6): if so, the lint report says so and suggests `update wiki`.
 - no forgotten temporary file the agent created and should have deleted: an update review file (`changes-<version>.md` or its translation) at the wiki root, or any other temporary note. The agent flags it and asks the user before deleting it; for a review file, it first offers to finish the review;
-- navigation (sections 6 and 11.1): every page is listed exactly once, by the page of its own domain (except contact and company pages, listed by their list pages, open-questions files, linked from Open points, and domain pages, listed by their parent's page or by `index.md`); every subdomain and project is linked from its parent's page; no domain page lists the pages of its subdomains or projects; `wiki/index.md` lists every main domain and nothing more than planned (general pages, cross-domain projects); domain and project pages respect their limits (overview at most 15 non-empty lines, key facts at most 20 points);
+- navigation (sections 6 and 11.1): every page is listed exactly once, by the page of its own domain (except contact and company pages, listed by their list pages, source pages, listed by their `<domain>-sources.md` list, open-questions files, linked from Open points, and domain pages, listed by their parent's page or by `index.md`); every subdomain and project is linked from its parent's page; no domain page lists the pages of its subdomains or projects; `wiki/index.md` lists every main domain and nothing more than planned (general pages, cross-domain projects); domain and project pages respect their limits (overview at most 15 non-empty lines, key facts at most 20 points);
 - wikilinks inside a markdown table escape the pipe of their alias: `[[page\|Name]]`, never `[[page|Name]]` (Obsidian's table formatting breaks the unescaped form);
 - no wikilink points to a deleted page: it is turned into plain text (the name is kept, the link is removed); otherwise a click in Obsidian creates an empty note at the root.
 
@@ -584,7 +597,7 @@ Navigation is a tree: `wiki/index.md` → domain page → subdomain or project p
 
   It is changed only when a main domain (or cross-domain project) is created, renamed, or archived, or when its summary changes. There is no `<domain>-index.md` file.
 - **Domain pages** (domains, subdomains, and projects) are the navigation pages of their level; their sections and limits are defined in section 6 ("Domain and project pages").
-- **Upkeep:** when a page is created, renamed, moved, or deleted, or its summary changes, the agent updates the page of its domain, and only that one. A new subdomain or project is added to its parent's page. When the overview or the key facts overflow their limits, the surplus goes to a `synthesis` page of the domain.
+- **Upkeep:** when a page is created, renamed, moved, or deleted, or its summary changes, the agent updates the page of its domain, and only that one (for a source page: the `<domain>-sources.md` list of its folder, and the domain page only when that list is new, section 5.5). A new subdomain or project is added to its parent's page. When the overview or the key facts overflow their limits, the surplus goes to a `synthesis` page of the domain.
 
 ### 11.2 Open questions
 
@@ -606,7 +619,7 @@ Questions waiting for the user's answer (skipped during a lint or an ingest, or 
 - **Scope:** `wiki/` **and** `raw/processed/`, so a precise detail can be found even if it was not carried into the wiki.
 - **Collection names:** qmd collections are global to the machine, so generic names like `wiki` or `raw` would clash with another wiki. Prefix them with the wiki's folder name: `<wiki>-wiki` (on `wiki/`) and `<wiki>-raw` (on `raw/processed/`).
 - **Re-indexing:** after every ingest and after any change to the wiki or the sources, run `qmd update && qmd embed`. Run `qmd cleanup` if qmd reports orphaned chunks.
-- **Search order:** qmd first. If qmd is not installed or fails, the agent walks the tree `index.md` → domain page → subdomain page → page (section 11.1); grep comes last.
+- **Search order:** `qmd search` first (keywords), or `qmd vsearch` (semantic) when the exact words are not enough; never `qmd query` (re-ranking), too slow for everyday use (over 2 minutes in a test, where `qmd search` was twice as fast as the tree and used a third fewer tokens, for about 10% less information found). Then the agent reads the domain page of the topic for context. If qmd is not installed or fails, the agent walks the tree `index.md` → domain page → subdomain page → page (section 11.1); grep comes last.
 - **Other scripts:** when a mechanical task becomes repetitive (checking that `CLAUDE.md` = `AGENTS.md`, unique names, broken links…), the agent may **propose** to write a small script in `scripts/`. Nothing is created without validation.
 
 ---
@@ -795,7 +808,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Unknown answers | Recorded as unknown with the date; question closed, not asked again |
 | Captured idea | Agent asks: integrate now or at next ingest |
 | New contact page | Requires validation; needs a name and a way to reach them (family: a name is enough) |
-| List pages | `<domain>-contacts.md` and `<domain>-companies.md` |
+| List pages | `<domain>-contacts.md`, `<domain>-companies.md` and `<domain>-sources.md` (in `sources/`, most recent first) |
 | New company page | Created freely |
 | How-to pages | Created freely; only "Goal" required; `status` + `howto/<status>` tag |
 | Outdated pages | Tag `archived` after validation, kept in place, ignored by staleness checks |
@@ -815,7 +828,7 @@ User settings live in **`settings.md`** at the root of the wiki, referenced by t
 | Contradictions | ⚠️ flag in page + user decides |
 | Idea evolution | Visible dated history in the page |
 | Log | None: commit messages are the trace of operations (section 14) |
-| Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`); without qmd, the tree `index.md` → domain → subdomain → page, then grep |
+| Search | qmd on `wiki/` + `raw/processed/` (collections `<wiki>-wiki`, `<wiki>-raw`): `qmd search` (`qmd vsearch` if needed, never `qmd query`) + domain page of the topic; without qmd, the tree `index.md` → domain → subdomain → page, then grep |
 | Scripts | Proposed by the agent when needed |
 | Reading tool | Obsidian |
 | Dashboard | `wiki/dashboard.base` (Obsidian Bases), 5 generic views + views proposed for domains with their own fields |
